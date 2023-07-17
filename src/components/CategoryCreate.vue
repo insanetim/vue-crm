@@ -74,14 +74,14 @@ export default {
       try {
         const category = await this.$store.dispatch('createCategory', {
           title: this.title,
-          limit: this.limit
+          limit: +this.limit
         })
 
         this.title = ''
         this.limit = categoryLimit
         this.$v.$reset()
-        this.$message('Категория была создана')
         this.$emit('created', category)
+        this.$message('Категория была создана')
       } catch (e) {}
     }
   }

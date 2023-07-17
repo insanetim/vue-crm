@@ -5,30 +5,51 @@
         <h4>Редактировать</h4>
       </div>
 
-      <form>
+      <form @submit.prevent="submitHandler">
         <div class="input-field">
-          <select>
-            <option>Category</option>
+          <select
+            ref="select"
+            v-model="current"
+          >
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.title }}
+            </option>
           </select>
           <label>Выберите категорию</label>
         </div>
 
         <div class="input-field">
           <input
-            type="text"
             id="name"
+            type="text"
+            v-model="$v.title.$model"
+            :class="{ invalid: $v.title.$error }"
           />
           <label for="name">Название</label>
-          <span class="helper-text invalid">TITLE</span>
+          <span
+            class="helper-text invalid"
+            v-if="$v.title.$dirty && !$v.title.required"
+            >Введите название категории</span
+          >
         </div>
 
         <div class="input-field">
           <input
             id="limit"
             type="number"
+            v-model="$v.limit.$model"
+            :class="{ invalid: $v.limit.$error }"
           />
           <label for="limit">Лимит</label>
-          <span class="helper-text invalid">LIMIT</span>
+          <span
+            class="helper-text invalid"
+            v-if="$v.limit.$dirty && !$v.limit.minValue"
+            >Минимальное значение {{ $v.limit.$params.minValue.min }}</span
+          >
         </div>
 
         <button
@@ -42,3 +63,69 @@
     </div>
   </div>
 </template>
+
+<script>
+import { required, minValue } from 'vuelidate/lib/validators'
+import { categoryLimit } from '@/constants'
+
+export default {
+  props: {
+    categories: {
+      type: Array,
+      required: true
+    }
+  },
+  data: () => ({
+    select: null,
+    title: '',
+    limit: categoryLimit,
+    current: null
+  }),
+  validations: {
+    title: { required },
+    limit: { minValue: minValue(categoryLimit) }
+  },
+  watch: {
+    current(id) {
+      const { title, limit } = this.categories.find(c => c.id === id)
+      this.title = title
+      this.limit = limit
+    }
+  },
+  methods: {
+    async submitHandler() {
+      if (this.$v.$invalid) {
+        this.$v.$touch()
+        return
+      }
+
+      try {
+        await this.$store.dispatch('updateCategory', {
+          id: this.current,
+          title: this.title,
+          limit: this.limit
+        })
+        this.$message('Категория успешно обновлена')
+      } catch (e) {}
+    }
+  },
+  created() {
+    const { id, title, limit } = this.categories[0]
+    this.current = id
+    this.title = title
+    this.limit = limit
+  },
+  mounted() {
+    this.select = M.FormSelect.init(this.$refs.select, {})
+    M.updateTextFields()
+  },
+  updated() {
+    this.select = M.FormSelect.init(this.$refs.select, {})
+  },
+  beforeDestroy() {
+    if (this.select && this.select.destroy) {
+      this.select.destroy()
+    }
+  }
+}
+</script>

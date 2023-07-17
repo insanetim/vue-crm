@@ -18,8 +18,8 @@ export default {
   actions: {
     async fetchInfo({ dispatch, commit }) {
       try {
-        const uid = await dispatch('getUid')
         const db = getDatabase()
+        const uid = await dispatch('getUid')
         onValue(
           ref(db, `/users/${uid}/info`),
           snapshot => {
