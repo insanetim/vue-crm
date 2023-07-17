@@ -110,14 +110,13 @@ export default {
         this.$v.$touch()
         return
       }
-      const formData = {
-        email: this.email,
-        password: this.password,
-        name: this.name
-      }
 
       try {
-        await this.$store.dispatch('register', formData)
+        await this.$store.dispatch('register', {
+          email: this.email,
+          password: this.password,
+          name: this.name
+        })
         this.$router.push('/')
       } catch (e) {}
     }

@@ -89,13 +89,12 @@ export default {
         this.$v.$touch()
         return
       }
-      const formData = {
-        email: this.email,
-        password: this.password
-      }
 
       try {
-        await this.$store.dispatch('login', formData)
+        await this.$store.dispatch('login', {
+          email: this.email,
+          password: this.password
+        })
         this.$router.push('/')
       } catch (e) {}
     }
