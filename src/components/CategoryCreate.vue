@@ -25,7 +25,7 @@
           <input
             id="limit"
             type="number"
-            v-model="$v.limit.$model"
+            v-model.number="$v.limit.$model"
             :class="{ invalid: $v.limit.$error }"
           />
           <label for="limit">Лимит</label>
@@ -74,12 +74,12 @@ export default {
       try {
         const category = await this.$store.dispatch('createCategory', {
           title: this.title,
-          limit: +this.limit
+          limit: this.limit
         })
 
+        this.$v.$reset()
         this.title = ''
         this.limit = categoryLimit
-        this.$v.$reset()
         this.$emit('created', category)
         this.$message('Категория была создана')
       } catch (e) {}

@@ -5,6 +5,7 @@ import { currencies } from '@/constants'
 import auth from './auth'
 import category from './category'
 import info from './info'
+import record from './record'
 
 Vue.use(Vuex)
 
@@ -36,5 +37,5 @@ export default new Vuex.Store({
       return await res.json()
     }
   },
-  modules: { auth, category, info }
+  modules: { auth, category, info, record }
 })

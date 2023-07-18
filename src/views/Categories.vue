@@ -4,7 +4,8 @@
       <h3>Категории</h3>
     </div>
     <section>
-      <Loader v-if="loading" />
+      <Loader v-if="!categoriesReady" />
+
       <div
         class="row"
         v-else
@@ -32,12 +33,12 @@ import CategoryEdit from '@/components/CategoryEdit'
 
 export default {
   name: 'categories',
-  data: () => ({
-    loading: true
-  }),
   computed: {
     categories() {
       return this.$store.getters.categories
+    },
+    categoriesReady() {
+      return this.$store.getters.categoriesReady
     }
   },
   async mounted() {

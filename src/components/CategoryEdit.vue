@@ -41,7 +41,7 @@
           <input
             id="limit"
             type="number"
-            v-model="$v.limit.$model"
+            v-model.number="$v.limit.$model"
             :class="{ invalid: $v.limit.$error }"
           />
           <label for="limit">Лимит</label>

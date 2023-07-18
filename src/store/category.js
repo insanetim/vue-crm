@@ -2,18 +2,23 @@ import { getDatabase, ref, child, push, onValue, update } from 'firebase/databas
 
 export default {
   state: {
-    categories: []
+    categories: [],
+    categoriesReady: false
   },
   getters: {
-    categories: s => s.categories
+    categories: s => s.categories,
+    categoriesReady: s => s.categoriesReady
   },
   mutations: {
     setCategories(state, categories) {
       state.categories = categories
+    },
+    setCategoriesReady(state) {
+      state.categoriesReady = true
     }
   },
   actions: {
-    async fetchCategories({ commit, dispatch }) {
+    async fetchCategories({ commit, dispatch, state }) {
       try {
         const db = getDatabase()
         const uid = await dispatch('getUid')
@@ -26,6 +31,9 @@ export default {
               ...categories[key]
             }))
           )
+          if (!state.categoriesReady) {
+            commit('setCategoriesReady')
+          }
         })
       } catch (e) {
         commit('setError', e)
@@ -36,7 +44,7 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('getUid')
-        push(ref(db, `/users/${uid}/categories`), { title, limit })
+        await push(ref(db, `/users/${uid}/categories`), { title, limit })
       } catch (e) {
         commit('setError', e)
         throw e
@@ -46,7 +54,7 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('getUid')
-        update(child(ref(db, `/users/${uid}/categories`), id), { title, limit })
+        await update(child(ref(db, `/users/${uid}/categories`), id), { title, limit })
       } catch (e) {
         commit('setError', e)
         throw e
