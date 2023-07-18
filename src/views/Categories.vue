@@ -4,7 +4,7 @@
       <h3>Категории</h3>
     </div>
     <section>
-      <Loader v-if="!categoriesReady" />
+      <Loader v-if="!ready" />
 
       <div
         class="row"
@@ -28,22 +28,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import CategoryCreate from '@/components/CategoryCreate'
 import CategoryEdit from '@/components/CategoryEdit'
+import isReady from '@/helpers/isReady'
 
 export default {
   name: 'categories',
   computed: {
-    categories() {
-      return this.$store.getters.categories
-    },
-    categoriesReady() {
-      return this.$store.getters.categoriesReady
+    ...mapGetters(['categories']),
+    ready() {
+      return isReady(this.$store.getters.categoriesReady)
     }
   },
   async mounted() {
     await this.$store.dispatch('fetchCategories')
-    this.loading = false
   },
   components: { CategoryCreate, CategoryEdit }
 }

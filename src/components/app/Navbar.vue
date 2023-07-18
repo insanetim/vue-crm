@@ -19,7 +19,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            {{ name }}
+            {{ info.name }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data: () => ({
     date: new Date(),
@@ -63,9 +65,7 @@ export default {
     dropdown: null
   }),
   computed: {
-    name() {
-      return this.$store.getters.info.name
-    }
+    ...mapGetters(['info'])
   },
   mounted() {
     this.interval = setInterval(() => {

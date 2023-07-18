@@ -22,6 +22,10 @@
         <RouterLink
           class="btn-floating btn-large blue"
           to="/record"
+          v-tooltip="{
+            html: 'Создать новую запись',
+            position: 'left'
+          }"
         >
           <i class="large material-icons">add</i>
         </RouterLink>

@@ -5,13 +5,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import messages from '@/utils/messages'
 
 export default {
   computed: {
-    error() {
-      return this.$store.getters.error
-    }
+    ...mapGetters(['error'])
   },
   watch: {
     error({ code }) {

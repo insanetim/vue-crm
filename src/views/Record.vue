@@ -4,7 +4,7 @@
       <h3>Новая запись</h3>
     </div>
 
-    <Loader v-if="!categoriesReady" />
+    <Loader v-if="!ready" />
 
     <p
       class="center"
@@ -104,6 +104,7 @@
 <script>
 import { required, minValue } from 'vuelidate/lib/validators'
 import { mapGetters } from 'vuex'
+import isReady from '@/helpers/isReady'
 
 export default {
   name: 'record',
@@ -119,12 +120,9 @@ export default {
     description: { required }
   },
   computed: {
-    ...mapGetters(['info']),
-    categories() {
-      return this.$store.getters.categories
-    },
-    categoriesReady() {
-      return this.$store.getters.categoriesReady
+    ...mapGetters(['info', 'categories']),
+    ready() {
+      return isReady(this.$store.getters.categoriesReady)
     },
     canCreateRecord() {
       if (this.type === 'income') {
