@@ -18,7 +18,17 @@
     </p>
 
     <section v-else>
-      <HistoryTable :records="records" />
+      <HistoryTable :records="items" />
+
+      <Paginate
+        v-model="page"
+        :page-count="pageCount"
+        :click-handler="pageChangeHandler"
+        :prev-text="'Назад'"
+        :next-text="'Вперед'"
+        :container-class="'pagination'"
+        :page-class="'waves-effect'"
+      />
     </section>
   </div>
 </template>
@@ -26,10 +36,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import isReady from '@/helpers/isReady'
+import paginationMixin from '@/mixins/pagination.mixin'
 import HistoryTable from '@/components/HistoryTable'
 
 export default {
   name: 'history',
+  mixins: [paginationMixin],
   computed: {
     ...mapGetters(['categories']),
     records() {
@@ -45,6 +57,17 @@ export default {
     ready() {
       return isReady(this.$store.getters.categoriesReady, this.$store.getters.recordsReady)
     }
+  },
+  created() {
+    this.$watch(
+      () => this.ready,
+      ready => {
+        if (ready) {
+          this.setupPagination(this.records)
+        }
+      },
+      { immediate: true }
+    )
   },
   async mounted() {
     await this.$store.dispatch('fetchCategories')
