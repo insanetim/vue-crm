@@ -44,7 +44,7 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('getUid')
-        const record = await get(child(ref(db, `/users/${uid}/records`), id))
+        const record = (await get(child(ref(db, `/users/${uid}/records`), id))).val()
 
         return { id, ...record }
       } catch (e) {

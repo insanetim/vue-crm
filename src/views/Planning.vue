@@ -22,7 +22,7 @@
       >
         <p>
           <strong>{{ cat.title }}:</strong>
-          {{ cat.spend | currency }} из {{ cat.limit | currency }}
+          {{ cat.balance | currency }} из {{ cat.limit | currency }}
         </p>
         <div class="progress">
           <div
@@ -47,22 +47,23 @@ export default {
     ...mapGetters(['info', 'records']),
     categories() {
       return this.$store.getters.categories.map(c => {
-        const spend = this.records
+        const balance = this.records
           .filter(r => r.categoryId === c.id)
-          .filter(r => r.type === 'outcome')
-          .reduce((sum, record) => sum + record.amount, 0)
-        const percent = (100 * spend) / c.limit
+          .reduce((sum, record) => {
+            return record.type === 'outcome' ? sum + record.amount : sum - record.amount
+          }, 0)
+        const percent = (100 * balance) / c.limit
         const progressPercent = Math.min(percent, 100)
         const progressColor = percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red'
 
-        const tooltipValue = c.limit - spend
+        const tooltipValue = c.limit - balance
         const tooltip = `${tooltipValue < 0 ? 'Превышение на' : 'Осталось'} ${currencyFilter(Math.abs(tooltipValue))}`
 
         return {
           ...c,
           progressPercent,
           progressColor,
-          spend,
+          balance,
           tooltip
         }
       })

@@ -44,7 +44,7 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('getUid')
-        const category = await get(child(ref(db, `/users/${uid}/categories`), id))
+        const category = (await get(child(ref(db, `/users/${uid}/categories`), id))).val()
 
         return { id, ...category }
       } catch (e) {
