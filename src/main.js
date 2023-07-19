@@ -25,13 +25,13 @@ Vue.directive('tooltip', tooltipDirective)
 Vue.component('Loader', Loader)
 
 initializeApp({
-  apiKey: 'AIzaSyCqDZUQMiZnkXq02KSgrb_nJPfWoQ8STEA',
-  authDomain: 'vue-644e1.firebaseapp.com',
-  projectId: 'vue-644e1',
-  storageBucket: 'vue-644e1.appspot.com',
-  messagingSenderId: '424568971407',
-  appId: '1:424568971407:web:1e1fe556e0b036b1a6d0fa',
-  databaseURL: 'https://vue-644e1-default-rtdb.europe-west1.firebasedatabase.app/'
+  apiKey: 'AIzaSyC2DiliMxVbxN5OsYUwc5d9Pos7A2yH9mw',
+  authDomain: 'vue-crm-93feb.firebaseapp.com',
+  projectId: 'vue-crm-93feb',
+  storageBucket: 'vue-crm-93feb.appspot.com',
+  messagingSenderId: '207435020724',
+  appId: '1:207435020724:web:96e6c441679d83cc6adae1',
+  databaseURL: 'https://vue-crm-93feb-default-rtdb.europe-west1.firebasedatabase.app/'
 })
 
 let app
