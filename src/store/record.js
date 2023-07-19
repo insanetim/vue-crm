@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, onValue } from 'firebase/database'
+import { getDatabase, ref, push, onValue, child, get } from 'firebase/database'
 
 export default {
   state: {
@@ -35,6 +35,18 @@ export default {
             commit('setRecordsReady')
           }
         })
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
+    },
+    async fetchRecordById({ commit, dispatch }, id) {
+      try {
+        const db = getDatabase()
+        const uid = await dispatch('getUid')
+        const record = await get(child(ref(db, `/users/${uid}/records`), id))
+
+        return { id, ...record }
       } catch (e) {
         commit('setError', e)
         throw e

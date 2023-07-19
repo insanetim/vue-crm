@@ -25,3 +25,13 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'detail',
+  data: () => ({
+    record: null,
+    loading: true
+  })
+}
+</script>

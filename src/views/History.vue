@@ -8,36 +8,48 @@
       <canvas></canvas>
     </div>
 
-    <section>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Сумма</th>
-            <th>Дата</th>
-            <th>Категория</th>
-            <th>Тип</th>
-            <th>Открыть</th>
-          </tr>
-        </thead>
+    <Loader v-if="!ready" />
 
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>1212</td>
-            <td>12.12.32</td>
-            <td>name</td>
-            <td>
-              <span class="white-text badge red">Расход</span>
-            </td>
-            <td>
-              <button class="btn-small btn">
-                <i class="material-icons">open_in_new</i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <p
+      class="center"
+      v-else-if="!records.length"
+    >
+      Записей пока нет. <RouterLink to="/record">Добавите первую.</RouterLink>
+    </p>
+
+    <section v-else>
+      <HistoryTable :records="records" />
     </section>
   </div>
 </template>
+
+<script>
+import { mapGetters } from 'vuex'
+import isReady from '@/helpers/isReady'
+import HistoryTable from '@/components/HistoryTable'
+
+export default {
+  name: 'history',
+  computed: {
+    ...mapGetters(['categories']),
+    records() {
+      return this.$store.getters.records.map(r => {
+        return {
+          ...r,
+          categoryName: this.categories.find(c => c.id === r.categoryId).title,
+          typeClass: r.type === 'income' ? 'green' : 'red',
+          typeText: r.type === 'income' ? 'Доход' : 'Расход'
+        }
+      })
+    },
+    ready() {
+      return isReady(this.$store.getters.categoriesReady, this.$store.getters.recordsReady)
+    }
+  },
+  async mounted() {
+    await this.$store.dispatch('fetchCategories')
+    await this.$store.dispatch('fetchRecords')
+  },
+  components: { HistoryTable }
+}
+</script>

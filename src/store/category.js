@@ -1,4 +1,4 @@
-import { getDatabase, ref, child, push, onValue, update } from 'firebase/database'
+import { getDatabase, ref, child, push, onValue, update, get } from 'firebase/database'
 
 export default {
   state: {
@@ -35,6 +35,18 @@ export default {
             commit('setCategoriesReady')
           }
         })
+      } catch (e) {
+        commit('setError', e)
+        throw e
+      }
+    },
+    async fetchCategoryById({ commit, dispatch }, id) {
+      try {
+        const db = getDatabase()
+        const uid = await dispatch('getUid')
+        const category = await get(child(ref(db, `/users/${uid}/categories`), id))
+
+        return { id, ...category }
       } catch (e) {
         commit('setError', e)
         throw e
