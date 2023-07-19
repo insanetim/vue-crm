@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import messages from '@/utils/messages'
 import Navbar from '../components/app/Navbar'
 import Sidebar from '../components/app/Sidebar'
 
@@ -43,6 +45,14 @@ export default {
     isOpen: true,
     loading: true
   }),
+  computed: {
+    ...mapGetters(['error'])
+  },
+  watch: {
+    error({ code }) {
+      this.$error(messages[code] || 'Что-то пошло не так')
+    }
+  },
   async mounted() {
     if (!Object.keys(this.$store.getters.info).length) {
       await this.$store.dispatch('fetchInfo')
