@@ -45,6 +45,11 @@ import isReady from '@/helpers/isReady'
 
 export default {
   name: 'planning',
+  metaInfo() {
+    return {
+      title: this.$title('Menu_Planning')
+    }
+  },
   computed: {
     ...mapGetters(['info', 'records']),
     categories() {

@@ -110,6 +110,11 @@ import isReady from '@/helpers/isReady'
 
 export default {
   name: 'record',
+  metaInfo() {
+    return {
+      title: this.$title('Menu_NewRecord')
+    }
+  },
   data: () => ({
     select: null,
     category: null,

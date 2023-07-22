@@ -26,8 +26,8 @@ export default new Vuex.Store({
   },
   actions: {
     async fetchCurrency() {
-      const apiKey = process.env.VUE_APP_KEY
-      const apiUrl = process.env.VUE_APP_URL
+      const apiKey = process.env.VUE_APP_API_KEY
+      const apiUrl = process.env.VUE_APP_API_URL
       const res = await fetch(
         `${apiUrl}/latest?${new URLSearchParams({
           base: 'USD',

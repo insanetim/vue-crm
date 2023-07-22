@@ -50,6 +50,11 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
 
 export default {
   name: 'history',
+  metaInfo() {
+    return {
+      title: this.$title('Menu_History')
+    }
+  },
   mixins: [paginationMixin],
   computed: {
     ...mapGetters(['categories']),
