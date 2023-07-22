@@ -49,8 +49,8 @@ export default {
       return this.$store.getters.categories.map(c => {
         const balance = this.records
           .filter(r => r.categoryId === c.id)
-          .reduce((sum, record) => {
-            return record.type === 'outcome' ? sum + record.amount : sum - record.amount
+          .reduce((total, r) => {
+            return r.type === 'outcome' ? total + r.amount : total - r.amount
           }, 0)
         const percent = (100 * balance) / c.limit
         const progressPercent = Math.min(percent, 100)

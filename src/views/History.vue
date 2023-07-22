@@ -5,7 +5,10 @@
     </div>
 
     <div class="history-chart">
-      <canvas></canvas>
+      <Pie
+        :chart-data="chartData"
+        :chart-options="chartOptions"
+      />
     </div>
 
     <Loader v-if="!ready" />
@@ -35,9 +38,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { Pie } from 'vue-chartjs/legacy'
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js'
 import isReady from '@/helpers/isReady'
 import paginationMixin from '@/mixins/pagination.mixin'
 import HistoryTable from '@/components/HistoryTable'
+
+ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
 
 export default {
   name: 'history',
@@ -53,6 +60,45 @@ export default {
           typeText: r.type === 'income' ? 'Доход' : 'Расход'
         }
       })
+    },
+    chartData() {
+      return {
+        labels: this.categories.map(c => c.title),
+        datasets: [
+          {
+            data: this.categories.map(c => {
+              return this.records
+                .filter(r => r.categoryId === c.id)
+                .reduce((total, r) => {
+                  return r.type === 'outcome' ? total + r.amount : total - r.amount
+                }, 0)
+            }),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }
+        ]
+      }
+    },
+    chartOptions() {
+      return {
+        responsive: true,
+        maintainAspectRatio: false
+      }
     },
     ready() {
       return isReady(this.$store.getters.categoriesReady, this.$store.getters.recordsReady)
@@ -73,6 +119,6 @@ export default {
     await this.$store.dispatch('fetchCategories')
     await this.$store.dispatch('fetchRecords')
   },
-  components: { HistoryTable }
+  components: { HistoryTable, Pie }
 }
 </script>
