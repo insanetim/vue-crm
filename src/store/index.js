@@ -26,14 +26,17 @@ export default new Vuex.Store({
   },
   actions: {
     async fetchCurrency() {
-      const key = process.env.VUE_APP_FIXER
+      const apiKey = process.env.VUE_APP_KEY
+      const apiUrl = process.env.VUE_APP_URL
       const res = await fetch(
-        'http://data.fixer.io/api/latest?' +
-          new URLSearchParams({
-            access_key: key,
-            symbols: currencies.join(',')
-          })
+        `${apiUrl}/latest?${new URLSearchParams({
+          base: 'USD',
+          symbols: currencies.join(',')
+        })}
+          `,
+        { headers: { apikey: apiKey } }
       )
+
       return await res.json()
     }
   },
