@@ -7,13 +7,13 @@
         <RouterLink
           class="breadcrumb"
           to="/history"
-          >История</RouterLink
+          >{{ 'Menu_History' | localize }}</RouterLink
         >
         <a
           class="breadcrumb"
           @click.prevent
         >
-          {{ record.type === 'income' ? 'Доход' : 'Расход' }}
+          {{ record.type === 'income' ? 'Income' : 'Outcome' | localize }}
         </a>
       </div>
       <div class="row">
@@ -26,9 +26,9 @@
             }"
           >
             <div class="card-content white-text">
-              <p>Описание: {{ record.description }}</p>
-              <p>Сумма: {{ record.amount | currency }}</p>
-              <p>Категория: {{ record.categoryName }}</p>
+              <p>{{ 'Description' | localize }}: {{ record.description }}</p>
+              <p>{{ 'Amount' | localize }}: {{ record.amount | currency }}</p>
+              <p>{{ 'Category' | localize }}: {{ record.categoryName }}</p>
 
               <small>{{ record.date | date('datetime') }}</small>
             </div>

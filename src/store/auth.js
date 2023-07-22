@@ -13,8 +13,9 @@ export default {
         const db = getDatabase()
         const uid = await dispatch('getUid')
         await set(ref(db, `/users/${uid}/info`), {
+          name,
           bill: 100000,
-          name
+          locale: 'ru-RU'
         })
       } catch (e) {
         commit('setError', e)

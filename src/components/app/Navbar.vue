@@ -32,7 +32,8 @@
                 to="/profile"
                 class="black-text"
               >
-                <i class="material-icons">account_circle</i>Профиль
+                <i class="material-icons">account_circle</i>
+                {{ 'ProfileTitle' | localize }}
               </RouterLink>
             </li>
             <li
@@ -45,7 +46,8 @@
                 class="black-text"
                 @click.prevent="logout"
               >
-                <i class="material-icons">assignment_return</i>Выйти
+                <i class="material-icons">assignment_return</i>
+                {{ 'Exit' | localize }}
               </a>
             </li>
           </ul>

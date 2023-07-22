@@ -7,7 +7,10 @@
     >
       <Navbar @click="isOpen = !isOpen" />
 
-      <Sidebar v-model="isOpen" />
+      <Sidebar
+        v-model="isOpen"
+        :key="info.locale"
+      />
 
       <main
         class="app-content"
@@ -36,6 +39,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import localizeFilter from '@/filters/localize.filter'
 import messages from '@/utils/messages'
 import Navbar from '../components/app/Navbar'
 import Sidebar from '../components/app/Sidebar'
@@ -46,11 +50,11 @@ export default {
     loading: true
   }),
   computed: {
-    ...mapGetters(['error'])
+    ...mapGetters(['info', 'error'])
   },
   watch: {
     error({ code }) {
-      this.$error(messages[code] || 'Что-то пошло не так')
+      this.$error(localizeFilter(messages[code] ?? 'SomethingWentWrong'))
     }
   },
   async mounted() {

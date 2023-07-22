@@ -4,7 +4,7 @@
     @submit.prevent="submitHandler"
   >
     <div class="card-content">
-      <span class="card-title">Домашняя бухгалтерия</span>
+      <span class="card-title">{{ 'CRM_Title' | localize }}</span>
       <div class="input-field">
         <input
           id="email"
@@ -16,12 +16,12 @@
         <small
           class="helper-text invalid"
           v-if="$v.email.$dirty && !$v.email.required"
-          >Поле Email не должно быть пустым</small
+          >{{ 'Message_EmailRequired' | localize }}</small
         >
         <small
           class="helper-text invalid"
           v-else-if="$v.email.$dirty && !$v.email.email"
-          >Введите корректный Email</small
+          >{{ 'Message_EmailValid' | localize }}</small
         >
       </div>
       <div class="input-field">
@@ -31,17 +31,16 @@
           v-model.trim="$v.password.$model"
           :class="{ invalid: $v.password.$error }"
         />
-        <label for="password">Пароль</label>
+        <label for="password">{{ 'Password' | localize }}</label>
         <small
           class="helper-text invalid"
           v-if="$v.password.$dirty && !$v.password.required"
-          >Введите пароль</small
+          >{{ 'Message_EnterPassword' | localize }}</small
         >
         <small
           class="helper-text invalid"
           v-else-if="$v.password.$dirty && !$v.password.minLength"
-          >Пароль должен быть минимум {{ $v.password.$params.minLength.min }} символов. Сейчас он
-          {{ password.length }}</small
+          >{{ 'Message_MinLength' | localize }} {{ $v.password.$params.minLength.min }}</small
         >
       </div>
       <div class="input-field">
@@ -51,11 +50,11 @@
           v-model.trim="$v.name.$model"
           :class="{ invalid: $v.name.$error }"
         />
-        <label for="name">Имя</label>
+        <label for="name">{{ 'Name' | localize }}</label>
         <small
           class="helper-text invalid"
           v-if="$v.name.$dirty && !$v.name.required"
-          >Введите ваше имя</small
+          >{{ 'Message_EnterName' | localize }}</small
         >
       </div>
       <p>
@@ -64,7 +63,7 @@
             type="checkbox"
             v-model="$v.agree.$model"
           />
-          <span>С правилами согласен</span>
+          <span>{{ 'AcceptRules' | localize }}</span>
         </label>
       </p>
     </div>
@@ -74,14 +73,14 @@
           class="btn waves-effect waves-light auth-submit"
           type="submit"
         >
-          Зарегистрироваться
+          {{ 'Register' | localize }}
           <i class="material-icons right">send</i>
         </button>
       </div>
 
       <p class="center">
-        Уже есть аккаунт?
-        <RouterLink to="/login">Войти!</RouterLink>
+        {{ 'HasAccount' | localize }}
+        <RouterLink to="/login">{{ 'Login' | localize }}</RouterLink>
       </p>
     </div>
   </form>

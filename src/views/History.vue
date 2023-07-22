@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>История записей</h3>
+      <h3>{{ 'History_Title' | localize }}</h3>
     </div>
 
     <div class="history-chart">
@@ -17,7 +17,8 @@
       class="center"
       v-else-if="!records.length"
     >
-      Записей пока нет. <RouterLink to="/record">Добавите первую.</RouterLink>
+      {{ 'NoRecords' | localize }}.
+      <RouterLink to="/record">{{ 'AddFirst' | localize }}</RouterLink>
     </p>
 
     <section v-else>
@@ -27,8 +28,8 @@
         v-model="page"
         :page-count="pageCount"
         :click-handler="pageChangeHandler"
-        :prev-text="'Назад'"
-        :next-text="'Вперед'"
+        :prev-text="'Back' | localize"
+        :next-text="'Forward' | localize"
         :container-class="'pagination'"
         :page-class="'waves-effect'"
       />
@@ -40,8 +41,9 @@
 import { mapGetters } from 'vuex'
 import { Pie } from 'vue-chartjs/legacy'
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js'
-import isReady from '@/helpers/isReady'
 import paginationMixin from '@/mixins/pagination.mixin'
+import localizeFilter from '@/filters/localize.filter'
+import isReady from '@/helpers/isReady'
 import HistoryTable from '@/components/HistoryTable'
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
@@ -57,7 +59,7 @@ export default {
           ...r,
           categoryName: this.categories.find(c => c.id === r.categoryId).title,
           typeClass: r.type === 'income' ? 'green' : 'red',
-          typeText: r.type === 'income' ? 'Доход' : 'Расход'
+          typeText: r.type === 'income' ? localizeFilter('Income') : localizeFilter('Outcome')
         }
       })
     },

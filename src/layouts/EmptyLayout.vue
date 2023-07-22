@@ -6,6 +6,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import localizeFilter from '@/filters/localize.filter'
 import messages from '@/utils/messages'
 
 export default {
@@ -14,7 +15,7 @@ export default {
   },
   watch: {
     error({ code }) {
-      this.$error(messages[code] || 'Что-то пошло не так')
+      this.$error(localizeFilter(messages[code] ?? 'SomethingWentWrong'))
     }
   }
 }
