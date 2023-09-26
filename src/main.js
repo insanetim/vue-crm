@@ -16,7 +16,6 @@ import titlePlugin from './utils/title.plugin'
 import tooltipDirective from './directives/tooltip.directive'
 import Loader from './components/app/Loader'
 
-import './registerServiceWorker'
 import 'materialize-css/dist/js/materialize.min.js'
 
 Vue.config.productionTip = false
