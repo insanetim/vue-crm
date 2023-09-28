@@ -1,25 +1,25 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>{{ 'ProfileTitle' | localize }}</h3>
+      <h3>{{ localize('ProfileTitle') }}</h3>
     </div>
 
     <form
+      @submit="onSubmit"
       class="form"
-      @submit.prevent="submitHandler"
     >
       <div class="input-field">
         <input
+          :class="{ invalid: errors.name }"
           id="name"
           type="text"
-          v-model.trim="$v.name.$model"
-          :class="{ invalid: $v.name.$error }"
+          v-model.trim="name"
         />
-        <label for="name">{{ 'Name' | localize }}</label>
+        <label for="name">{{ localize('Name') }}</label>
         <small
           class="helper-text invalid"
-          v-if="$v.name.$dirty && !$v.name.required"
-          >{{ 'Message_EnterName' | localize }}</small
+          v-if="errors.name"
+          >{{ errors.name }}</small
         >
       </div>
 
@@ -39,59 +39,42 @@
         class="btn waves-effect waves-light"
         type="submit"
       >
-        {{ 'Update' | localize }}
+        {{ localize('Update') }}
         <i class="material-icons right">send</i>
       </button>
     </form>
   </div>
 </template>
 
-<script>
-import { mapGetters, mapActions } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
-import localizeFilter from '@/filters/localize.filter'
+<script setup>
+import { computed, onMounted } from 'vue'
+import { useMeta } from 'vue-meta'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'profile',
-  metaInfo() {
-    return {
-      title: this.$title('ProfileTitle')
-    }
-  },
-  data: () => ({
-    name: '',
-    isRuLocale: true
-  }),
-  validations: {
-    name: { required }
-  },
-  computed: {
-    ...mapGetters(['info'])
-  },
-  mounted() {
-    this.name = this.info.name
-    this.isRuLocale = this.info.locale === 'ru-RU'
-    setTimeout(() => {
-      M.updateTextFields()
-    }, 0)
-  },
-  methods: {
-    ...mapActions(['updateInfo']),
-    async submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
-        return
-      }
+import useProfileForm from '../hooks/profile-form'
+import localize from '../utils/localize'
 
-      try {
-        await this.updateInfo({
-          name: this.name,
-          locale: this.isRuLocale ? 'ru-RU' : 'en-US'
-        })
-      } catch (e) {}
-    }
-  }
+useMeta({ title: 'ProfileTitle' })
+
+const store = useStore()
+const info = computed(() => store.getters['info/info'])
+const { errors, isRuLocale, name, onSubmit } = useProfileForm(submitHandler, {
+  isRuLocale: info.value.locale === 'ru-RU',
+  name: info.value.name
+})
+
+async function submitHandler({ isRuLocale, name }) {
+  try {
+    await store.dispatch('info/updateInfo', {
+      locale: isRuLocale ? 'ru-RU' : 'en-US',
+      name
+    })
+  } catch (e) {}
 }
+
+onMounted(() => {
+  M.updateTextFields()
+})
 </script>
 
 <style scoped>

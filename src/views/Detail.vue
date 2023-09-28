@@ -1,36 +1,38 @@
 <template>
   <div>
-    <Loader v-if="loading" />
+    <app-loader v-if="loading"></app-loader>
 
     <div v-else-if="record">
       <div class="breadcrumb-wrap">
-        <RouterLink
+        <router-link
           class="breadcrumb"
           to="/history"
-          >{{ 'Menu_History' | localize }}</RouterLink
         >
+          {{ localize('Menu_History') }}
+        </router-link>
         <a
-          class="breadcrumb"
           @click.prevent
+          class="breadcrumb"
         >
-          {{ record.type === 'income' ? 'Income' : 'Outcome' | localize }}
+          {{ localize(record.type === 'income' ? 'Income' : 'Outcome') }}
         </a>
       </div>
       <div class="row">
         <div class="col s12 m6">
           <div
-            class="card"
-            :class="{
-              red: record.type === 'outcome',
-              green: record.type === 'income'
-            }"
+            :class="[
+              'card',
+              {
+                red: record.type === 'outcome',
+                green: record.type === 'income'
+              }
+            ]"
           >
             <div class="card-content white-text">
-              <p>{{ 'Description' | localize }}: {{ record.description }}</p>
-              <p>{{ 'Amount' | localize }}: {{ record.amount | currency }}</p>
-              <p>{{ 'Category' | localize }}: {{ record.categoryName }}</p>
-
-              <small>{{ record.date | date('datetime') }}</small>
+              <p>{{ localize('Description') }}: {{ record.description }}</p>
+              <p>{{ localize('Amount') }}: {{ currencyFormat(record.amount) }}</p>
+              <p>{{ localize('Category') }}: {{ record.categoryName }}</p>
+              <small>{{ dateFormat(record.date, 'datetime') }}</small>
             </div>
           </div>
         </div>
@@ -41,34 +43,43 @@
       class="center"
       v-else
     >
-      Запись с id={{ $route.params.id }} не найдена
+      Запись с id={{ id }} не найдена
     </p>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'detail',
-  metaInfo() {
-    return {
-      title: this.$title('Detail_Title')
-    }
-  },
-  data: () => ({
-    record: null,
-    loading: true
-  }),
-  async mounted() {
-    const id = this.$route.params.id
-    const record = await this.$store.dispatch('fetchRecordById', id)
-    const category = await this.$store.dispatch('fetchCategoryById', record.categoryId)
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+import { useStore } from 'vuex'
 
-    this.record = {
-      ...record,
+import currencyFormat from '../utils/currencyFormat'
+import dateFormat from '../utils/dateFormat'
+import localize from '../utils/localize'
+
+useMeta({ title: 'Detail_Title' })
+
+const { id } = defineProps({
+  id: {
+    required: true,
+    type: String
+  }
+})
+const store = useStore()
+const record = ref(null)
+const loading = ref(true)
+
+onMounted(async () => {
+  const currentRecord = await store.dispatch('record/fetchRecordById', id)
+
+  if ('categoryId' in currentRecord) {
+    const category = await store.dispatch('category/fetchCategoryById', currentRecord.categoryId)
+    record.value = {
+      ...currentRecord,
       categoryName: category.title
     }
-
-    this.loading = false
   }
-}
+
+  loading.value = false
+})
 </script>

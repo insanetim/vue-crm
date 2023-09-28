@@ -1,108 +1,89 @@
 <template>
   <form
+    @submit="onSubmit"
     class="card auth-card"
-    @submit.prevent="submitHandler"
   >
     <div class="card-content">
-      <span class="card-title">{{ 'CRM_Title' | localize }}</span>
+      <span class="card-title">{{ localize('CRM_Title') }}</span>
       <div class="input-field">
         <input
+          :class="{ invalid: errors.email }"
           id="email"
           type="text"
-          v-model.trim="$v.email.$model"
-          :class="{ invalid: $v.email.$error }"
+          v-model.trim="email"
         />
         <label for="email">Email</label>
         <small
           class="helper-text invalid"
-          v-if="$v.email.$dirty && !$v.email.required"
-          >{{ 'Message_EmailRequired' | localize }}</small
-        >
-        <small
-          class="helper-text invalid"
-          v-else-if="$v.email.$dirty && !$v.email.email"
-          >{{ 'Message_EmailValid' | localize }}</small
+          v-if="errors.email"
+          >{{ errors.email }}</small
         >
       </div>
+
       <div class="input-field">
         <input
+          :class="{ invalid: errors.password }"
           id="password"
           type="password"
-          v-model.trim="$v.password.$model"
-          :class="{ invalid: $v.password.$error }"
+          v-model.trim="password"
         />
-        <label for="password">{{ 'Password' | localize }}</label>
+        <label for="password">{{ localize('Password') }}</label>
         <small
           class="helper-text invalid"
-          v-if="$v.password.$dirty && !$v.password.required"
-          >{{ 'Message_EnterPassword' | localize }}</small
-        >
-        <small
-          class="helper-text invalid"
-          v-else-if="$v.password.$dirty && !$v.password.minLength"
-          >{{ 'Message_MinLength' | localize }} {{ $v.password.$params.minLength.min }}</small
+          v-if="errors.password"
+          >{{ errors.password }}</small
         >
       </div>
     </div>
+
     <div class="card-action">
       <div>
         <button
           class="btn waves-effect waves-light auth-submit"
           type="submit"
         >
-          {{ 'Login' | localize }}
+          {{ localize('Login') }}
           <i class="material-icons right">send</i>
         </button>
       </div>
 
       <p class="center">
-        {{ 'NoAccount' | localize }}
-        <RouterLink to="/register">{{ 'Register' | localize }}</RouterLink>
+        {{ localize('NoAccount') }}
+        <router-link to="/register">{{ localize('Register') }}</router-link>
       </p>
     </div>
   </form>
 </template>
 
-<script>
-import { email, required, minLength } from 'vuelidate/lib/validators'
-import messages from '@/utils/messages'
-import localizeFilter from '@/filters/localize.filter'
+<script setup>
+import { inject, onMounted } from 'vue'
+import { useMeta } from 'vue-meta'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'login',
-  metaInfo() {
-    return {
-      title: this.$title('Login')
-    }
-  },
-  data: () => ({
-    email: '',
-    password: ''
-  }),
-  validations: {
-    email: { email, required },
-    password: { required, minLength: minLength(6) }
-  },
-  mounted() {
-    if (messages[this.$route.query.message]) {
-      this.$message(localizeFilter(messages[this.$route.query.message]))
-    }
-  },
-  methods: {
-    async submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
-        return
-      }
+import useLoginForm from '../hooks/login-form'
+import localize from '../utils/localize'
+import messages from '../utils/messages'
 
-      try {
-        await this.$store.dispatch('login', {
-          email: this.email,
-          password: this.password
-        })
-        this.$router.push('/')
-      } catch (e) {}
-    }
-  }
+useMeta({ title: 'Login' })
+
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
+const $message = inject('$message')
+
+const login = async values => {
+  try {
+    await store.dispatch('auth/login', values)
+    router.push('/')
+  } catch (e) {}
 }
+
+const { email, errors, onSubmit, password } = useLoginForm(login)
+
+onMounted(() => {
+  if (messages[route.query.message]) {
+    $message(localize(messages[route.query.message]))
+  }
+})
 </script>

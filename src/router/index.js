@@ -1,72 +1,70 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import { getAuth } from 'firebase/auth'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/login',
+    component: () => import('@/views/Login'),
+    meta: { layout: 'empty' },
     name: 'login',
-    meta: { layout: 'empty' },
-    component: () => import('@/views/Login')
+    path: '/login'
   },
   {
-    path: '/register',
+    component: () => import('@/views/Register'),
+    meta: { layout: 'empty' },
     name: 'register',
-    meta: { layout: 'empty' },
-    component: () => import('@/views/Register')
+    path: '/register'
   },
   {
-    path: '/',
+    component: () => import('@/views/Home'),
+    meta: { auth: true, layout: 'main' },
     name: 'home',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/Home')
+    path: '/'
   },
   {
-    path: '/categories',
+    component: () => import('@/views/Categories'),
+    meta: { auth: true, layout: 'main' },
     name: 'categories',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/Categories')
+    path: '/categories'
   },
   {
-    path: '/detail/:id',
+    component: () => import('@/views/Detail'),
+    meta: { auth: true, layout: 'main' },
     name: 'detail',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/Detail')
+    path: '/detail/:id',
+    props: true
   },
   {
-    path: '/history',
+    component: () => import('@/views/History'),
+    meta: { auth: true, layout: 'main' },
     name: 'history',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/History')
+    path: '/history'
   },
   {
-    path: '/planning',
+    component: () => import('@/views/Planning'),
+    meta: { auth: true, layout: 'main' },
     name: 'planning',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/Planning')
+    path: '/planning'
   },
   {
-    path: '/profile',
+    component: () => import('@/views/Profile'),
+    meta: { auth: true, layout: 'main' },
     name: 'profile',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/Profile')
+    path: '/profile'
   },
   {
-    path: '/record',
+    component: () => import('@/views/Record'),
+    meta: { auth: true, layout: 'main' },
     name: 'record',
-    meta: { layout: 'main', auth: true },
-    component: () => import('@/views/Record')
+    path: '/record'
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const auth = getAuth()
   const user = auth.currentUser
   const requireAuth = to.matched.some(record => record.meta.auth)

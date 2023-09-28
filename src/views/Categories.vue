@@ -1,54 +1,47 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>{{ 'Categories' | localize }}</h3>
+      <h3>{{ localize('Categories') }}</h3>
     </div>
     <section>
-      <Loader v-if="!ready" />
+      <app-loader v-if="!ready"></app-loader>
 
       <div
         class="row"
         v-else
       >
-        <CategoryCreate />
+        <category-create></category-create>
 
-        <CategoryEdit
-          v-if="categories.length"
-          :categories="categories"
-        />
+        <category-edit v-if="categories.length"></category-edit>
+
         <p
-          v-else
           class="center"
+          v-else
         >
-          {{ 'NoCategories' | localize }}
+          {{ localize('NoCategories') }}
         </p>
       </div>
     </section>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import CategoryCreate from '@/components/CategoryCreate'
-import CategoryEdit from '@/components/CategoryEdit'
-import isReady from '@/helpers/isReady'
+<script setup>
+import { computed, onMounted } from 'vue'
+import { useMeta } from 'vue-meta'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'categories',
-  metaInfo() {
-    return {
-      title: this.$title('Menu_Categories')
-    }
-  },
-  computed: {
-    ...mapGetters(['categories']),
-    ready() {
-      return isReady(this.$store.getters.categoriesReady)
-    }
-  },
-  async mounted() {
-    await this.$store.dispatch('fetchCategories')
-  },
-  components: { CategoryCreate, CategoryEdit }
-}
+import CategoryCreate from '../components/category/CategoryCreate.vue'
+import CategoryEdit from '../components/category/CategoryEdit.vue'
+import isReady from '../helpers/isReady'
+import localize from '../utils/localize'
+
+useMeta({ title: 'Menu_Categories' })
+
+const store = useStore()
+const categories = computed(() => store.getters['category/categories'])
+const ready = computed(() => isReady(store.getters['category/categoriesReady']))
+
+onMounted(async () => {
+  await store.dispatch('category/fetchCategories')
+})
 </script>

@@ -1,7 +1,7 @@
-import store from '@/store'
+import store from '../store'
 
-export default function dateFilter(value, format = 'date') {
-  const locale = store.getters.info.locale ?? 'ru-RU'
+export default function dateFormat(value, format = 'date') {
+  const locale = store.getters['info/info'].locale ?? 'ru-RU'
   const options = {}
 
   if (format.includes('date')) {

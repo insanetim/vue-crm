@@ -1,29 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createLogger, createStore } from 'vuex'
 
-import { currencies } from '@/constants'
-import auth from './auth'
-import category from './category'
-import info from './info'
-import record from './record'
+import { currencies } from '../constants'
+import auth from './modules/auth'
+import category from './modules/category'
+import info from './modules/info'
+import record from './modules/record'
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
-  state: {
-    error: null
-  },
-  getters: {
-    error: s => s.error
-  },
-  mutations: {
-    setError(state, error) {
-      state.error = error
-    },
-    clearError(state) {
-      state.error = null
-    }
-  },
+const store = createStore({
   actions: {
     async fetchCurrency() {
       const apiKey = process.env.VUE_APP_API_KEY
@@ -40,5 +23,22 @@ export default new Vuex.Store({
       return await res.json()
     }
   },
-  modules: { auth, category, info, record }
+  getters: {
+    error: s => s.error
+  },
+  modules: { auth, category, info, record },
+  mutations: {
+    clearError(state) {
+      state.error = null
+    },
+    setError(state, error) {
+      state.error = error
+    }
+  },
+  plugins: [createLogger()],
+  state: {
+    error: null
+  }
 })
+
+export default store

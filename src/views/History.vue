@@ -1,131 +1,119 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>{{ 'History_Title' | localize }}</h3>
+      <h3>{{ localize('History_Title') }}</h3>
     </div>
 
     <div class="history-chart">
-      <Pie
-        :chart-data="chartData"
-        :chart-options="chartOptions"
-      />
+      <pie
+        :data="chartData"
+        :options="chartOptions"
+      ></pie>
     </div>
 
-    <Loader v-if="!ready" />
+    <app-loader v-if="!ready"></app-loader>
+
+    <section v-else-if="records.length">
+      <history-table :records="items"></history-table>
+
+      <app-pagination
+        :click-handler="pageChangeHandler"
+        :container-class="'pagination'"
+        :next-link-class="'waves-effect'"
+        :next-text="localize('Forward')"
+        :page-count="pageCount"
+        :page-link-class="'waves-effect'"
+        :prev-link-class="'waves-effect'"
+        :prev-text="localize('Back')"
+        v-if="records.length > items.length"
+        v-model="page"
+      ></app-pagination>
+    </section>
 
     <p
       class="center"
-      v-else-if="!records.length"
+      v-else
     >
-      {{ 'NoRecords' | localize }}.
-      <RouterLink to="/record">{{ 'AddFirst' | localize }}</RouterLink>
+      {{ localize('NoRecords') }}.
+      <router-link to="/record">{{ localize('AddFirst') }}</router-link>
     </p>
-
-    <section v-else>
-      <HistoryTable :records="items" />
-
-      <Paginate
-        v-model="page"
-        :page-count="pageCount"
-        :click-handler="pageChangeHandler"
-        :prev-text="'Back' | localize"
-        :next-text="'Forward' | localize"
-        :container-class="'pagination'"
-        :page-class="'waves-effect'"
-      />
-    </section>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import { Pie } from 'vue-chartjs/legacy'
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js'
-import paginationMixin from '@/mixins/pagination.mixin'
-import localizeFilter from '@/filters/localize.filter'
-import isReady from '@/helpers/isReady'
-import HistoryTable from '@/components/HistoryTable'
+<script setup>
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
+import { computed, onMounted, watch } from 'vue'
+import { Pie } from 'vue-chartjs'
+import { useMeta } from 'vue-meta'
+import { useStore } from 'vuex'
 
-ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
+import HistoryTable from '../components/history/HistoryTable.vue'
+import isReady from '../helpers/isReady'
+import usePagination from '../hooks/pagination'
+import localize from '../utils/localize'
 
-export default {
-  name: 'history',
-  metaInfo() {
-    return {
-      title: this.$title('Menu_History')
-    }
-  },
-  mixins: [paginationMixin],
-  computed: {
-    ...mapGetters(['categories']),
-    records() {
-      return this.$store.getters.records.map(r => {
-        return {
-          ...r,
-          categoryName: this.categories.find(c => c.id === r.categoryId).title,
-          typeClass: r.type === 'income' ? 'green' : 'red',
-          typeText: r.type === 'income' ? localizeFilter('Income') : localizeFilter('Outcome')
-        }
+ChartJS.register(Tooltip, Legend, ArcElement)
+
+useMeta({ title: 'Menu_History' })
+
+const store = useStore()
+const categories = computed(() => store.getters['category/categories'])
+const records = computed(() =>
+  store.getters['record/records'].map(r => ({
+    ...r,
+    categoryName: categories.value.find(c => c.id === r.categoryId).title,
+    typeClass: r.type === 'income' ? 'green' : 'red',
+    typeText: r.type === 'income' ? localize('Income') : localize('Outcome')
+  }))
+)
+const ready = computed(() => isReady(store.getters['category/categoriesReady'], store.getters['record/recordsReady']))
+const chartData = computed(() => ({
+  datasets: [
+    {
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1,
+      data: categories.value.map(c => {
+        return records.value
+          .filter(r => r.categoryId === c.id)
+          .reduce((total, r) => {
+            return r.type === 'outcome' ? total + r.amount : total - r.amount
+          }, 0)
       })
-    },
-    chartData() {
-      return {
-        labels: this.categories.map(c => c.title),
-        datasets: [
-          {
-            data: this.categories.map(c => {
-              return this.records
-                .filter(r => r.categoryId === c.id)
-                .reduce((total, r) => {
-                  return r.type === 'outcome' ? total + r.amount : total - r.amount
-                }, 0)
-            }),
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }
-        ]
-      }
-    },
-    chartOptions() {
-      return {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    },
-    ready() {
-      return isReady(this.$store.getters.categoriesReady, this.$store.getters.recordsReady)
     }
-  },
-  created() {
-    this.$watch(
-      () => this.ready,
-      ready => {
-        if (ready) {
-          this.setupPagination(this.records)
-        }
-      },
-      { immediate: true }
-    )
-  },
-  async mounted() {
-    await this.$store.dispatch('fetchCategories')
-    await this.$store.dispatch('fetchRecords')
-  },
-  components: { HistoryTable, Pie }
+  ],
+  labels: categories.value.map(c => c.title)
+}))
+const chartOptions = {
+  maintainAspectRatio: false,
+  responsive: true
 }
+const { items, page, pageChangeHandler, pageCount, setupPagination } = usePagination()
+
+watch(
+  ready,
+  () => {
+    setupPagination(records.value)
+  },
+  { immediate: true }
+)
+
+onMounted(async () => {
+  await store.dispatch('category/fetchCategories')
+  await store.dispatch('record/fetchRecords')
+})
 </script>

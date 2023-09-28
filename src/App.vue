@@ -1,26 +1,28 @@
 <template>
-  <div id="app">
-    <component :is="layout">
-      <RouterView />
-    </component>
-  </div>
+  <metainfo>
+    <template v-slot:title="{ content }">{{ appTitle(content) }}</template>
+  </metainfo>
+  <component :is="layout">
+    <router-view></router-view>
+  </component>
 </template>
 
 <script>
-import EmptyLayout from '@/layouts/EmptyLayout'
-import MainLayout from '@/layouts/MainLayout'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+import EmptyLayout from './layouts/EmptyLayout'
+import MainLayout from './layouts/MainLayout'
+import appTitle from './utils/appTitle'
 
 export default {
-  computed: {
-    layout() {
-      return `${this.$route.meta.layout || 'empty'}-layout`
-    }
-  },
-  components: { EmptyLayout, MainLayout }
+  components: { EmptyLayout, MainLayout },
+  setup() {
+    const route = useRoute()
+
+    const layout = computed(() => `${route.meta.layout || 'empty'}-layout`)
+
+    return { appTitle, layout }
+  }
 }
 </script>
-
-<style>
-@import '~materialize-css/dist/css/materialize.min.css';
-@import 'assets/index.css';
-</style>

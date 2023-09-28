@@ -1,129 +1,104 @@
 <template>
   <form
+    @submit="onSubmit"
     class="card auth-card"
-    @submit.prevent="submitHandler"
   >
     <div class="card-content">
-      <span class="card-title">{{ 'CRM_Title' | localize }}</span>
+      <span class="card-title">{{ localize('CRM_Title') }}</span>
       <div class="input-field">
         <input
+          :class="{ invalid: errors.email }"
           id="email"
           type="text"
-          v-model.trim="$v.email.$model"
-          :class="{ invalid: $v.email.$error }"
+          v-model.trim="email"
         />
         <label for="email">Email</label>
         <small
           class="helper-text invalid"
-          v-if="$v.email.$dirty && !$v.email.required"
-          >{{ 'Message_EmailRequired' | localize }}</small
-        >
-        <small
-          class="helper-text invalid"
-          v-else-if="$v.email.$dirty && !$v.email.email"
-          >{{ 'Message_EmailValid' | localize }}</small
+          v-if="errors.email"
+          >{{ errors.email }}</small
         >
       </div>
+
       <div class="input-field">
         <input
+          :class="{ invalid: errors.password }"
           id="password"
           type="password"
-          v-model.trim="$v.password.$model"
-          :class="{ invalid: $v.password.$error }"
+          v-model.trim="password"
         />
-        <label for="password">{{ 'Password' | localize }}</label>
+        <label for="password">{{ localize('Password') }}</label>
         <small
           class="helper-text invalid"
-          v-if="$v.password.$dirty && !$v.password.required"
-          >{{ 'Message_EnterPassword' | localize }}</small
-        >
-        <small
-          class="helper-text invalid"
-          v-else-if="$v.password.$dirty && !$v.password.minLength"
-          >{{ 'Message_MinLength' | localize }} {{ $v.password.$params.minLength.min }}</small
+          v-if="errors.password"
+          >{{ errors.password }}</small
         >
       </div>
+
       <div class="input-field">
         <input
+          :class="{ invalid: errors.name }"
           id="name"
           type="text"
-          v-model.trim="$v.name.$model"
-          :class="{ invalid: $v.name.$error }"
+          v-model.trim="name"
         />
-        <label for="name">{{ 'Name' | localize }}</label>
+        <label for="name">{{ localize('Name') }}</label>
         <small
           class="helper-text invalid"
-          v-if="$v.name.$dirty && !$v.name.required"
-          >{{ 'Message_EnterName' | localize }}</small
+          v-if="errors.name"
+          >{{ errors.name }}</small
         >
       </div>
+
       <p>
         <label>
           <input
             type="checkbox"
-            v-model="$v.agree.$model"
+            v-model="agree"
           />
-          <span>{{ 'AcceptRules' | localize }}</span>
+          <span>{{ localize('AcceptRules') }}</span>
         </label>
       </p>
     </div>
+
     <div class="card-action">
       <div>
         <button
           class="btn waves-effect waves-light auth-submit"
           type="submit"
         >
-          {{ 'Register' | localize }}
+          {{ localize('Register') }}
           <i class="material-icons right">send</i>
         </button>
       </div>
 
       <p class="center">
-        {{ 'HasAccount' | localize }}
-        <RouterLink to="/login">{{ 'Login' | localize }}</RouterLink>
+        {{ localize('HasAccount') }}
+        <router-link to="/login">{{ localize('Login') }}</router-link>
       </p>
     </div>
   </form>
 </template>
 
-<script>
-import { email, required, minLength } from 'vuelidate/lib/validators'
+<script setup>
+import { useMeta } from 'vue-meta'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'register',
-  metaInfo() {
-    return {
-      title: this.$title('Register')
-    }
-  },
-  data: () => ({
-    email: '',
-    password: '',
-    name: '',
-    agree: false
-  }),
-  validations: {
-    email: { email, required },
-    password: { required, minLength: minLength(6) },
-    name: { required },
-    agree: { checked: v => v }
-  },
-  methods: {
-    async submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
-        return
-      }
+import useRegisterForm from '../hooks/register-form'
+import localize from '../utils/localize'
 
-      try {
-        await this.$store.dispatch('register', {
-          email: this.email,
-          password: this.password,
-          name: this.name
-        })
-        this.$router.push('/')
-      } catch (e) {}
-    }
-  }
+useMeta({ title: 'Register' })
+
+const store = useStore()
+const router = useRouter()
+
+const register = async values => {
+  try {
+    await store.dispatch('auth/register', values)
+    router.push('/')
+  } catch (e) {}
 }
+
+const { agree, email, errors, name, onSubmit, password } = useRegisterForm(register)
 </script>

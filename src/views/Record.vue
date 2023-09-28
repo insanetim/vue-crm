@@ -1,38 +1,30 @@
 <template>
   <div>
     <div class="page-title">
-      <h3>{{ 'Menu_NewRecord' | localize }}</h3>
+      <h3>{{ localize('Menu_NewRecord') }}</h3>
     </div>
 
-    <Loader v-if="!ready" />
-
-    <p
-      class="center"
-      v-else-if="!categories.length"
-    >
-      {{ 'NoCategories' | localize }}.
-      <RouterLink to="/categories">{{ 'AddFirst' | localize }}</RouterLink>
-    </p>
+    <app-loader v-if="!ready"></app-loader>
 
     <form
+      @submit="onSubmit"
       class="form"
-      v-else
-      @submit.prevent="submitHandler"
+      v-else-if="categories.length"
     >
       <div class="input-field">
         <select
-          ref="select"
+          ref="selectRef"
           v-model="category"
         >
           <option
-            v-for="category in categories"
             :key="category.id"
             :value="category.id"
+            v-for="category in categories"
           >
             {{ category.title }}
           </option>
         </select>
-        <label>{{ 'SelectCategory' | localize }}</label>
+        <label>{{ localize('SelectCategory') }}</label>
       </div>
 
       <p>
@@ -41,10 +33,10 @@
             class="with-gap"
             name="type"
             type="radio"
-            value="income"
             v-model="type"
+            value="income"
           />
-          <span>{{ 'Income' | localize }}</span>
+          <span>{{ localize('Income') }}</span>
         </label>
       </p>
 
@@ -54,40 +46,40 @@
             class="with-gap"
             name="type"
             type="radio"
-            value="outcome"
             v-model="type"
+            value="outcome"
           />
-          <span>{{ 'Outcome' | localize }}</span>
+          <span>{{ localize('Outcome') }}</span>
         </label>
       </p>
 
       <div class="input-field">
         <input
+          :class="{ invalid: errors.amount }"
           id="amount"
           type="number"
-          v-model.number="$v.amount.$model"
-          :class="{ invalid: $v.amount.$error }"
+          v-model.number="amount"
         />
-        <label for="amount">{{ 'Amount' | localize }}</label>
+        <label for="amount">{{ localize('Amount') }}</label>
         <small
           class="helper-text invalid"
-          v-if="$v.amount.$dirty && !$v.amount.minValue"
-          >{{ 'Message_MinLength' | localize }} {{ $v.amount.$params.minValue.min }}</small
+          v-if="errors.amount"
+          >{{ errors.amount }}</small
         >
       </div>
 
       <div class="input-field">
         <input
+          :class="{ invalid: errors.description }"
           id="description"
           type="text"
-          v-model="$v.description.$model"
-          :class="{ invalid: $v.description.$error }"
+          v-model="description"
         />
-        <label for="description">{{ 'Description' | localize }}</label>
+        <label for="description">{{ localize('Description') }}</label>
         <small
           class="helper-text invalid"
-          v-if="$v.description.$dirty && !$v.description.required"
-          >{{ 'Message_EnterDescription' | localize }}</small
+          v-if="errors.description"
+          >{{ errors.description }}</small
         >
       </div>
 
@@ -95,94 +87,82 @@
         class="btn waves-effect waves-light"
         type="submit"
       >
-        {{ 'Create' | localize }}
+        {{ localize('Create') }}
         <i class="material-icons right">send</i>
       </button>
     </form>
+
+    <p
+      class="center"
+      v-else
+    >
+      {{ localize('NoCategories') }}.
+      <router-link to="/categories">{{ localize('AddFirst') }}</router-link>
+    </p>
   </div>
 </template>
 
-<script>
-import { required, minValue } from 'vuelidate/lib/validators'
-import { mapGetters } from 'vuex'
-import localizeFilter from '@/filters/localize.filter'
-import isReady from '@/helpers/isReady'
+<script setup>
+import { computed, inject, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'record',
-  metaInfo() {
-    return {
-      title: this.$title('Menu_NewRecord')
-    }
-  },
-  data: () => ({
-    select: null,
-    category: null,
-    type: 'outcome',
-    amount: 1,
-    description: ''
-  }),
-  validations: {
-    amount: { minValue: minValue(1) },
-    description: { required }
-  },
-  computed: {
-    ...mapGetters(['info', 'categories']),
-    ready() {
-      return isReady(this.$store.getters.categoriesReady)
-    },
-    canCreateRecord() {
-      if (this.type === 'income') {
-        return true
-      }
+import isReady from '../helpers/isReady'
+import useRecordForm from '../hooks/record-form'
+import localize from '../utils/localize'
 
-      return this.info.bill >= this.amount
-    }
-  },
-  methods: {
-    async submitHandler() {
-      if (this.$v.$invalid) {
-        this.$v.$touch()
-        return
-      }
+useMeta({ title: 'Menu_NewRecord' })
 
-      if (this.canCreateRecord) {
-        try {
-          await this.$store.dispatch('createRecord', {
-            categoryId: this.category,
-            amount: this.amount,
-            description: this.description,
-            type: this.type,
-            date: new Date().toJSON()
-          })
+const store = useStore()
+const $message = inject('$message')
+const select = ref(null)
+const selectRef = ref(null)
+const category = ref(null)
+const info = computed(() => store.getters['info/info'])
+const categories = computed(() => store.getters['category/categories'])
+const ready = computed(() => isReady(store.getters['category/categoriesReady']))
+const { amount, description, errors, onSubmit, resetForm, type } = useRecordForm(submitHandler)
+const canCreateRecord = computed(() => {
+  if (type.value === 'income') {
+    return true
+  }
 
-          const bill = this.type === 'income' ? this.info.bill + this.amount : this.info.bill - this.amount
-          await this.$store.dispatch('updateInfo', { bill })
+  return info.value.bill >= amount.value
+})
 
-          this.$message(localizeFilter('RecordHasBeenCreated'))
-          this.$v.$reset()
-          this.amount = 1
-          this.description = ''
-        } catch (e) {}
-      } else {
-        this.$message(`${localizeFilter('NotEnoughMoney')} (${this.amount - this.info.bill})`)
-      }
-    }
-  },
-  async mounted() {
-    await this.$store.dispatch('fetchCategories')
-  },
-  updated() {
-    if (this.categories.length && !this.category) {
-      this.category = this.categories[0].id
-    }
-    this.select = M.FormSelect.init(this.$refs.select, {})
-    M.updateTextFields()
-  },
-  beforeDestroy() {
-    if (this.select && this.select.destroy) {
-      this.select.destroy()
-    }
+async function submitHandler(values) {
+  if (canCreateRecord.value) {
+    try {
+      await store.dispatch('record/createRecord', {
+        categoryId: category.value,
+        date: new Date().toJSON(),
+        ...values
+      })
+      const bill = values.type === 'income' ? info.value.bill + values.amount : info.value.bill - values.amount
+      await store.dispatch('info/updateInfo', { bill })
+      $message(localize('RecordHasBeenCreated'))
+      resetForm()
+    } catch (e) {}
+  } else {
+    $message(`${localize('NotEnoughMoney')} (${values.amount - info.value.bill})`)
   }
 }
+
+onMounted(async () => {
+  await store.dispatch('category/fetchCategories')
+})
+
+onUpdated(() => {
+  if (categories.value.length && !category.value) {
+    category.value = categories.value[0].id
+  }
+  select.value = M.FormSelect.init(selectRef.value, {})
+  M.updateTextFields()
+})
+
+onBeforeUnmount(() => {
+  if (select.value && select.value.destroy) {
+    select.value.destroy()
+  }
+})
 </script>

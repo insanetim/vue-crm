@@ -1,22 +1,21 @@
 <template>
   <div class="grey darken-1 empty-layout">
-    <RouterView />
+    <router-view></router-view>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import localizeFilter from '@/filters/localize.filter'
-import messages from '@/utils/messages'
+<script setup>
+import { computed, inject, watch } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  computed: {
-    ...mapGetters(['error'])
-  },
-  watch: {
-    error({ code }) {
-      this.$error(localizeFilter(messages[code] ?? 'SomethingWentWrong'))
-    }
-  }
-}
+import localize from '../utils/localize'
+import messages from '../utils/messages'
+
+const store = useStore()
+const $error = inject('$error')
+const error = computed(() => store.getters.error)
+
+watch(error, ({ code }) => {
+  $error(localize(messages[code] ?? 'SomethingWentWrong'))
+})
 </script>

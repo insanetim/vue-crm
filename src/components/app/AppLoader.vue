@@ -2,8 +2,8 @@
   <div class="app-loader">
     <div class="preloader-wrapper active">
       <div
-        class="spinner-layer"
         :class="color"
+        class="spinner-layer"
       >
         <div class="circle-clipper left">
           <div class="circle"></div>
@@ -19,14 +19,9 @@
   </div>
 </template>
 
-<script>
-export default {
-  computed: {
-    color() {
-      const colors = ['spinner-red-only', 'spinner-blue-only', 'spinner-green-only']
+<script setup>
+import { computed } from 'vue'
 
-      return colors[Math.floor(Math.random() * colors.length)]
-    }
-  }
-}
+const colors = ['spinner-red-only', 'spinner-blue-only', 'spinner-green-only']
+const color = computed(() => colors[Math.floor(Math.random() * colors.length)])
 </script>

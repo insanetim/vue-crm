@@ -1,68 +1,64 @@
 <template>
   <div>
-    <Loader v-if="loading" />
+    <app-loader v-if="loading"></app-loader>
+
     <div
       class="app-main-layout"
       v-else
     >
-      <Navbar @click="isOpen = !isOpen" />
+      <app-navbar @toggle="isOpen = !isOpen"></app-navbar>
 
-      <Sidebar
-        v-model="isOpen"
+      <app-sidebar
+        :isOpen="isOpen"
         :key="info.locale"
-      />
+      ></app-sidebar>
 
-      <main
-        class="app-content"
-        :class="{ full: !isOpen }"
-      >
+      <main :class="['app-content', { full: !isOpen }]">
         <div class="app-page">
-          <RouterView />
+          <router-view></router-view>
         </div>
       </main>
 
       <div class="fixed-action-btn">
-        <RouterLink
+        <router-link
           class="btn-floating btn-large blue"
           to="/record"
           v-tooltip="{
-            html: 'Создать новую запись',
+            html: 'CreateNewRecord',
             position: 'left'
           }"
         >
           <i class="large material-icons">add</i>
-        </RouterLink>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
-import localizeFilter from '@/filters/localize.filter'
-import messages from '@/utils/messages'
-import Navbar from '../components/app/Navbar'
-import Sidebar from '../components/app/Sidebar'
+<script setup>
+import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  data: () => ({
-    isOpen: true,
-    loading: true
-  }),
-  computed: {
-    ...mapGetters(['info', 'error'])
-  },
-  watch: {
-    error({ code }) {
-      this.$error(localizeFilter(messages[code] ?? 'SomethingWentWrong'))
-    }
-  },
-  async mounted() {
-    if (!Object.keys(this.$store.getters.info).length) {
-      await this.$store.dispatch('fetchInfo')
-    }
-    this.loading = false
-  },
-  components: { Navbar, Sidebar }
-}
+import AppNavbar from '../components/app/AppNavbar.vue'
+import AppSidebar from '../components/app/AppSidebar.vue'
+import localize from '../utils/localize'
+import messages from '../utils/messages'
+
+const store = useStore()
+const isOpen = ref(true)
+const loading = ref(true)
+const $error = inject('$error')
+const info = computed(() => store.getters['info/info'])
+const error = computed(() => store.getters.error)
+
+watch(error, ({ code }) => {
+  $error(localize(messages[code] ?? 'SomethingWentWrong'))
+})
+
+onMounted(async () => {
+  if (!Object.keys(info.value).length) {
+    await store.dispatch('info/fetchInfo')
+  }
+  loading.value = false
+})
 </script>
