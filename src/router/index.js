@@ -3,56 +3,56 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    component: () => import('@/views/Login'),
+    component: () => import('@/views/LoginView'),
     meta: { layout: 'empty' },
     name: 'login',
     path: '/login'
   },
   {
-    component: () => import('@/views/Register'),
+    component: () => import('@/views/RegisterView'),
     meta: { layout: 'empty' },
     name: 'register',
     path: '/register'
   },
   {
-    component: () => import('@/views/Home'),
+    component: () => import('@/views/HomeView'),
     meta: { auth: true, layout: 'main' },
     name: 'home',
     path: '/'
   },
   {
-    component: () => import('@/views/Categories'),
+    component: () => import('@/views/CategoriesView'),
     meta: { auth: true, layout: 'main' },
     name: 'categories',
     path: '/categories'
   },
   {
-    component: () => import('@/views/Detail'),
+    component: () => import('@/views/DetailView'),
     meta: { auth: true, layout: 'main' },
     name: 'detail',
     path: '/detail/:id',
     props: true
   },
   {
-    component: () => import('@/views/History'),
+    component: () => import('@/views/HistoryView'),
     meta: { auth: true, layout: 'main' },
     name: 'history',
     path: '/history'
   },
   {
-    component: () => import('@/views/Planning'),
+    component: () => import('@/views/PlanningView'),
     meta: { auth: true, layout: 'main' },
     name: 'planning',
     path: '/planning'
   },
   {
-    component: () => import('@/views/Profile'),
+    component: () => import('@/views/ProfileView'),
     meta: { auth: true, layout: 'main' },
     name: 'profile',
     path: '/profile'
   },
   {
-    component: () => import('@/views/Record'),
+    component: () => import('@/views/RecordView'),
     meta: { auth: true, layout: 'main' },
     name: 'record',
     path: '/record'
