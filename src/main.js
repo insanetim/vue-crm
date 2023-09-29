@@ -18,7 +18,8 @@ initializeApp({
   apiKey: 'AIzaSyC2DiliMxVbxN5OsYUwc5d9Pos7A2yH9mw',
   appId: '1:207435020724:web:96e6c441679d83cc6adae1',
   authDomain: 'vue-crm-93feb.firebaseapp.com',
-  databaseURL: 'https://vue-crm-93feb-default-rtdb.europe-west1.firebasedatabase.app/',
+  databaseURL:
+    'https://vue-crm-93feb-default-rtdb.europe-west1.firebasedatabase.app/',
   messagingSenderId: '207435020724',
   projectId: 'vue-crm-93feb',
   storageBucket: 'vue-crm-93feb.appspot.com'

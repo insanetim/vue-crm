@@ -4,25 +4,25 @@
       <h3>{{ localize('Bill') }}</h3>
 
       <button
-        @click="refresh"
         class="btn waves-effect waves-light btn-small"
+        @click="refresh"
       >
         <i class="material-icons">refresh</i>
       </button>
     </div>
 
-    <app-loader v-if="loading"></app-loader>
+    <app-loader v-if="loading" />
 
     <div
-      class="row"
       v-else
+      class="row"
     >
-      <home-bill :rates="currency.rates"></home-bill>
+      <home-bill :rates="currency.rates" />
 
       <home-currency
         :date="currency.date"
         :rates="currency.rates"
-      ></home-currency>
+      />
     </div>
   </div>
 </template>

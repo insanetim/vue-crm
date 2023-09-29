@@ -16,8 +16,8 @@
 
           <tbody>
             <tr
-              :key="cur"
               v-for="cur in currencies"
+              :key="cur"
             >
               <td>{{ cur }}</td>
               <td>{{ parseFloat(rates[cur].toFixed(5)) }}</td>

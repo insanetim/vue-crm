@@ -12,9 +12,9 @@
             v-model="current"
           >
             <option
+              v-for="category in categories"
               :key="category.id"
               :value="category.id"
-              v-for="category in categories"
             >
               {{ category.title }}
             </option>
@@ -24,30 +24,30 @@
 
         <div class="input-field">
           <input
-            :class="{ invalid: errors.title }"
             id="title"
-            type="text"
             v-model="title"
+            :class="{ invalid: errors.title }"
+            type="text"
           />
           <label for="title">{{ localize('Title') }}</label>
           <small
-            class="helper-text invalid"
             v-if="errors.title"
+            class="helper-text invalid"
             >{{ errors.title }}</small
           >
         </div>
 
         <div class="input-field">
           <input
-            :class="{ invalid: errors.limit }"
             id="limit"
-            type="number"
             v-model.number="limit"
+            :class="{ invalid: errors.limit }"
+            type="number"
           />
           <label for="limit">{{ localize('Limit') }}</label>
           <small
-            class="helper-text invalid"
             v-if="errors.limit"
+            class="helper-text invalid"
             >{{ errors.limit }}</small
           >
         </div>
@@ -65,7 +65,15 @@
 </template>
 
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, onUpdated, ref, watch } from 'vue'
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  onUpdated,
+  ref,
+  watch
+} from 'vue'
 import { useStore } from 'vuex'
 
 import useCategoryForm from '../../hooks/category-form'
@@ -78,10 +86,13 @@ const initCategory = categories.value[0]
 const current = ref(initCategory.id)
 const select = ref(null)
 const selectRef = ref(null)
-const { errors, limit, onSubmit, setValues, title } = useCategoryForm(submitHandler, {
-  limit: initCategory.limit,
-  title: initCategory.title
-})
+const { errors, limit, onSubmit, setValues, title } = useCategoryForm(
+  submitHandler,
+  {
+    limit: initCategory.limit,
+    title: initCategory.title
+  }
+)
 
 async function submitHandler(values) {
   try {

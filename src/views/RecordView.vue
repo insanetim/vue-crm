@@ -4,12 +4,12 @@
       <h3>{{ localize('Menu_NewRecord') }}</h3>
     </div>
 
-    <app-loader v-if="!ready"></app-loader>
+    <app-loader v-if="!ready" />
 
     <form
-      @submit="onSubmit"
-      class="form"
       v-else-if="categories.length"
+      class="form"
+      @submit="onSubmit"
     >
       <div class="input-field">
         <select
@@ -17,11 +17,11 @@
           v-model="category"
         >
           <option
-            :key="category.id"
-            :value="category.id"
-            v-for="category in categories"
+            v-for="c in categories"
+            :key="c.id"
+            :value="c.id"
           >
-            {{ category.title }}
+            {{ c.title }}
           </option>
         </select>
         <label>{{ localize('SelectCategory') }}</label>
@@ -30,10 +30,10 @@
       <p>
         <label>
           <input
+            v-model="type"
             class="with-gap"
             name="type"
             type="radio"
-            v-model="type"
             value="income"
           />
           <span>{{ localize('Income') }}</span>
@@ -43,10 +43,10 @@
       <p>
         <label>
           <input
+            v-model="type"
             class="with-gap"
             name="type"
             type="radio"
-            v-model="type"
             value="outcome"
           />
           <span>{{ localize('Outcome') }}</span>
@@ -55,30 +55,30 @@
 
       <div class="input-field">
         <input
-          :class="{ invalid: errors.amount }"
           id="amount"
-          type="number"
           v-model.number="amount"
+          :class="{ invalid: errors.amount }"
+          type="number"
         />
         <label for="amount">{{ localize('Amount') }}</label>
         <small
-          class="helper-text invalid"
           v-if="errors.amount"
+          class="helper-text invalid"
           >{{ errors.amount }}</small
         >
       </div>
 
       <div class="input-field">
         <input
-          :class="{ invalid: errors.description }"
           id="description"
-          type="text"
           v-model="description"
+          :class="{ invalid: errors.description }"
+          type="text"
         />
         <label for="description">{{ localize('Description') }}</label>
         <small
-          class="helper-text invalid"
           v-if="errors.description"
+          class="helper-text invalid"
           >{{ errors.description }}</small
         >
       </div>
@@ -93,8 +93,8 @@
     </form>
 
     <p
-      class="center"
       v-else
+      class="center"
     >
       {{ localize('NoCategories') }}.
       <router-link to="/categories">{{ localize('AddFirst') }}</router-link>
@@ -103,7 +103,14 @@
 </template>
 
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, onUpdated, ref } from 'vue'
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  onUpdated,
+  ref
+} from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
 
@@ -121,7 +128,8 @@ const category = ref(null)
 const info = computed(() => store.getters['info/info'])
 const categories = computed(() => store.getters['category/categories'])
 const ready = computed(() => isReady(store.getters['category/categoriesReady']))
-const { amount, description, errors, onSubmit, resetForm, type } = useRecordForm(submitHandler)
+const { amount, description, errors, onSubmit, resetForm, type } =
+  useRecordForm(submitHandler)
 const canCreateRecord = computed(() => {
   if (type.value === 'income') {
     return true
@@ -138,13 +146,18 @@ async function submitHandler(values) {
         date: new Date().toJSON(),
         ...values
       })
-      const bill = values.type === 'income' ? info.value.bill + values.amount : info.value.bill - values.amount
+      const bill =
+        values.type === 'income'
+          ? info.value.bill + values.amount
+          : info.value.bill - values.amount
       await store.dispatch('info/updateInfo', { bill })
       $message(localize('RecordHasBeenCreated'))
       resetForm()
     } catch (e) {}
   } else {
-    $message(`${localize('NotEnoughMoney')} (${values.amount - info.value.bill})`)
+    $message(
+      `${localize('NotEnoughMoney')} (${values.amount - info.value.bill})`
+    )
   }
 }
 

@@ -8,15 +8,17 @@
       <pie
         :data="chartData"
         :options="chartOptions"
-      ></pie>
+      />
     </div>
 
-    <app-loader v-if="!ready"></app-loader>
+    <app-loader v-if="!ready" />
 
     <section v-else-if="records.length">
-      <history-table :records="items"></history-table>
+      <history-table :records="items" />
 
       <app-pagination
+        v-if="records.length > items.length"
+        v-model="page"
         :click-handler="pageChangeHandler"
         :container-class="'pagination'"
         :next-link-class="'waves-effect'"
@@ -25,14 +27,12 @@
         :page-link-class="'waves-effect'"
         :prev-link-class="'waves-effect'"
         :prev-text="localize('Back')"
-        v-if="records.length > items.length"
-        v-model="page"
-      ></app-pagination>
+      />
     </section>
 
     <p
-      class="center"
       v-else
+      class="center"
     >
       {{ localize('NoRecords') }}.
       <router-link to="/record">{{ localize('AddFirst') }}</router-link>
@@ -66,7 +66,12 @@ const records = computed(() =>
     typeText: r.type === 'income' ? localize('Income') : localize('Outcome')
   }))
 )
-const ready = computed(() => isReady(store.getters['category/categoriesReady'], store.getters['record/recordsReady']))
+const ready = computed(() =>
+  isReady(
+    store.getters['category/categoriesReady'],
+    store.getters['record/recordsReady']
+  )
+)
 const chartData = computed(() => ({
   datasets: [
     {
@@ -102,7 +107,8 @@ const chartOptions = {
   maintainAspectRatio: false,
   responsive: true
 }
-const { items, page, pageChangeHandler, pageCount, setupPagination } = usePagination()
+const { items, page, pageChangeHandler, pageCount, setupPagination } =
+  usePagination()
 
 watch(
   ready,

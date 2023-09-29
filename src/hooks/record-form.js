@@ -20,7 +20,11 @@ export default function useRecordForm(fn) {
     },
     validationSchema: schema
   })
-  const [amount, description, type] = useFieldModel(['amount', 'description', 'type'])
+  const [amount, description, type] = useFieldModel([
+    'amount',
+    'description',
+    'type'
+  ])
 
   const onSubmit = handleSubmit(values => {
     fn(values)

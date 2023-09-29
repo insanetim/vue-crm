@@ -4,19 +4,19 @@
       <h3>{{ localize('Categories') }}</h3>
     </div>
     <section>
-      <app-loader v-if="!ready"></app-loader>
+      <app-loader v-if="!ready" />
 
       <div
-        class="row"
         v-else
+        class="row"
       >
-        <category-create></category-create>
+        <category-create />
 
-        <category-edit v-if="categories.length"></category-edit>
+        <category-edit v-if="categories.length" />
 
         <p
-          class="center"
           v-else
+          class="center"
         >
           {{ localize('NoCategories') }}
         </p>

@@ -1,36 +1,36 @@
 <template>
   <form
-    @submit="onSubmit"
     class="card auth-card"
+    @submit="onSubmit"
   >
     <div class="card-content">
       <span class="card-title">{{ localize('CRM_Title') }}</span>
       <div class="input-field">
         <input
-          :class="{ invalid: errors.email }"
           id="email"
-          type="text"
           v-model.trim="email"
+          :class="{ invalid: errors.email }"
+          type="text"
         />
         <label for="email">Email</label>
         <small
-          class="helper-text invalid"
           v-if="errors.email"
+          class="helper-text invalid"
           >{{ errors.email }}</small
         >
       </div>
 
       <div class="input-field">
         <input
-          :class="{ invalid: errors.password }"
           id="password"
-          type="password"
           v-model.trim="password"
+          :class="{ invalid: errors.password }"
+          type="password"
         />
         <label for="password">{{ localize('Password') }}</label>
         <small
-          class="helper-text invalid"
           v-if="errors.password"
+          class="helper-text invalid"
           >{{ errors.password }}</small
         >
       </div>

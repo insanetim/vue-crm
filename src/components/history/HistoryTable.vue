@@ -13,8 +13,8 @@
 
     <tbody>
       <tr
-        :key="record.id"
         v-for="(record, idx) in records"
+        :key="record.id"
       >
         <td>{{ idx + 1 }}</td>
         <td>{{ currencyFormat(record.amount) }}</td>
@@ -27,9 +27,9 @@
         </td>
         <td>
           <button
-            @click="$router.push(`/detail/${record.id}`)"
-            class="btn-small btn"
             v-tooltip="{ html: 'OpenRecord' }"
+            class="btn-small btn"
+            @click="$router.push(`/detail/${record.id}`)"
           >
             <i class="material-icons">open_in_new</i>
           </button>

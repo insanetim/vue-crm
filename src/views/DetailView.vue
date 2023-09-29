@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-loader v-if="loading"></app-loader>
+    <app-loader v-if="loading" />
 
     <div v-else-if="record">
       <div class="breadcrumb-wrap">
@@ -11,8 +11,8 @@
           {{ localize('Menu_History') }}
         </router-link>
         <a
-          @click.prevent
           class="breadcrumb"
+          @click.prevent
         >
           {{ localize(record.type === 'income' ? 'Income' : 'Outcome') }}
         </a>
@@ -30,7 +30,9 @@
           >
             <div class="card-content white-text">
               <p>{{ localize('Description') }}: {{ record.description }}</p>
-              <p>{{ localize('Amount') }}: {{ currencyFormat(record.amount) }}</p>
+              <p>
+                {{ localize('Amount') }}: {{ currencyFormat(record.amount) }}
+              </p>
               <p>{{ localize('Category') }}: {{ record.categoryName }}</p>
               <small>{{ dateFormat(record.date, 'datetime') }}</small>
             </div>
@@ -40,8 +42,8 @@
     </div>
 
     <p
-      class="center"
       v-else
+      class="center"
     >
       Запись с id={{ id }} не найдена
     </p>
@@ -73,7 +75,10 @@ onMounted(async () => {
   const currentRecord = await store.dispatch('record/fetchRecordById', id)
 
   if ('categoryId' in currentRecord) {
-    const category = await store.dispatch('category/fetchCategoryById', currentRecord.categoryId)
+    const category = await store.dispatch(
+      'category/fetchCategoryById',
+      currentRecord.categoryId
+    )
     record.value = {
       ...currentRecord,
       categoryName: category.title

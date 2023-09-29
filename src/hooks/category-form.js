@@ -8,17 +8,22 @@ import localize from '../utils/localize'
 export default function useCategoryForm(fn, initialValues = {}) {
   const schema = toTypedSchema(
     object({
-      limit: number().min(categoryLimit, `${localize('Message_MinLength')} ${categoryLimit}`),
+      limit: number().min(
+        categoryLimit,
+        `${localize('Message_MinLength')} ${categoryLimit}`
+      ),
       title: string().required(localize('Message_CategoryTitle'))
     })
   )
-  const { errors, handleSubmit, resetForm, setValues, useFieldModel } = useForm({
-    initialValues: {
-      limit: initialValues.limit ?? categoryLimit,
-      title: initialValues.title ?? ''
-    },
-    validationSchema: schema
-  })
+  const { errors, handleSubmit, resetForm, setValues, useFieldModel } = useForm(
+    {
+      initialValues: {
+        limit: initialValues.limit ?? categoryLimit,
+        title: initialValues.title ?? ''
+      },
+      validationSchema: schema
+    }
+  )
   const [limit, title] = useFieldModel(['limit', 'title'])
 
   const onSubmit = handleSubmit(values => {

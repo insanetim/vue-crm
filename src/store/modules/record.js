@@ -16,7 +16,9 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('auth/getUid', null, { root: true })
-        const record = (await get(child(ref(db, `/users/${uid}/records`), id))).val()
+        const record = (
+          await get(child(ref(db, `/users/${uid}/records`), id))
+        ).val()
 
         return { id, ...record }
       } catch (e) {

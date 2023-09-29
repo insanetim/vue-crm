@@ -8,9 +8,13 @@ export default function useRegisterForm(fn) {
   const schema = toTypedSchema(
     object({
       agree: boolean().oneOf([true]),
-      email: string().required(localize('Message_EmailRequired')).email(localize('Message_EmailValid')),
+      email: string()
+        .required(localize('Message_EmailRequired'))
+        .email(localize('Message_EmailValid')),
       name: string().required(localize('Message_EnterName')),
-      password: string().required(localize('Message_EnterPassword')).min(6, localize('Message_MinLength'))
+      password: string()
+        .required(localize('Message_EnterPassword'))
+        .min(6, localize('Message_MinLength'))
     })
   )
   const { errors, handleSubmit, useFieldModel } = useForm({
@@ -19,7 +23,12 @@ export default function useRegisterForm(fn) {
     },
     validationSchema: schema
   })
-  const [agree, email, name, password] = useFieldModel(['agree', 'email', 'name', 'password'])
+  const [agree, email, name, password] = useFieldModel([
+    'agree',
+    'email',
+    'name',
+    'password'
+  ])
 
   const onSubmit = handleSubmit(values => {
     fn(values)

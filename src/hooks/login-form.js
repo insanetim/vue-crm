@@ -9,7 +9,9 @@ const MIN_LENGTH = 6
 export default function useLoginForm(fn) {
   const schema = toTypedSchema(
     object({
-      email: string().required(localize('Message_EmailRequired')).email(localize('Message_EmailValid')),
+      email: string()
+        .required(localize('Message_EmailRequired'))
+        .email(localize('Message_EmailValid')),
       password: string()
         .required(localize('Message_EnterPassword'))
         .min(MIN_LENGTH, `${localize('Message_MinLength')} ${MIN_LENGTH}`)

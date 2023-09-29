@@ -5,9 +5,9 @@
         <span class="card-title">{{ localize('BillInCurrency') }}</span>
 
         <p
+          v-for="cur in currencies"
           :key="cur"
           class="currency-line"
-          v-for="cur in currencies"
         >
           <span>
             {{ currencyFormat(getCurrency(cur), cur) }}

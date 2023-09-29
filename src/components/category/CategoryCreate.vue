@@ -8,30 +8,30 @@
       <form @submit="onSubmit">
         <div class="input-field">
           <input
-            :class="{ invalid: errors.title }"
             id="title"
-            type="text"
             v-model="title"
+            :class="{ invalid: errors.title }"
+            type="text"
           />
           <label for="title">{{ localize('Title') }}</label>
           <small
-            class="helper-text invalid"
             v-if="errors.title"
+            class="helper-text invalid"
             >{{ errors.title }}</small
           >
         </div>
 
         <div class="input-field">
           <input
-            :class="{ invalid: errors.limit }"
             id="limit"
-            type="number"
             v-model.number="limit"
+            :class="{ invalid: errors.limit }"
+            type="number"
           />
           <label for="limit">{{ localize('Limit') }}</label>
           <small
-            class="helper-text invalid"
             v-if="errors.limit"
+            class="helper-text invalid"
             >{{ errors.limit }}</small
           >
         </div>
@@ -57,7 +57,8 @@ import localize from '../../utils/localize'
 
 const store = useStore()
 const $message = inject('$message')
-const { errors, limit, onSubmit, resetForm, title } = useCategoryForm(submitHandler)
+const { errors, limit, onSubmit, resetForm, title } =
+  useCategoryForm(submitHandler)
 
 async function submitHandler(values) {
   try {

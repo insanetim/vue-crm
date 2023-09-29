@@ -1,32 +1,32 @@
 <template>
   <div>
-    <app-loader v-if="loading"></app-loader>
+    <app-loader v-if="loading" />
 
     <div
-      class="app-main-layout"
       v-else
+      class="app-main-layout"
     >
-      <app-navbar @toggle="isOpen = !isOpen"></app-navbar>
+      <app-navbar @toggle="isOpen = !isOpen" />
 
       <app-sidebar
-        :isOpen="isOpen"
         :key="info.locale"
-      ></app-sidebar>
+        :is-open="isOpen"
+      />
 
       <main :class="['app-content', { full: !isOpen }]">
         <div class="app-page">
-          <router-view></router-view>
+          <router-view />
         </div>
       </main>
 
       <div class="fixed-action-btn">
         <router-link
-          class="btn-floating btn-large blue"
-          to="/record"
           v-tooltip="{
             html: 'CreateNewRecord',
             position: 'left'
           }"
+          class="btn-floating btn-large blue"
+          to="/record"
         >
           <i class="large material-icons">add</i>
         </router-link>

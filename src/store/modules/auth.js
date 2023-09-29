@@ -1,4 +1,9 @@
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth'
 import { getDatabase, ref, set } from 'firebase/database'
 
 export default {

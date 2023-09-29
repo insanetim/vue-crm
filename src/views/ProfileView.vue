@@ -5,20 +5,20 @@
     </div>
 
     <form
-      @submit="onSubmit"
       class="form"
+      @submit="onSubmit"
     >
       <div class="input-field">
         <input
-          :class="{ invalid: errors.name }"
           id="name"
-          type="text"
           v-model.trim="name"
+          :class="{ invalid: errors.name }"
+          type="text"
         />
         <label for="name">{{ localize('Name') }}</label>
         <small
-          class="helper-text invalid"
           v-if="errors.name"
+          class="helper-text invalid"
           >{{ errors.name }}</small
         >
       </div>
@@ -27,10 +27,10 @@
         <label>
           English
           <input
-            type="checkbox"
             v-model="isRuLocale"
+            type="checkbox"
           />
-          <span class="lever"></span>
+          <span class="lever" />
           Русский
         </label>
       </div>

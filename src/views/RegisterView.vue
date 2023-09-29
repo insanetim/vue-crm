@@ -1,51 +1,51 @@
 <template>
   <form
-    @submit="onSubmit"
     class="card auth-card"
+    @submit="onSubmit"
   >
     <div class="card-content">
       <span class="card-title">{{ localize('CRM_Title') }}</span>
       <div class="input-field">
         <input
-          :class="{ invalid: errors.email }"
           id="email"
-          type="text"
           v-model.trim="email"
+          :class="{ invalid: errors.email }"
+          type="text"
         />
         <label for="email">Email</label>
         <small
-          class="helper-text invalid"
           v-if="errors.email"
+          class="helper-text invalid"
           >{{ errors.email }}</small
         >
       </div>
 
       <div class="input-field">
         <input
-          :class="{ invalid: errors.password }"
           id="password"
-          type="password"
           v-model.trim="password"
+          :class="{ invalid: errors.password }"
+          type="password"
         />
         <label for="password">{{ localize('Password') }}</label>
         <small
-          class="helper-text invalid"
           v-if="errors.password"
+          class="helper-text invalid"
           >{{ errors.password }}</small
         >
       </div>
 
       <div class="input-field">
         <input
-          :class="{ invalid: errors.name }"
           id="name"
-          type="text"
           v-model.trim="name"
+          :class="{ invalid: errors.name }"
+          type="text"
         />
         <label for="name">{{ localize('Name') }}</label>
         <small
-          class="helper-text invalid"
           v-if="errors.name"
+          class="helper-text invalid"
           >{{ errors.name }}</small
         >
       </div>
@@ -53,8 +53,8 @@
       <p>
         <label>
           <input
-            type="checkbox"
             v-model="agree"
+            type="checkbox"
           />
           <span>{{ localize('AcceptRules') }}</span>
         </label>
@@ -100,5 +100,6 @@ const register = async values => {
   } catch (e) {}
 }
 
-const { agree, email, errors, name, onSubmit, password } = useRegisterForm(register)
+const { agree, email, errors, name, onSubmit, password } =
+  useRegisterForm(register)
 </script>

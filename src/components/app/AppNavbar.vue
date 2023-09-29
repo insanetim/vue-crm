@@ -3,8 +3,8 @@
     <div class="nav-wrapper">
       <div class="navbar-left">
         <a
-          @click.prevent="$emit('toggle')"
           href="#"
+          @click.prevent="emit('toggle')"
         >
           <i class="material-icons black-text">dehaze</i>
         </a>
@@ -14,18 +14,18 @@
       <ul class="right hide-on-small-and-down">
         <li>
           <a
+            ref="dropdownRef"
             class="dropdown-trigger black-text"
             data-target="dropdown"
             href="#"
-            ref="dropdownRef"
           >
             {{ info.name }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
           <ul
-            class="dropdown-content"
             id="dropdown"
+            class="dropdown-content"
           >
             <li>
               <router-link
@@ -39,12 +39,12 @@
             <li
               class="divider"
               tabindex="-1"
-            ></li>
+            />
             <li>
               <a
-                @click.prevent="logout"
                 class="black-text"
                 href="#"
+                @click.prevent="logout"
               >
                 <i class="material-icons">assignment_return</i>
                 {{ localize('Exit') }}
@@ -64,6 +64,8 @@ import { useStore } from 'vuex'
 
 import dateFormat from '../../utils/dateFormat'
 import localize from '../../utils/localize'
+
+const emit = defineEmits(['toggle'])
 
 const store = useStore()
 const router = useRouter()

@@ -5,31 +5,32 @@
       <h4>{{ currencyFormat(info.bill) }}</h4>
     </div>
 
-    <app-loader v-if="!ready"></app-loader>
+    <app-loader v-if="!ready" />
 
     <section v-else-if="categories.length">
       <div
-        :key="cat.id"
         v-for="cat in categories"
+        :key="cat.id"
         v-tooltip.noloc="{ html: cat.tooltip }"
       >
         <p>
           <strong>{{ cat.title }}:</strong>
-          {{ currencyFormat(cat.balance) }} {{ localize('Of') }} {{ currencyFormat(cat.limit) }}
+          {{ currencyFormat(cat.balance) }} {{ localize('Of') }}
+          {{ currencyFormat(cat.limit) }}
         </p>
         <div class="progress">
           <div
             :class="[cat.progressColor]"
             :style="{ width: `${cat.progressPercent}%` }"
             class="determinate"
-          ></div>
+          />
         </div>
       </div>
     </section>
 
     <p
-      class="center"
       v-else
+      class="center"
     >
       {{ localize('NoCategories') }}.
       <router-link to="/categories">{{ localize('AddFirst') }}</router-link>
@@ -60,12 +61,13 @@ const categories = computed(() => {
       }, 0)
     const percent = (100 * balance) / c.limit
     const progressPercent = Math.min(percent, 100)
-    const progressColor = percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red'
+    const progressColor =
+      percent < 60 ? 'green' : percent < 100 ? 'yellow' : 'red'
 
     const tooltipValue = c.limit - balance
-    const tooltip = `${tooltipValue < 0 ? localize('MoreThan') : localize('Stayed')} ${currencyFormat(
-      Math.abs(tooltipValue)
-    )}`
+    const tooltip = `${
+      tooltipValue < 0 ? localize('MoreThan') : localize('Stayed')
+    } ${currencyFormat(Math.abs(tooltipValue))}`
 
     return {
       ...c,
@@ -77,7 +79,10 @@ const categories = computed(() => {
   })
 })
 const ready = computed(() => {
-  return isReady(store.getters['category/categoriesReady'], store.getters['record/recordsReady'])
+  return isReady(
+    store.getters['category/categoriesReady'],
+    store.getters['record/recordsReady']
+  )
 })
 
 onMounted(async () => {

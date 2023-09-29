@@ -1,4 +1,12 @@
-import { child, get, getDatabase, onValue, push, ref, update } from 'firebase/database'
+import {
+  child,
+  get,
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  update
+} from 'firebase/database'
 
 export default {
   actions: {
@@ -38,7 +46,9 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('auth/getUid', null, { root: true })
-        const category = (await get(child(ref(db, `/users/${uid}/categories`), id))).val()
+        const category = (
+          await get(child(ref(db, `/users/${uid}/categories`), id))
+        ).val()
 
         return { id, ...category }
       } catch (e) {
@@ -50,7 +60,10 @@ export default {
       try {
         const db = getDatabase()
         const uid = await dispatch('auth/getUid', null, { root: true })
-        await update(child(ref(db, `/users/${uid}/categories`), id), { limit, title })
+        await update(child(ref(db, `/users/${uid}/categories`), id), {
+          limit,
+          title
+        })
       } catch (e) {
         commit('setError', e, { root: true })
         throw e

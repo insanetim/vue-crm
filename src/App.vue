@@ -1,9 +1,9 @@
 <template>
   <metainfo>
-    <template v-slot:title="{ content }">{{ appTitle(content) }}</template>
+    <template #title="{ content }">{{ appTitle(content) }}</template>
   </metainfo>
   <component :is="layout">
-    <router-view></router-view>
+    <router-view />
   </component>
 </template>
 
