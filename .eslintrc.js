@@ -24,7 +24,7 @@ module.exports = {
       {
         html: {
           component: 'always',
-          normal: 'always',
+          normal: 'never',
           void: 'always'
         },
         svg: 'always'
