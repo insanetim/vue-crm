@@ -30,7 +30,7 @@
             v-model="isRuLocale"
             type="checkbox"
           />
-          <span class="lever" />
+          <span class="lever" ></span>
           Русский
         </label>
       </div>

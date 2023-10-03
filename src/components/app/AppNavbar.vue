@@ -39,7 +39,7 @@
             <li
               class="divider"
               tabindex="-1"
-            />
+            ></li>
             <li>
               <a
                 class="black-text"

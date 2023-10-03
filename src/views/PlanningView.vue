@@ -23,7 +23,7 @@
             :class="[cat.progressColor]"
             :style="{ width: `${cat.progressPercent}%` }"
             class="determinate"
-          />
+          ></div>
         </div>
       </div>
     </section>
