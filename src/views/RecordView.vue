@@ -4,7 +4,7 @@
       <h3>{{ localize('Menu_NewRecord') }}</h3>
     </div>
 
-    <app-loader v-if="!ready" />
+    <app-loader v-if="loading" />
 
     <form
       v-else-if="categories.length"
@@ -114,7 +114,6 @@ import {
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
 
-import isReady from '../helpers/isReady'
 import useRecordForm from '../hooks/record-form'
 import localize from '../utils/localize'
 
@@ -122,12 +121,12 @@ useMeta({ title: 'Menu_NewRecord' })
 
 const store = useStore()
 const $message = inject('$message')
+const loading = ref(true)
 const select = ref(null)
 const selectRef = ref(null)
 const category = ref(null)
 const info = computed(() => store.getters['info/info'])
 const categories = computed(() => store.getters['category/categories'])
-const ready = computed(() => isReady(store.getters['category/categoriesReady']))
 const { amount, description, errors, onSubmit, resetForm, type } =
   useRecordForm(submitHandler)
 const canCreateRecord = computed(() => {
@@ -163,6 +162,7 @@ async function submitHandler(values) {
 
 onMounted(async () => {
   await store.dispatch('category/fetchCategories')
+  loading.value = false
 })
 
 onUpdated(() => {

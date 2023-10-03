@@ -26,44 +26,41 @@ export default {
         throw e
       }
     },
-    async fetchRecords({ commit, dispatch, state }) {
-      try {
-        const db = getDatabase()
-        const uid = await dispatch('auth/getUid', null, { root: true })
-        onValue(ref(db, `/users/${uid}/records`), snapshot => {
-          const records = snapshot.val() || {}
-          commit(
-            'setRecords',
-            Object.keys(records).map(id => ({
-              id,
-              ...records[id]
-            }))
-          )
-          if (!state.recordsReady) {
-            commit('setRecordsReady')
+    fetchRecords({ commit, dispatch }) {
+      return new Promise(resolve => {
+        ;(async function () {
+          try {
+            const db = getDatabase()
+            const uid = await dispatch('auth/getUid', null, { root: true })
+            onValue(ref(db, `/users/${uid}/records`), snapshot => {
+              const records = snapshot.val() || {}
+              commit(
+                'setRecords',
+                Object.keys(records).map(id => ({
+                  id,
+                  ...records[id]
+                }))
+              )
+              resolve()
+            })
+          } catch (e) {
+            commit('setError', e, { root: true })
+            throw e
           }
-        })
-      } catch (e) {
-        commit('setError', e, { root: true })
-        throw e
-      }
+        })()
+      })
     }
   },
   getters: {
-    records: s => s.records,
-    recordsReady: s => s.recordsReady
+    records: s => s.records
   },
   mutations: {
     setRecords(state, records) {
       state.records = records
-    },
-    setRecordsReady(state) {
-      state.recordsReady = true
     }
   },
   namespaced: true,
-  state: {
-    records: [],
-    recordsReady: false
-  }
+  state: () => ({
+    records: []
+  })
 }

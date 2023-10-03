@@ -11,7 +11,7 @@
       />
     </div>
 
-    <app-loader v-if="!ready" />
+    <app-loader v-if="loading" />
 
     <section v-else-if="records.length">
       <history-table :records="items" />
@@ -42,13 +42,12 @@
 
 <script setup>
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { Pie } from 'vue-chartjs'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
 
 import HistoryTable from '../components/history/HistoryTable.vue'
-import isReady from '../helpers/isReady'
 import usePagination from '../hooks/pagination'
 import localize from '../utils/localize'
 
@@ -57,6 +56,7 @@ ChartJS.register(Tooltip, Legend, ArcElement)
 useMeta({ title: 'Menu_History' })
 
 const store = useStore()
+const loading = ref(true)
 const categories = computed(() => store.getters['category/categories'])
 const records = computed(() =>
   store.getters['record/records'].map(r => ({
@@ -65,12 +65,6 @@ const records = computed(() =>
     typeClass: r.type === 'income' ? 'green' : 'red',
     typeText: r.type === 'income' ? localize('Income') : localize('Outcome')
   }))
-)
-const ready = computed(() =>
-  isReady(
-    store.getters['category/categoriesReady'],
-    store.getters['record/recordsReady']
-  )
 )
 const chartData = computed(() => ({
   datasets: [
@@ -111,7 +105,7 @@ const { items, page, pageChangeHandler, pageCount, setupPagination } =
   usePagination()
 
 watch(
-  ready,
+  loading,
   () => {
     setupPagination(records.value)
   },
@@ -121,5 +115,6 @@ watch(
 onMounted(async () => {
   await store.dispatch('category/fetchCategories')
   await store.dispatch('record/fetchRecords')
+  loading.value = false
 })
 </script>

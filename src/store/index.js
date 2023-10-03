@@ -36,9 +36,9 @@ const store = createStore({
     }
   },
   plugins: [createLogger()],
-  state: {
+  state: () => ({
     error: null
-  }
+  })
 })
 
 export default store

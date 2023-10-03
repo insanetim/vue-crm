@@ -20,27 +20,29 @@ export default {
         throw e
       }
     },
-    async fetchCategories({ commit, dispatch, state }) {
-      try {
-        const db = getDatabase()
-        const uid = await dispatch('auth/getUid', null, { root: true })
-        onValue(ref(db, `/users/${uid}/categories`), snapshot => {
-          const categories = snapshot.val() || {}
-          commit(
-            'setCategories',
-            Object.keys(categories).map(id => ({
-              id,
-              ...categories[id]
-            }))
-          )
-          if (!state.categoriesReady) {
-            commit('setCategoriesReady')
+    fetchCategories({ commit, dispatch }) {
+      return new Promise(resolve => {
+        ;(async function () {
+          try {
+            const db = getDatabase()
+            const uid = await dispatch('auth/getUid', null, { root: true })
+            onValue(ref(db, `/users/${uid}/categories`), snapshot => {
+              const categories = snapshot.val() || {}
+              commit(
+                'setCategories',
+                Object.keys(categories).map(id => ({
+                  id,
+                  ...categories[id]
+                }))
+              )
+              resolve()
+            })
+          } catch (e) {
+            commit('setError', e, { root: true })
+            throw e
           }
-        })
-      } catch (e) {
-        commit('setError', e, { root: true })
-        throw e
-      }
+        })()
+      })
     },
     async fetchCategoryById({ commit, dispatch }, id) {
       try {
@@ -71,20 +73,15 @@ export default {
     }
   },
   getters: {
-    categories: s => s.categories,
-    categoriesReady: s => s.categoriesReady
+    categories: s => s.categories
   },
   mutations: {
     setCategories(state, categories) {
       state.categories = categories
-    },
-    setCategoriesReady(state) {
-      state.categoriesReady = true
     }
   },
   namespaced: true,
-  state: {
-    categories: [],
-    categoriesReady: false
-  }
+  state: () => ({
+    categories: []
+  })
 }

@@ -5,7 +5,7 @@
       <h4>{{ currencyFormat(info.bill) }}</h4>
     </div>
 
-    <app-loader v-if="!ready" />
+    <app-loader v-if="loading" />
 
     <section v-else-if="categories.length">
       <div
@@ -39,17 +39,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
 
-import isReady from '../helpers/isReady'
 import currencyFormat from '../utils/currencyFormat'
 import localize from '../utils/localize'
 
 useMeta({ title: 'Menu_Planning' })
 
 const store = useStore()
+const loading = ref(true)
 const info = computed(() => store.getters['info/info'])
 const records = computed(() => store.getters['record/records'])
 const categories = computed(() => {
@@ -78,15 +78,10 @@ const categories = computed(() => {
     }
   })
 })
-const ready = computed(() => {
-  return isReady(
-    store.getters['category/categoriesReady'],
-    store.getters['record/recordsReady']
-  )
-})
 
 onMounted(async () => {
   await store.dispatch('category/fetchCategories')
   await store.dispatch('record/fetchRecords')
+  loading.value = false
 })
 </script>
