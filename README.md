@@ -18,6 +18,6 @@ yarn serve
 yarn build
 ```
 
-### Customize configuration
+### Demo
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+https://vue-crm-93feb.web.app/
