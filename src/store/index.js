@@ -6,6 +6,11 @@ import category from './modules/category'
 import info from './modules/info'
 import record from './modules/record'
 
+const plugins = []
+if (process.env.NODE_ENV === 'development') {
+  plugins.push(createLogger())
+}
+
 const store = createStore({
   actions: {
     async fetchCurrency() {
@@ -35,7 +40,7 @@ const store = createStore({
       state.error = error
     }
   },
-  plugins: [createLogger()],
+  plugins,
   state: () => ({
     error: null
   })
