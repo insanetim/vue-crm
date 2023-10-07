@@ -1,6 +1,6 @@
-import en from '../locales/en.json'
-import ru from '../locales/ru.json'
-import store from '../store'
+import en from '@/locales/en.json'
+import ru from '@/locales/ru.json'
+import store from '@/store'
 
 const locales = {
   'en-US': en,

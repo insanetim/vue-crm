@@ -83,12 +83,11 @@
 </template>
 
 <script setup>
+import useRegisterForm from '@/hooks/register-form'
+import localize from '@/utils/localize'
 import { useMeta } from 'vue-meta'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-
-import useRegisterForm from '../hooks/register-form'
-import localize from '../utils/localize'
 
 useMeta({ title: 'Register' })
 

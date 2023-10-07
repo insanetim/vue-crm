@@ -36,14 +36,13 @@
 </template>
 
 <script setup>
+import AppNavbar from '@/components/app/AppNavbar.vue'
+import AppSidebar from '@/components/app/AppSidebar.vue'
+import localize from '@/utils/localize'
+import messages from '@/utils/messages'
 import { useToggle } from '@vueuse/core'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-
-import AppNavbar from '../components/app/AppNavbar.vue'
-import AppSidebar from '../components/app/AppSidebar.vue'
-import localize from '../utils/localize'
-import messages from '../utils/messages'
 
 const store = useStore()
 const loading = ref(true)

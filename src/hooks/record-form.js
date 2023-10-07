@@ -1,8 +1,7 @@
+import localize from '@/utils/localize'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { number, object, string } from 'yup'
-
-import localize from '../utils/localize'
 
 export default function useRecordForm(fn) {
   const schema = toTypedSchema(

@@ -19,12 +19,11 @@
 </template>
 
 <script setup>
+import { currencies } from '@/constants'
+import currencyFormat from '@/utils/currencyFormat'
+import localize from '@/utils/localize'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-
-import { currencies } from '../../constants'
-import currencyFormat from '../../utils/currencyFormat'
-import localize from '../../utils/localize'
 
 const store = useStore()
 const { rates } = defineProps({

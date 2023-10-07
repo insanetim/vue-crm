@@ -1,4 +1,4 @@
-import store from '../store'
+import store from '@/store'
 
 export default function currencyFormat(value, currency = 'UAH') {
   const locale = store.getters['info/info'].locale ?? 'ru-RU'

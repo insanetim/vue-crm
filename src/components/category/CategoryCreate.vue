@@ -49,11 +49,10 @@
 </template>
 
 <script setup>
+import useCategoryForm from '@/hooks/category-form'
+import localize from '@/utils/localize'
 import { inject, onMounted } from 'vue'
 import { useStore } from 'vuex'
-
-import useCategoryForm from '../../hooks/category-form'
-import localize from '../../utils/localize'
 
 const store = useStore()
 const $message = inject('$message')

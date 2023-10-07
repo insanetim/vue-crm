@@ -1,3 +1,9 @@
+import App from '@/App.vue'
+import AppLoader from '@/components/app/AppLoader'
+import tooltipDirective from '@/directives/tooltip'
+import messagePlugin from '@/plugins/message'
+import router from '@/router'
+import store from '@/store'
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import 'materialize-css/dist/css/materialize.min.css'
@@ -6,13 +12,7 @@ import { createApp } from 'vue'
 import { createMetaManager } from 'vue-meta'
 import Paginate from 'vuejs-paginate-next'
 
-import App from './App.vue'
 import './assets/index.css'
-import AppLoader from './components/app/AppLoader'
-import tooltipDirective from './directives/tooltip'
-import messagePlugin from './plugins/message'
-import router from './router'
-import store from './store'
 
 initializeApp({
   apiKey: 'AIzaSyC2DiliMxVbxN5OsYUwc5d9Pos7A2yH9mw',

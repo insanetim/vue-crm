@@ -1,4 +1,4 @@
-import localize from '../utils/localize'
+import localize from '@/utils/localize'
 
 export default {
   beforeUnmount(el) {

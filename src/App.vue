@@ -8,12 +8,11 @@
 </template>
 
 <script>
+import EmptyLayout from '@/layouts/EmptyLayout'
+import MainLayout from '@/layouts/MainLayout'
+import appTitle from '@/utils/appTitle'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-
-import EmptyLayout from './layouts/EmptyLayout'
-import MainLayout from './layouts/MainLayout'
-import appTitle from './utils/appTitle'
 
 export default {
   components: { EmptyLayout, MainLayout },

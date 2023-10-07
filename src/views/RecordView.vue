@@ -105,6 +105,8 @@
 </template>
 
 <script setup>
+import useRecordForm from '@/hooks/record-form'
+import localize from '@/utils/localize'
 import {
   computed,
   inject,
@@ -115,9 +117,6 @@ import {
 } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
-
-import useRecordForm from '../hooks/record-form'
-import localize from '../utils/localize'
 
 useMeta({ title: 'Menu_NewRecord' })
 

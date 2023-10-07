@@ -58,13 +58,12 @@
 </template>
 
 <script setup>
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
 import { useNow } from '@vueuse/core'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-
-import dateFormat from '../../utils/dateFormat'
-import localize from '../../utils/localize'
 
 const emit = defineEmits(['toggle'])
 

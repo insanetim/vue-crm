@@ -1,9 +1,8 @@
+import { categoryLimit } from '@/constants'
+import localize from '@/utils/localize'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { number, object, string } from 'yup'
-
-import { categoryLimit } from '../constants'
-import localize from '../utils/localize'
 
 export default function useCategoryForm(fn, initialValues = {}) {
   const schema = toTypedSchema(

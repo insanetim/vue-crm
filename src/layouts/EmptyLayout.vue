@@ -5,11 +5,10 @@
 </template>
 
 <script setup>
+import localize from '@/utils/localize'
+import messages from '@/utils/messages'
 import { computed, inject, watch } from 'vue'
 import { useStore } from 'vuex'
-
-import localize from '../utils/localize'
-import messages from '../utils/messages'
 
 const store = useStore()
 const $error = inject('$error')

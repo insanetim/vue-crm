@@ -1,8 +1,7 @@
+import { pageSize } from '@/constants'
 import _ from 'lodash'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-import { pageSize } from '../constants'
 
 export default function usePagination() {
   const route = useRoute()

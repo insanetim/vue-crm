@@ -58,14 +58,13 @@
 </template>
 
 <script setup>
+import useLoginForm from '@/hooks/login-form'
+import localize from '@/utils/localize'
+import messages from '@/utils/messages'
 import { inject, onMounted } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-
-import useLoginForm from '../hooks/login-form'
-import localize from '../utils/localize'
-import messages from '../utils/messages'
 
 useMeta({ title: 'Login' })
 

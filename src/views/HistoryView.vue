@@ -43,15 +43,14 @@
 </template>
 
 <script setup>
+import HistoryTable from '@/components/history/HistoryTable.vue'
+import usePagination from '@/hooks/pagination'
+import localize from '@/utils/localize'
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
 import { computed, onMounted, ref, watch } from 'vue'
 import { Pie } from 'vue-chartjs'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
-
-import HistoryTable from '../components/history/HistoryTable.vue'
-import usePagination from '../hooks/pagination'
-import localize from '../utils/localize'
 
 ChartJS.register(Tooltip, Legend, ArcElement)
 

@@ -40,9 +40,9 @@
 </template>
 
 <script setup>
-import currencyFormat from '../../utils/currencyFormat'
-import dateFormat from '../../utils/dateFormat'
-import localize from '../../utils/localize'
+import currencyFormat from '@/utils/currencyFormat'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
 
 defineProps({
   records: {

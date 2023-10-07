@@ -1,4 +1,4 @@
-import localize from '../utils/localize'
+import localize from '@/utils/localize'
 
 export default function appTitle(titleKey) {
   const appName = process.env.VUE_APP_TITLE

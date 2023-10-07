@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import localize from '../../utils/localize'
+import localize from '@/utils/localize'
 
 defineProps({
   isOpen: {

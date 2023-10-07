@@ -28,13 +28,12 @@
 </template>
 
 <script setup>
+import HomeBill from '@/components/home/HomeBill.vue'
+import HomeCurrency from '@/components/home/HomeCurrency.vue'
+import localize from '@/utils/localize'
 import { onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
-
-import HomeBill from '../components/home/HomeBill.vue'
-import HomeCurrency from '../components/home/HomeCurrency.vue'
-import localize from '../utils/localize'
 
 useMeta({ title: 'Menu_Bill' })
 

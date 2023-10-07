@@ -51,13 +51,12 @@
 </template>
 
 <script setup>
+import currencyFormat from '@/utils/currencyFormat'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
 import { onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
-
-import currencyFormat from '../utils/currencyFormat'
-import dateFormat from '../utils/dateFormat'
-import localize from '../utils/localize'
 
 useMeta({ title: 'Detail_Title' })
 

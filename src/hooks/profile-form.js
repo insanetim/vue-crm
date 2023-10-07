@@ -1,8 +1,7 @@
+import localize from '@/utils/localize'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { boolean, object, string } from 'yup'
-
-import localize from '../utils/localize'
 
 export default function useProfileForm(fn, initialValues = {}) {
   const schema = toTypedSchema(

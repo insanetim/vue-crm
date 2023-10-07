@@ -31,9 +31,9 @@
 </template>
 
 <script setup>
-import { currencies } from '../../constants'
-import dateFormat from '../../utils/dateFormat'
-import localize from '../../utils/localize'
+import { currencies } from '@/constants'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
 
 defineProps({
   date: {

@@ -1,8 +1,7 @@
+import localize from '@/utils/localize'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { object, string } from 'yup'
-
-import localize from '../utils/localize'
 
 const MIN_LENGTH = 6
 

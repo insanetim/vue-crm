@@ -1,6 +1,6 @@
+import { currencies } from '@/constants'
 import { createLogger, createStore } from 'vuex'
 
-import { currencies } from '../constants'
 import auth from './modules/auth'
 import category from './modules/category'
 import info from './modules/info'

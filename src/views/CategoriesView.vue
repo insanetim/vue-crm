@@ -26,13 +26,12 @@
 </template>
 
 <script setup>
+import CategoryCreate from '@/components/category/CategoryCreate.vue'
+import CategoryEdit from '@/components/category/CategoryEdit.vue'
+import localize from '@/utils/localize'
 import { computed, onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
-
-import CategoryCreate from '../components/category/CategoryCreate.vue'
-import CategoryEdit from '../components/category/CategoryEdit.vue'
-import localize from '../utils/localize'
 
 useMeta({ title: 'Menu_Categories' })
 

@@ -30,7 +30,7 @@
             v-model="isRuLocale"
             type="checkbox"
           />
-          <span class="lever" ></span>
+          <span class="lever"></span>
           Русский
         </label>
       </div>
@@ -47,12 +47,11 @@
 </template>
 
 <script setup>
+import useProfileForm from '@/hooks/profile-form'
+import localize from '@/utils/localize'
 import { computed, onMounted } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useStore } from 'vuex'
-
-import useProfileForm from '../hooks/profile-form'
-import localize from '../utils/localize'
 
 useMeta({ title: 'ProfileTitle' })
 
