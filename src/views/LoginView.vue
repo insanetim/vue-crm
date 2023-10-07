@@ -49,7 +49,9 @@
 
       <p class="center">
         {{ localize('NoAccount') }}
-        <router-link to="/register">{{ localize('Register') }}</router-link>
+        <router-link :to="{ name: 'register' }">
+          {{ localize('Register') }}
+        </router-link>
       </p>
     </div>
   </form>
@@ -75,7 +77,7 @@ const $message = inject('$message')
 const login = async values => {
   try {
     await store.dispatch('auth/login', values)
-    router.push('/')
+    router.push({ name: 'home' })
   } catch (e) {}
 }
 

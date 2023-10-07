@@ -35,7 +35,9 @@
       class="center"
     >
       {{ localize('NoRecords') }}.
-      <router-link to="/record">{{ localize('AddFirst') }}</router-link>
+      <router-link :to="{ name: 'record' }">
+        {{ localize('AddFirst') }}
+      </router-link>
     </p>
   </div>
 </template>

@@ -8,7 +8,7 @@
         >
           <i class="material-icons black-text">dehaze</i>
         </a>
-        <span class="black-text">{{ dateFormat(date, 'datetime') }}</span>
+        <span class="black-text">{{ dateFormat(now, 'datetime') }}</span>
       </div>
 
       <ul class="right hide-on-small-and-down">
@@ -30,7 +30,7 @@
             <li>
               <router-link
                 class="black-text"
-                to="/profile"
+                :to="{ name: 'profile' }"
               >
                 <i class="material-icons">account_circle</i>
                 {{ localize('ProfileTitle') }}
@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+import { useNow } from '@vueuse/core'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -69,28 +70,23 @@ const emit = defineEmits(['toggle'])
 
 const store = useStore()
 const router = useRouter()
-const date = ref(new Date())
 const dropdown = ref(null)
 const dropdownRef = ref(null)
-const interval = ref(null)
 const info = computed(() => store.getters['info/info'])
+const now = useNow()
 
 const logout = async () => {
   await store.dispatch('auth/logout')
-  router.push('/login?message=logout')
+  router.push({ name: 'login', query: { message: 'logout' } })
 }
 
 onMounted(() => {
-  interval.value = setInterval(() => {
-    date.value = new Date()
-  }, 1000)
   dropdown.value = M.Dropdown.init(dropdownRef.value, {
     constrainWidth: false
   })
 })
 
 onBeforeUnmount(() => {
-  clearInterval(interval.value)
   if (dropdown.value && dropdown.value.destroy) {
     dropdown.value.destroy()
   }

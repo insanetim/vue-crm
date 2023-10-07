@@ -4,7 +4,7 @@
       v-for="link in links"
       :key="link.url"
       v-slot="{ navigate, isExactActive, href }"
-      :to="link.url"
+      :to="{ path: link.url }"
       custom
     >
       <li :class="{ active: isExactActive }">

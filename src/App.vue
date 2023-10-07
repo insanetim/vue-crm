@@ -19,7 +19,6 @@ export default {
   components: { EmptyLayout, MainLayout },
   setup() {
     const route = useRoute()
-
     const layout = computed(() => `${route.meta.layout || 'empty'}-layout`)
 
     return { appTitle, layout }

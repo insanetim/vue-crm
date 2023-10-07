@@ -6,7 +6,7 @@
       v-else
       class="app-main-layout"
     >
-      <app-navbar @toggle="isOpen = !isOpen" />
+      <app-navbar @toggle="toggle()" />
 
       <app-sidebar
         :key="info.locale"
@@ -26,7 +26,7 @@
             position: 'left'
           }"
           class="btn-floating btn-large blue"
-          to="/record"
+          :to="{ name: 'record' }"
         >
           <i class="large material-icons">add</i>
         </router-link>
@@ -36,6 +36,7 @@
 </template>
 
 <script setup>
+import { useToggle } from '@vueuse/core'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 
@@ -45,11 +46,11 @@ import localize from '../utils/localize'
 import messages from '../utils/messages'
 
 const store = useStore()
-const isOpen = ref(true)
 const loading = ref(true)
 const $error = inject('$error')
 const info = computed(() => store.getters['info/info'])
 const error = computed(() => store.getters.error)
+const [isOpen, toggle] = useToggle(true)
 
 watch(error, ({ code }) => {
   $error(localize(messages[code] ?? 'SomethingWentWrong'))

@@ -22,7 +22,7 @@ export default function usePagination() {
   )
 
   const pageChangeHandler = page => {
-    router.push(`${route.path}?page=${page}`)
+    router.push({ path: route.path, query: { page } })
     items.value = allItems.value[page - 1] || allItems.value[0]
   }
 

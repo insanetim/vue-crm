@@ -6,7 +6,7 @@
       <div class="breadcrumb-wrap">
         <router-link
           class="breadcrumb"
-          to="/history"
+          :to="{ name: 'history' }"
         >
           {{ localize('Menu_History') }}
         </router-link>

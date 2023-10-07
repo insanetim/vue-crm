@@ -33,7 +33,9 @@
       class="center"
     >
       {{ localize('NoCategories') }}.
-      <router-link to="/categories">{{ localize('AddFirst') }}</router-link>
+      <router-link :to="{ name: 'category' }">
+        {{ localize('AddFirst') }}
+      </router-link>
     </p>
   </div>
 </template>
