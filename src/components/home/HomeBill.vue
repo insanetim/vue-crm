@@ -36,4 +36,3 @@ const base = computed(() => infoStore.bill / rates.UAH)
 
 const getCurrency = currency => Math.round(base.value * rates[currency])
 </script>
-@/stores/info

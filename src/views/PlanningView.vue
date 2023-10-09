@@ -90,4 +90,3 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
-@/stores/category@/stores/info@/stores/record

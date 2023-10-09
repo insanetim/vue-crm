@@ -93,4 +93,3 @@ onBeforeUnmount(() => {
   }
 })
 </script>
-@/stores/auth@/stores/info

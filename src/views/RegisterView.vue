@@ -104,4 +104,3 @@ const register = async values => {
 const { agree, email, errors, name, onSubmit, password } =
   useRegisterForm(register)
 </script>
-@/stores/auth

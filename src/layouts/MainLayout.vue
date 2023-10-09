@@ -21,6 +21,7 @@
 
       <div class="fixed-action-btn">
         <router-link
+          :key="infoStore.locale"
           v-tooltip="{
             html: 'CreateNewRecord',
             position: 'left'
@@ -64,4 +65,3 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
-@/stores/app @/stores/app@/stores/info

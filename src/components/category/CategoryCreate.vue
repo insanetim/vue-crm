@@ -71,4 +71,3 @@ onMounted(() => {
   M.updateTextFields()
 })
 </script>
-@/stores/category

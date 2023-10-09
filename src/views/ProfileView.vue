@@ -81,4 +81,3 @@ onMounted(() => {
   margin-bottom: 2rem;
 }
 </style>
-@/stores/info

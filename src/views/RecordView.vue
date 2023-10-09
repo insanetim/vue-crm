@@ -184,4 +184,3 @@ onBeforeUnmount(() => {
   }
 })
 </script>
-@/stores/category@/stores/info@/stores/record

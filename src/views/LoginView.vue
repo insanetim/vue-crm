@@ -88,4 +88,3 @@ onMounted(() => {
   }
 })
 </script>
-@/stores/auth

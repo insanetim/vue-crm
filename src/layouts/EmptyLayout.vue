@@ -18,4 +18,3 @@ watch(error, ({ code }) => {
   $error(localize(messages[code] ?? 'SomethingWentWrong'))
 })
 </script>
-@/stores/app @/stores/app

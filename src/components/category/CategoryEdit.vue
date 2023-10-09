@@ -123,4 +123,3 @@ onBeforeUnmount(() => {
   }
 })
 </script>
-@/stores/category
