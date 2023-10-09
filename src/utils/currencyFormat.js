@@ -1,7 +1,8 @@
-import store from '@/store'
+import { useInfoStore } from '@/stores/info'
 
 export default function currencyFormat(value, currency = 'UAH') {
-  const locale = store.getters['info/info'].locale ?? 'ru-RU'
+  const infoStore = useInfoStore()
+  const locale = infoStore.locale ?? 'ru-RU'
   const formatter = new Intl.NumberFormat(locale, {
     currency,
     style: 'currency'

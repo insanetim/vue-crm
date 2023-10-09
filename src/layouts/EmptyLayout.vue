@@ -5,16 +5,17 @@
 </template>
 
 <script setup>
+import { useAppStore } from '@/stores/app'
 import localize from '@/utils/localize'
 import messages from '@/utils/messages'
 import { computed, inject, watch } from 'vue'
-import { useStore } from 'vuex'
 
-const store = useStore()
+const appStore = useAppStore()
 const $error = inject('$error')
-const error = computed(() => store.getters.error)
+const error = computed(() => appStore.error)
 
 watch(error, ({ code }) => {
   $error(localize(messages[code] ?? 'SomethingWentWrong'))
 })
 </script>
+@/stores/app @/stores/app

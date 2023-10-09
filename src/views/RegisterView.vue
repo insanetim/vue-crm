@@ -84,19 +84,19 @@
 
 <script setup>
 import useRegisterForm from '@/hooks/register-form'
+import { useAuthStore } from '@/stores/auth'
 import localize from '@/utils/localize'
 import { useMeta } from 'vue-meta'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'Register' })
 
-const store = useStore()
+const authStore = useAuthStore()
 const router = useRouter()
 
 const register = async values => {
   try {
-    await store.dispatch('auth/register', values)
+    await authStore.register(values)
     router.push({ name: 'home' })
   } catch (e) {}
 }
@@ -104,3 +104,4 @@ const register = async values => {
 const { agree, email, errors, name, onSubmit, password } =
   useRegisterForm(register)
 </script>
+@/stores/auth

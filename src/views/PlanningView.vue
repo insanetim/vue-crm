@@ -41,20 +41,24 @@
 </template>
 
 <script setup>
+import { useCategoryStore } from '@/stores/category'
+import { useInfoStore } from '@/stores/info'
+import { useRecordStore } from '@/stores/record'
 import currencyFormat from '@/utils/currencyFormat'
 import localize from '@/utils/localize'
 import { computed, onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'Menu_Planning' })
 
-const store = useStore()
+const infoStore = useInfoStore()
+const recordStore = useRecordStore()
+const categoryStore = useCategoryStore()
 const loading = ref(true)
-const info = computed(() => store.getters['info/info'])
-const records = computed(() => store.getters['record/records'])
+const info = computed(() => infoStore.info)
+const records = computed(() => recordStore.records)
 const categories = computed(() => {
-  return store.getters['category/categories'].map(c => {
+  return categoryStore.categories.map(c => {
     const balance = records.value
       .filter(r => r.categoryId === c.id)
       .reduce((total, r) => {
@@ -81,8 +85,9 @@ const categories = computed(() => {
 })
 
 onMounted(async () => {
-  await store.dispatch('category/fetchCategories')
-  await store.dispatch('record/fetchRecords')
+  await categoryStore.fetchCategories()
+  await recordStore.fetchRecords()
   loading.value = false
 })
 </script>
+@/stores/category@/stores/info@/stores/record

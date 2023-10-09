@@ -48,15 +48,15 @@
 
 <script setup>
 import useProfileForm from '@/hooks/profile-form'
+import { useInfoStore } from '@/stores/info'
 import localize from '@/utils/localize'
 import { computed, onMounted } from 'vue'
 import { useMeta } from 'vue-meta'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'ProfileTitle' })
 
-const store = useStore()
-const info = computed(() => store.getters['info/info'])
+const infoStore = useInfoStore()
+const info = computed(() => infoStore.info)
 const { errors, isRuLocale, name, onSubmit } = useProfileForm(submitHandler, {
   isRuLocale: info.value.locale === 'ru-RU',
   name: info.value.name
@@ -64,7 +64,7 @@ const { errors, isRuLocale, name, onSubmit } = useProfileForm(submitHandler, {
 
 async function submitHandler({ isRuLocale, name }) {
   try {
-    await store.dispatch('info/updateInfo', {
+    await infoStore.updateInfo({
       locale: isRuLocale ? 'ru-RU' : 'en-US',
       name
     })
@@ -81,3 +81,4 @@ onMounted(() => {
   margin-bottom: 2rem;
 }
 </style>
+@/stores/info

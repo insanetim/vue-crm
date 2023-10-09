@@ -20,19 +20,20 @@
 
 <script setup>
 import { currencies } from '@/constants'
+import { useInfoStore } from '@/stores/info'
 import currencyFormat from '@/utils/currencyFormat'
 import localize from '@/utils/localize'
 import { computed } from 'vue'
-import { useStore } from 'vuex'
 
-const store = useStore()
+const infoStore = useInfoStore()
 const { rates } = defineProps({
   rates: {
     required: true,
     type: Object
   }
 })
-const base = computed(() => store.getters['info/info'].bill / rates.UAH)
+const base = computed(() => infoStore.bill / rates.UAH)
 
 const getCurrency = currency => Math.round(base.value * rates[currency])
 </script>
+@/stores/info

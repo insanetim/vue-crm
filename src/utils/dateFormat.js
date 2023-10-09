@@ -1,7 +1,8 @@
-import store from '@/store'
+import { useInfoStore } from '@/stores/info'
 
 export default function dateFormat(value, format = 'date') {
-  const locale = store.getters['info/info'].locale ?? 'ru-RU'
+  const infoStore = useInfoStore()
+  const locale = infoStore.locale ?? 'ru-RU'
   const options = {}
 
   if (format.includes('date')) {

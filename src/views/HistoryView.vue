@@ -45,22 +45,24 @@
 <script setup>
 import HistoryTable from '@/components/history/HistoryTable.vue'
 import usePagination from '@/hooks/pagination'
+import { useCategoryStore } from '@/stores/category'
+import { useRecordStore } from '@/stores/record'
 import localize from '@/utils/localize'
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
 import { computed, onMounted, ref, watch } from 'vue'
 import { Pie } from 'vue-chartjs'
 import { useMeta } from 'vue-meta'
-import { useStore } from 'vuex'
 
 ChartJS.register(Tooltip, Legend, ArcElement)
 
 useMeta({ title: 'Menu_History' })
 
-const store = useStore()
+const categoryStore = useCategoryStore()
+const recordStore = useRecordStore()
 const loading = ref(true)
-const categories = computed(() => store.getters['category/categories'])
+const categories = computed(() => categoryStore.categories)
 const records = computed(() =>
-  store.getters['record/records'].map(r => ({
+  recordStore.records.map(r => ({
     ...r,
     categoryName: categories.value.find(c => c.id === r.categoryId).title,
     typeClass: r.type === 'income' ? 'green' : 'red',
@@ -114,8 +116,9 @@ watch(
 )
 
 onMounted(async () => {
-  await store.dispatch('category/fetchCategories')
-  await store.dispatch('record/fetchRecords')
+  await categoryStore.fetchCategories()
+  await recordStore.fetchRecords()
   loading.value = false
 })
 </script>
+@/stores/category@/stores/record

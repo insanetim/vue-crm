@@ -51,12 +51,13 @@
 </template>
 
 <script setup>
+import { useCategoryStore } from '@/stores/category'
+import { useRecordStore } from '@/stores/record'
 import currencyFormat from '@/utils/currencyFormat'
 import dateFormat from '@/utils/dateFormat'
 import localize from '@/utils/localize'
 import { onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'Detail_Title' })
 
@@ -66,16 +67,16 @@ const { id } = defineProps({
     type: String
   }
 })
-const store = useStore()
+const categoryStore = useCategoryStore()
+const recordStore = useRecordStore()
 const record = ref(null)
 const loading = ref(true)
 
 onMounted(async () => {
-  const currentRecord = await store.dispatch('record/fetchRecordById', id)
+  const currentRecord = await recordStore.fetchRecordById(id)
 
   if ('categoryId' in currentRecord) {
-    const category = await store.dispatch(
-      'category/fetchCategoryById',
+    const category = await categoryStore.fetchCategoryById(
       currentRecord.categoryId
     )
     record.value = {
@@ -87,3 +88,4 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
+@/stores/category@/stores/record

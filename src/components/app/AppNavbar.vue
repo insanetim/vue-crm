@@ -58,24 +58,26 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth'
+import { useInfoStore } from '@/stores/info'
 import dateFormat from '@/utils/dateFormat'
 import localize from '@/utils/localize'
 import { useNow } from '@vueuse/core'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 
 const emit = defineEmits(['toggle'])
 
-const store = useStore()
+const authStore = useAuthStore()
+const infoStore = useInfoStore()
 const router = useRouter()
 const dropdown = ref(null)
 const dropdownRef = ref(null)
-const info = computed(() => store.getters['info/info'])
+const info = computed(() => infoStore.info)
 const now = useNow()
 
 const logout = async () => {
-  await store.dispatch('auth/logout')
+  await authStore.logout()
   router.push({ name: 'login', query: { message: 'logout' } })
 }
 
@@ -91,3 +93,4 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+@/stores/auth@/stores/info

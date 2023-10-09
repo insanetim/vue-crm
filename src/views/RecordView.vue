@@ -106,6 +106,9 @@
 
 <script setup>
 import useRecordForm from '@/hooks/record-form'
+import { useCategoryStore } from '@/stores/category'
+import { useInfoStore } from '@/stores/info'
+import { useRecordStore } from '@/stores/record'
 import localize from '@/utils/localize'
 import {
   computed,
@@ -116,18 +119,19 @@ import {
   ref
 } from 'vue'
 import { useMeta } from 'vue-meta'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'Menu_NewRecord' })
 
-const store = useStore()
+const infoStore = useInfoStore()
+const recordStore = useRecordStore()
+const categoryStore = useCategoryStore()
 const $message = inject('$message')
 const loading = ref(true)
 const select = ref(null)
 const selectRef = ref(null)
 const category = ref(null)
-const info = computed(() => store.getters['info/info'])
-const categories = computed(() => store.getters['category/categories'])
+const info = computed(() => infoStore.info)
+const categories = computed(() => categoryStore.categories)
 const { amount, description, errors, onSubmit, resetForm, type } =
   useRecordForm(submitHandler)
 const canCreateRecord = computed(() => {
@@ -141,7 +145,7 @@ const canCreateRecord = computed(() => {
 async function submitHandler(values) {
   if (canCreateRecord.value) {
     try {
-      await store.dispatch('record/createRecord', {
+      await recordStore.createRecord({
         categoryId: category.value,
         date: new Date().toJSON(),
         ...values
@@ -150,7 +154,7 @@ async function submitHandler(values) {
         values.type === 'income'
           ? info.value.bill + values.amount
           : info.value.bill - values.amount
-      await store.dispatch('info/updateInfo', { bill })
+      await infoStore.updateInfo({ bill })
       $message(localize('RecordHasBeenCreated'))
       resetForm()
     } catch (e) {}
@@ -162,7 +166,7 @@ async function submitHandler(values) {
 }
 
 onMounted(async () => {
-  await store.dispatch('category/fetchCategories')
+  await categoryStore.fetchCategories()
   loading.value = false
 })
 
@@ -180,3 +184,4 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+@/stores/category@/stores/info@/stores/record

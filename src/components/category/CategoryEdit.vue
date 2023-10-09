@@ -12,11 +12,11 @@
             v-model="current"
           >
             <option
-              v-for="category in categories"
-              :key="category.id"
-              :value="category.id"
+              v-for="c in categories"
+              :key="c.id"
+              :value="c.id"
             >
-              {{ category.title }}
+              {{ c.title }}
             </option>
           </select>
           <label>{{ localize('SelectCategory') }}</label>
@@ -66,6 +66,7 @@
 
 <script setup>
 import useCategoryForm from '@/hooks/category-form'
+import { useCategoryStore } from '@/stores/category'
 import localize from '@/utils/localize'
 import {
   computed,
@@ -76,11 +77,10 @@ import {
   ref,
   watch
 } from 'vue'
-import { useStore } from 'vuex'
 
-const store = useStore()
+const categoryStore = useCategoryStore()
 const $message = inject('$message')
-const categories = computed(() => store.getters['category/categories'])
+const categories = computed(() => categoryStore.categories)
 const initCategory = categories.value[0]
 const current = ref(initCategory.id)
 const select = ref(null)
@@ -95,7 +95,7 @@ const { errors, limit, onSubmit, setValues, title } = useCategoryForm(
 
 async function submitHandler(values) {
   try {
-    await store.dispatch('category/updateCategory', {
+    await categoryStore.updateCategory({
       id: current.value,
       ...values
     })
@@ -123,3 +123,4 @@ onBeforeUnmount(() => {
   }
 })
 </script>
+@/stores/category

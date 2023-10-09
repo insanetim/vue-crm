@@ -1,13 +1,14 @@
 import App from '@/App.vue'
 import AppLoader from '@/components/app/AppLoader'
-import tooltipDirective from '@/directives/tooltip'
+import tooltip from '@/directives/tooltip'
 import messagePlugin from '@/plugins/message'
 import router from '@/router'
-import store from '@/store'
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import 'materialize-css/dist/css/materialize.min.css'
 import 'materialize-css/dist/js/materialize.min.js'
+import { createPinia } from 'pinia'
+import { PiniaLogger } from 'pinia-logger'
 import { createApp } from 'vue'
 import { createMetaManager } from 'vue-meta'
 import Paginate from 'vuejs-paginate-next'
@@ -25,16 +26,24 @@ initializeApp({
   storageBucket: 'vue-crm-93feb.appspot.com'
 })
 
+const pinia = createPinia()
+pinia.use(
+  PiniaLogger({
+    disabled: process.env.NODE_ENV === 'production',
+    expanded: false
+  })
+)
+
 let app
 const auth = getAuth()
 onAuthStateChanged(auth, async () => {
   if (!app) {
     app = createApp(App)
-    app.use(store)
+    app.use(pinia)
     app.use(router)
     app.use(createMetaManager())
     app.use(messagePlugin)
-    app.directive('tooltip', tooltipDirective)
+    app.directive('tooltip', tooltip)
     app.component('AppLoader', AppLoader)
     app.component('AppPagination', Paginate)
     await router.isReady()

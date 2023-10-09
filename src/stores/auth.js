@@ -5,44 +5,50 @@ import {
   signOut
 } from 'firebase/auth'
 import { getDatabase, ref, set } from 'firebase/database'
+import { defineStore } from 'pinia'
 
-export default {
+import { useAppStore } from './app'
+import { useInfoStore } from './info'
+
+export const useAuthStore = defineStore('auth', {
   actions: {
     getUid() {
       const user = getAuth().currentUser
 
       return user ? user.uid : null
     },
-    async login({ commit }, { email, password }) {
+    async login({ email, password }) {
       try {
         const auth = getAuth()
         await signInWithEmailAndPassword(auth, email, password)
       } catch (e) {
-        commit('setError', e, { root: true })
+        const appStore = useAppStore()
+        appStore.setError(e)
         throw e
       }
     },
-    async logout({ commit }) {
+    async logout() {
       const auth = getAuth()
       await signOut(auth)
-      commit('info/clearInfo', null, { root: true })
+      const infoStore = useInfoStore()
+      infoStore.clearInfo()
     },
-    async register({ commit, dispatch }, { email, name, password }) {
+    async register({ email, name, password }) {
       try {
         const auth = getAuth()
         await createUserWithEmailAndPassword(auth, email, password)
         const db = getDatabase()
-        const uid = await dispatch('getUid')
+        const uid = this.getUid()
         await set(ref(db, `/users/${uid}/info`), {
           bill: 100000,
           locale: 'ru-RU',
           name
         })
       } catch (e) {
-        commit('setError', e, { root: true })
+        const appStore = useAppStore()
+        appStore.setError(e)
         throw e
       }
     }
-  },
-  namespaced: true
-}
+  }
+})

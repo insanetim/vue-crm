@@ -9,7 +9,7 @@
       <app-navbar @toggle="toggle()" />
 
       <app-sidebar
-        :key="info.locale"
+        :key="infoStore.locale"
         :is-open="isOpen"
       />
 
@@ -38,17 +38,19 @@
 <script setup>
 import AppNavbar from '@/components/app/AppNavbar.vue'
 import AppSidebar from '@/components/app/AppSidebar.vue'
+import { useAppStore } from '@/stores/app'
+import { useInfoStore } from '@/stores/info'
 import localize from '@/utils/localize'
 import messages from '@/utils/messages'
 import { useToggle } from '@vueuse/core'
 import { computed, inject, onMounted, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 
-const store = useStore()
+const appStore = useAppStore()
+const infoStore = useInfoStore()
 const loading = ref(true)
 const $error = inject('$error')
-const info = computed(() => store.getters['info/info'])
-const error = computed(() => store.getters.error)
+const info = computed(() => infoStore.info)
+const error = computed(() => appStore.error)
 const [isOpen, toggle] = useToggle(true)
 
 watch(error, ({ code }) => {
@@ -57,8 +59,9 @@ watch(error, ({ code }) => {
 
 onMounted(async () => {
   if (!Object.keys(info.value).length) {
-    await store.dispatch('info/fetchInfo')
+    await infoStore.fetchInfo()
   }
   loading.value = false
 })
 </script>
+@/stores/app @/stores/app@/stores/info

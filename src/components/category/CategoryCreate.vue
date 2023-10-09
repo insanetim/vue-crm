@@ -50,18 +50,18 @@
 
 <script setup>
 import useCategoryForm from '@/hooks/category-form'
+import { useCategoryStore } from '@/stores/category'
 import localize from '@/utils/localize'
 import { inject, onMounted } from 'vue'
-import { useStore } from 'vuex'
 
-const store = useStore()
+const categoryStore = useCategoryStore()
 const $message = inject('$message')
 const { errors, limit, onSubmit, resetForm, title } =
   useCategoryForm(submitHandler)
 
 async function submitHandler(values) {
   try {
-    await store.dispatch('category/createCategory', values)
+    await categoryStore.createCategory(values)
     resetForm()
     $message(localize('Category_HasBeenCreated'))
   } catch (e) {}
@@ -71,3 +71,4 @@ onMounted(() => {
   M.updateTextFields()
 })
 </script>
+@/stores/category

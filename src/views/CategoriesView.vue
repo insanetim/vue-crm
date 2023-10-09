@@ -28,19 +28,20 @@
 <script setup>
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryEdit from '@/components/category/CategoryEdit.vue'
+import { useCategoryStore } from '@/stores/category'
 import localize from '@/utils/localize'
 import { computed, onMounted, ref } from 'vue'
 import { useMeta } from 'vue-meta'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'Menu_Categories' })
 
-const store = useStore()
+const categoryStore = useCategoryStore()
 const loading = ref(true)
-const categories = computed(() => store.getters['category/categories'])
+const categories = computed(() => categoryStore.categories)
 
 onMounted(async () => {
-  await store.dispatch('category/fetchCategories')
+  await categoryStore.fetchCategories()
   loading.value = false
 })
 </script>
+@/stores/category

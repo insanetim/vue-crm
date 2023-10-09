@@ -59,23 +59,23 @@
 
 <script setup>
 import useLoginForm from '@/hooks/login-form'
+import { useAuthStore } from '@/stores/auth'
 import localize from '@/utils/localize'
 import messages from '@/utils/messages'
 import { inject, onMounted } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useRoute, useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 
 useMeta({ title: 'Login' })
 
-const store = useStore()
+const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
 const $message = inject('$message')
 
 const login = async values => {
   try {
-    await store.dispatch('auth/login', values)
+    await authStore.login(values)
     router.push({ name: 'home' })
   } catch (e) {}
 }
@@ -88,3 +88,4 @@ onMounted(() => {
   }
 })
 </script>
+@/stores/auth
