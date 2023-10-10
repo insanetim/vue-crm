@@ -4,8 +4,8 @@ import { defineStore } from 'pinia'
 export const useAppStore = defineStore('app', {
   actions: {
     async fetchCurrency() {
-      const apiKey = process.env.VUE_APP_API_KEY
-      const apiUrl = process.env.VUE_APP_API_URL
+      const apiKey = import.meta.env.VITE_API_KEY
+      const apiUrl = import.meta.env.VITE_API_URL
       const res = await fetch(
         `${apiUrl}/latest?${new URLSearchParams({
           base: 'USD',

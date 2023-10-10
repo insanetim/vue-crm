@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import EmptyLayout from '@/layouts/EmptyLayout'
-import MainLayout from '@/layouts/MainLayout'
+import EmptyLayout from '@/layouts/EmptyLayout.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
 import appTitle from '@/utils/appTitle'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'

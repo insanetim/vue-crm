@@ -1,5 +1,5 @@
 import App from '@/App.vue'
-import AppLoader from '@/components/app/AppLoader'
+import AppLoader from '@/components/app/AppLoader.vue'
 import tooltip from '@/directives/tooltip'
 import messagePlugin from '@/plugins/message'
 import router from '@/router'
@@ -29,7 +29,7 @@ initializeApp({
 const pinia = createPinia()
 pinia.use(
   PiniaLogger({
-    disabled: process.env.NODE_ENV === 'production',
+    disabled: import.meta.env.MODE === 'production',
     expanded: false
   })
 )
