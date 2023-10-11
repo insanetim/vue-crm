@@ -64,5 +64,7 @@
   "WrongPassword": "Invalid password",
   "EmailInUse": "Email is already in use",
   "Error": "Error",
-  "SomethingWentWrong": "Something went wrong"
+  "SomethingWentWrong": "Something went wrong",
+  "NotFoundText": "Oops! We can't find the page you're looking for. Go to the",
+  "HomePage": "Home Page"
 }

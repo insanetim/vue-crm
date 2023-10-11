@@ -65,5 +65,7 @@
   "WrongPassword": "Неверный пароль",
   "EmailInUse": "Email уже занят",
   "Error": "Ошибка",
-  "SomethingWentWrong": "Что-то пошло не так"
+  "SomethingWentWrong": "Что-то пошло не так",
+  "NotFoundText": "Упс! Мы не можем найти страницу, которую вы ищете. Перейти на",
+  "HomePage": "главную страницу"
 }
