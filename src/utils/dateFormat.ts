@@ -1,9 +1,11 @@
 import { useInfoStore } from '@/stores/info'
 
-export default function dateFormat(value, format = 'date') {
+type Value = string | number | Date
+
+export default function dateFormat(value: Value, format = 'date') {
   const infoStore = useInfoStore()
   const locale = infoStore.locale ?? 'ru-RU'
-  const options = {}
+  const options: Record<string, string> = {}
 
   if (format.includes('date')) {
     options.day = '2-digit'

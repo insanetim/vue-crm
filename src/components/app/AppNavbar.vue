@@ -14,12 +14,12 @@
       <ul class="right hide-on-small-and-down">
         <li>
           <a
-            ref="dropdownRef"
+            href="#"
             class="dropdown-trigger black-text"
             data-target="dropdown"
-            href="#"
+            v-dropdown
           >
-            {{ info.name }}
+            {{ info?.name }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -57,39 +57,32 @@
   </nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useNow } from '@vueuse/core'
+
 import { useAuthStore } from '@/stores/auth'
 import { useInfoStore } from '@/stores/info'
 import dateFormat from '@/utils/dateFormat'
 import localize from '@/utils/localize'
-import { useNow } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import type { UserInfo } from '@/types'
 
-const emit = defineEmits(['toggle'])
+type EmitTypes = {
+  (e: 'toggle'): void
+}
 
+const emit = defineEmits<EmitTypes>()
+
+const router = useRouter()
 const authStore = useAuthStore()
 const infoStore = useInfoStore()
-const router = useRouter()
-const dropdown = ref(null)
-const dropdownRef = ref(null)
-const info = computed(() => infoStore.info)
 const now = useNow()
+
+const info = computed<UserInfo | null>(() => infoStore.info)
 
 const logout = async () => {
   await authStore.logout()
   router.push({ name: 'login', query: { message: 'logout' } })
 }
-
-onMounted(() => {
-  dropdown.value = M.Dropdown.init(dropdownRef.value, {
-    constrainWidth: false
-  })
-})
-
-onBeforeUnmount(() => {
-  if (dropdown.value && dropdown.value.destroy) {
-    dropdown.value.destroy()
-  }
-})
 </script>

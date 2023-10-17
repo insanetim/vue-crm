@@ -42,31 +42,44 @@
   </div>
 </template>
 
-<script setup>
-import HistoryTable from '@/components/history/HistoryTable.vue'
-import usePagination from '@/hooks/pagination'
-import { useCategoryStore } from '@/stores/category'
-import { useRecordStore } from '@/stores/record'
-import localize from '@/utils/localize'
-import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 import { useMeta } from 'vue-meta'
+
+import HistoryTable from '@/components/history/HistoryTable.vue'
+import { useCategoryStore } from '@/stores/category'
+import { useRecordStore } from '@/stores/record'
+import { usePagination } from '@/use/usePagination'
+import localize from '@/utils/localize'
+import type { CategoryPersistent, RecordPersistent } from '@/types'
+
+export type RecordExtended = RecordPersistent & {
+  categoryName: string
+  typeClass: 'green' | 'red'
+  typeText: string
+}
 
 ChartJS.register(Tooltip, Legend, ArcElement)
 
 useMeta({ title: 'Menu_History' })
-
 const categoryStore = useCategoryStore()
 const recordStore = useRecordStore()
+const { items, page, pageChangeHandler, pageCount, setupPagination } =
+  usePagination<RecordExtended>()
+
 const loading = ref(true)
-const categories = computed(() => categoryStore.categories)
-const records = computed(() =>
-  recordStore.records.map(r => ({
-    ...r,
-    categoryName: categories.value.find(c => c.id === r.categoryId).title,
-    typeClass: r.type === 'income' ? 'green' : 'red',
-    typeText: r.type === 'income' ? localize('Income') : localize('Outcome')
+const categories = computed<CategoryPersistent[]>(
+  () => categoryStore.categories
+)
+const records = computed<RecordExtended[]>(() =>
+  recordStore.records.map(record => ({
+    ...record,
+    categoryName: categories.value.find(c => c.id === record.categoryId)!.title,
+    typeClass: record.type === 'income' ? 'green' : 'red',
+    typeText:
+      record.type === 'income' ? localize('Income') : localize('Outcome')
   }))
 )
 const chartData = computed(() => ({
@@ -104,8 +117,6 @@ const chartOptions = {
   maintainAspectRatio: false,
   responsive: true
 }
-const { items, page, pageChangeHandler, pageCount, setupPagination } =
-  usePagination()
 
 watch(
   loading,

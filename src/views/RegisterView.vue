@@ -82,19 +82,20 @@
   </form>
 </template>
 
-<script setup>
-import useRegisterForm from '@/hooks/register-form'
-import { useAuthStore } from '@/stores/auth'
-import localize from '@/utils/localize'
-import { useMeta } from 'vue-meta'
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
+
+import type { Credentials } from '@/types'
+import { useAuthStore } from '@/stores/auth'
+import { useRegisterForm } from '@/use/useRegisterForm'
+import localize from '@/utils/localize'
 
 useMeta({ title: 'Register' })
-
-const authStore = useAuthStore()
 const router = useRouter()
+const authStore = useAuthStore()
 
-const register = async values => {
+const register = async (values: Credentials) => {
   try {
     await authStore.register(values)
     router.push({ name: 'home' })

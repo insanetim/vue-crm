@@ -1,9 +1,11 @@
-import localize from '@/utils/localize'
-import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { boolean, object, string } from 'yup'
+import { toTypedSchema } from '@vee-validate/yup'
 
-export default function useRegisterForm(fn) {
+import type { CallbackFunction } from '@/types'
+import localize from '@/utils/localize'
+
+export function useRegisterForm(fn: CallbackFunction) {
   const schema = toTypedSchema(
     object({
       agree: boolean().oneOf([true]),

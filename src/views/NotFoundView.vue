@@ -7,6 +7,6 @@
   </p>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import localize from '@/utils/localize'
 </script>

@@ -1,9 +1,11 @@
-import localize from '@/utils/localize'
-import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { number, object, string } from 'yup'
+import { toTypedSchema } from '@vee-validate/yup'
 
-export default function useRecordForm(fn) {
+import type { CallbackFunction } from '@/types'
+import localize from '@/utils/localize'
+
+export function useRecordForm(fn: CallbackFunction) {
   const schema = toTypedSchema(
     object({
       amount: number().min(1, `${localize('Message_MinLength')} 1`),

@@ -8,8 +8,8 @@
       <form @submit="onSubmit">
         <div class="input-field">
           <select
-            ref="selectRef"
             v-model="current"
+            v-select
           >
             <option
               v-for="c in categories"
@@ -64,36 +64,27 @@
   </div>
 </template>
 
-<script setup>
-import useCategoryForm from '@/hooks/category-form'
-import { useCategoryStore } from '@/stores/category'
-import localize from '@/utils/localize'
-import {
-  computed,
-  inject,
-  onBeforeUnmount,
-  onMounted,
-  onUpdated,
-  ref,
-  watch
-} from 'vue'
+<script setup lang="ts">
+import { computed, inject, ref, watch } from 'vue'
 
+import type { CategoryPersistent, UserCategory } from '@/types'
+import type { MessageType } from '@/plugins/message'
+import { useCategoryStore } from '@/stores/category'
+import { useCategoryForm } from '@/use/useCategoryForm'
+import { useUpdateTextFields } from '@/use/useUpdateTextFields'
+import localize from '@/utils/localize'
+
+const $message = inject('$message') as MessageType
 const categoryStore = useCategoryStore()
-const $message = inject('$message')
-const categories = computed(() => categoryStore.categories)
+useUpdateTextFields()
+
+const categories = computed<CategoryPersistent[]>(
+  () => categoryStore.categories
+)
 const initCategory = categories.value[0]
 const current = ref(initCategory.id)
-const select = ref(null)
-const selectRef = ref(null)
-const { errors, limit, onSubmit, setValues, title } = useCategoryForm(
-  submitHandler,
-  {
-    limit: initCategory.limit,
-    title: initCategory.title
-  }
-)
 
-async function submitHandler(values) {
+const submitHandler = async (values: UserCategory) => {
   try {
     await categoryStore.updateCategory({
       id: current.value,
@@ -102,24 +93,18 @@ async function submitHandler(values) {
     $message(localize('Category_HasBeenUpdated'))
   } catch (e) {}
 }
+const { errors, limit, onSubmit, setValues, title } = useCategoryForm(
+  submitHandler,
+  {
+    limit: initCategory.limit,
+    title: initCategory.title
+  }
+)
 
 watch(current, id => {
-  const { limit, title } = categories.value.find(c => c.id === id)
+  const { limit, title } = categories.value.find(
+    c => c.id === id
+  ) as CategoryPersistent
   setValues({ limit, title })
-})
-
-onMounted(() => {
-  select.value = M.FormSelect.init(selectRef.value, {})
-  M.updateTextFields()
-})
-
-onUpdated(() => {
-  select.value = M.FormSelect.init(selectRef.value, {})
-})
-
-onBeforeUnmount(() => {
-  if (select.value && select.value.destroy) {
-    select.value.destroy()
-  }
 })
 </script>

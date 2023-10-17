@@ -1,9 +1,19 @@
-import localize from '@/utils/localize'
-import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { boolean, object, string } from 'yup'
+import { toTypedSchema } from '@vee-validate/yup'
 
-export default function useProfileForm(fn, initialValues = {}) {
+import type { CallbackFunction } from '@/types'
+import localize from '@/utils/localize'
+
+type InitialValues = {
+  isRuLocale?: boolean
+  name?: string
+}
+
+export function useProfileForm(
+  fn: CallbackFunction,
+  initialValues: InitialValues = {}
+) {
   const schema = toTypedSchema(
     object({
       isRuLocale: boolean(),

@@ -7,12 +7,13 @@
   </component>
 </template>
 
-<script>
+<script lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+
 import EmptyLayout from '@/layouts/EmptyLayout.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import appTitle from '@/utils/appTitle'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 
 export default {
   components: { EmptyLayout, MainLayout },

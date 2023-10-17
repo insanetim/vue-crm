@@ -1,3 +1,4 @@
+import type { FirebaseError } from 'firebase/app'
 import {
   child,
   get,
@@ -9,12 +10,20 @@ import {
 } from 'firebase/database'
 import { defineStore } from 'pinia'
 
+import type { UserCategory, CategoryPersistent } from '@/types'
 import { useAppStore } from './app'
 import { useAuthStore } from './auth'
 
+type StateShape = {
+  categories: CategoryPersistent[]
+}
+
 export const useCategoryStore = defineStore('category', {
+  state: (): StateShape => ({
+    categories: []
+  }),
   actions: {
-    async createCategory({ limit, title }) {
+    async createCategory({ limit, title }: UserCategory) {
       try {
         const db = getDatabase()
         const authStore = useAuthStore()
@@ -22,12 +31,12 @@ export const useCategoryStore = defineStore('category', {
         await push(ref(db, `/users/${uid}/categories`), { limit, title })
       } catch (e) {
         const appStore = useAppStore()
-        appStore.setError(e)
+        appStore.setError(e as FirebaseError)
         throw e
       }
     },
     fetchCategories() {
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         ;(async () => {
           try {
             const db = getDatabase()
@@ -43,13 +52,13 @@ export const useCategoryStore = defineStore('category', {
             })
           } catch (e) {
             const appStore = useAppStore()
-            appStore.setError(e)
+            appStore.setError(e as FirebaseError)
             throw e
           }
         })()
       })
     },
-    async fetchCategoryById(id) {
+    async fetchCategoryById(id: string) {
       try {
         const db = getDatabase()
         const authStore = useAuthStore()
@@ -61,11 +70,11 @@ export const useCategoryStore = defineStore('category', {
         return { id, ...category }
       } catch (e) {
         const appStore = useAppStore()
-        appStore.setError(e)
+        appStore.setError(e as FirebaseError)
         throw e
       }
     },
-    async updateCategory({ id, limit, title }) {
+    async updateCategory({ id, limit, title }: CategoryPersistent) {
       try {
         const db = getDatabase()
         const authStore = useAuthStore()
@@ -76,12 +85,9 @@ export const useCategoryStore = defineStore('category', {
         })
       } catch (e) {
         const appStore = useAppStore()
-        appStore.setError(e)
+        appStore.setError(e as FirebaseError)
         throw e
       }
     }
-  },
-  state: () => ({
-    categories: []
-  })
+  }
 })

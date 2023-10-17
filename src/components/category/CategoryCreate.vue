@@ -48,26 +48,27 @@
   </div>
 </template>
 
-<script setup>
-import useCategoryForm from '@/hooks/category-form'
+<script setup lang="ts">
+import { inject } from 'vue'
+
+import type { UserCategory } from '@/types'
+import type { MessageType } from '@/plugins/message'
 import { useCategoryStore } from '@/stores/category'
+import { useCategoryForm } from '@/use/useCategoryForm'
+import { useUpdateTextFields } from '@/use/useUpdateTextFields'
 import localize from '@/utils/localize'
-import { inject, onMounted } from 'vue'
 
+const $message = inject('$message') as MessageType
 const categoryStore = useCategoryStore()
-const $message = inject('$message')
-const { errors, limit, onSubmit, resetForm, title } =
-  useCategoryForm(submitHandler)
+useUpdateTextFields()
 
-async function submitHandler(values) {
+const submitHandler = async (values: UserCategory) => {
   try {
     await categoryStore.createCategory(values)
     resetForm()
     $message(localize('Category_HasBeenCreated'))
   } catch (e) {}
 }
-
-onMounted(() => {
-  M.updateTextFields()
-})
+const { errors, limit, onSubmit, resetForm, title } =
+  useCategoryForm(submitHandler)
 </script>

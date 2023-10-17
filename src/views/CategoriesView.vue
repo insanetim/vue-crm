@@ -25,19 +25,23 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+
 import CategoryCreate from '@/components/category/CategoryCreate.vue'
 import CategoryEdit from '@/components/category/CategoryEdit.vue'
 import { useCategoryStore } from '@/stores/category'
 import localize from '@/utils/localize'
-import { computed, onMounted, ref } from 'vue'
-import { useMeta } from 'vue-meta'
+import type { CategoryPersistent } from '@/types'
 
 useMeta({ title: 'Menu_Categories' })
-
 const categoryStore = useCategoryStore()
+
 const loading = ref(true)
-const categories = computed(() => categoryStore.categories)
+const categories = computed<CategoryPersistent[]>(
+  () => categoryStore.categories
+)
 
 onMounted(async () => {
   await categoryStore.fetchCategories()

@@ -1,11 +1,12 @@
-import localize from '@/utils/localize'
-import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import { object, string } from 'yup'
+import { toTypedSchema } from '@vee-validate/yup'
 
-const MIN_LENGTH = 6
+import type { CallbackFunction } from '@/types'
+import { passwordMinLength } from '@/constants/index'
+import localize from '@/utils/localize'
 
-export default function useLoginForm(fn) {
+export function useLoginForm(fn: CallbackFunction) {
   const schema = toTypedSchema(
     object({
       email: string()
@@ -13,7 +14,10 @@ export default function useLoginForm(fn) {
         .email(localize('Message_EmailValid')),
       password: string()
         .required(localize('Message_EnterPassword'))
-        .min(MIN_LENGTH, `${localize('Message_MinLength')} ${MIN_LENGTH}`)
+        .min(
+          passwordMinLength,
+          `${localize('Message_MinLength')} ${passwordMinLength}`
+        )
     })
   )
   const { errors, handleSubmit, useFieldModel } = useForm({

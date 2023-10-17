@@ -30,19 +30,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { CurrenciesResponse } from '@/types'
 import { currencies } from '@/constants'
 import dateFormat from '@/utils/dateFormat'
 import localize from '@/utils/localize'
 
-defineProps({
-  date: {
-    required: true,
-    type: String
-  },
-  rates: {
-    required: true,
-    type: Object
-  }
-})
+type PropTypes = {
+  date: string
+  rates: CurrenciesResponse['rates']
+}
+
+defineProps<PropTypes>()
 </script>

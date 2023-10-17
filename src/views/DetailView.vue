@@ -50,32 +50,37 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+
+import type { RecordPersistent } from '@/types'
 import { useCategoryStore } from '@/stores/category'
 import { useRecordStore } from '@/stores/record'
 import currencyFormat from '@/utils/currencyFormat'
 import dateFormat from '@/utils/dateFormat'
 import localize from '@/utils/localize'
-import { onMounted, ref } from 'vue'
-import { useMeta } from 'vue-meta'
+
+type PropTypes = {
+  id: string
+}
+type RecordDetail = RecordPersistent & {
+  categoryName: string
+}
+
+const { id } = defineProps<PropTypes>()
 
 useMeta({ title: 'Detail_Title' })
-
-const { id } = defineProps({
-  id: {
-    required: true,
-    type: String
-  }
-})
 const categoryStore = useCategoryStore()
 const recordStore = useRecordStore()
-const record = ref(null)
+
+const record = ref<RecordDetail | null>(null)
 const loading = ref(true)
 
 onMounted(async () => {
   const currentRecord = await recordStore.fetchRecordById(id)
 
-  if ('categoryId' in currentRecord) {
+  if (currentRecord.categoryId) {
     const category = await categoryStore.fetchCategoryById(
       currentRecord.categoryId
     )

@@ -1,3 +1,4 @@
+import type { FirebaseError } from 'firebase/app'
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -7,6 +8,7 @@ import {
 import { getDatabase, ref, set } from 'firebase/database'
 import { defineStore } from 'pinia'
 
+import type { Credentials } from '@/types'
 import { useAppStore } from './app'
 import { useInfoStore } from './info'
 
@@ -17,13 +19,13 @@ export const useAuthStore = defineStore('auth', {
 
       return user ? user.uid : null
     },
-    async login({ email, password }) {
+    async login({ email, password }: Omit<Credentials, 'name'>) {
       try {
         const auth = getAuth()
         await signInWithEmailAndPassword(auth, email, password)
       } catch (e) {
         const appStore = useAppStore()
-        appStore.setError(e)
+        appStore.setError(e as FirebaseError)
         throw e
       }
     },
@@ -33,7 +35,7 @@ export const useAuthStore = defineStore('auth', {
       const infoStore = useInfoStore()
       infoStore.clearInfo()
     },
-    async register({ email, name, password }) {
+    async register({ email, name, password }: Credentials) {
       try {
         const auth = getAuth()
         await createUserWithEmailAndPassword(auth, email, password)
@@ -46,7 +48,7 @@ export const useAuthStore = defineStore('auth', {
         })
       } catch (e) {
         const appStore = useAppStore()
-        appStore.setError(e)
+        appStore.setError(e as FirebaseError)
         throw e
       }
     }

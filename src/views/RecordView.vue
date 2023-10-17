@@ -13,8 +13,8 @@
     >
       <div class="input-field">
         <select
-          ref="selectRef"
           v-model="category"
+          v-select
         >
           <option
             v-for="c in categories"
@@ -104,66 +104,69 @@
   </div>
 </template>
 
-<script setup>
-import useRecordForm from '@/hooks/record-form'
+<script setup lang="ts">
+import { computed, inject, onMounted, onUpdated, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+
+import type { MessageType } from '@/plugins/message'
 import { useCategoryStore } from '@/stores/category'
 import { useInfoStore } from '@/stores/info'
 import { useRecordStore } from '@/stores/record'
+import { useRecordForm } from '@/use/useRecordForm'
 import localize from '@/utils/localize'
-import {
-  computed,
-  inject,
-  onBeforeUnmount,
-  onMounted,
-  onUpdated,
-  ref
-} from 'vue'
-import { useMeta } from 'vue-meta'
+import type { CategoryPersistent, UserInfo } from '@/types'
+
+declare let M: any
+type RecordValues = {
+  amount: number
+  description: string
+  type: string
+}
 
 useMeta({ title: 'Menu_NewRecord' })
-
 const infoStore = useInfoStore()
 const recordStore = useRecordStore()
 const categoryStore = useCategoryStore()
-const $message = inject('$message')
+const $message = inject('$message') as MessageType
+
 const loading = ref(true)
-const select = ref(null)
-const selectRef = ref(null)
-const category = ref(null)
-const info = computed(() => infoStore.info)
-const categories = computed(() => categoryStore.categories)
-const { amount, description, errors, onSubmit, resetForm, type } =
-  useRecordForm(submitHandler)
+const category = ref<string>('')
+const info = computed<UserInfo | null>(() => infoStore.info)
+const categories = computed<CategoryPersistent[]>(
+  () => categoryStore.categories
+)
 const canCreateRecord = computed(() => {
   if (type.value === 'income') {
     return true
   }
 
-  return info.value.bill >= amount.value
+  return info.value!.bill >= (amount.value as number)
 })
 
-async function submitHandler(values) {
+const submitHandler = async (values: RecordValues) => {
   if (canCreateRecord.value) {
     try {
       await recordStore.createRecord({
+        ...values,
         categoryId: category.value,
-        date: new Date().toJSON(),
-        ...values
+        date: new Date().toJSON()
       })
       const bill =
         values.type === 'income'
-          ? info.value.bill + values.amount
-          : info.value.bill - values.amount
+          ? info.value!.bill + values.amount
+          : info.value!.bill - values.amount
       await infoStore.updateInfo({ bill })
       $message(localize('RecordHasBeenCreated'))
       resetForm()
     } catch (e) {}
   } else {
     $message(
-      `${localize('NotEnoughMoney')} (${values.amount - info.value.bill})`
+      `${localize('NotEnoughMoney')} (${values.amount - info.value!.bill})`
     )
   }
 }
+const { amount, description, errors, onSubmit, resetForm, type } =
+  useRecordForm(submitHandler)
 
 onMounted(async () => {
   await categoryStore.fetchCategories()
@@ -174,13 +177,6 @@ onUpdated(() => {
   if (categories.value.length && !category.value) {
     category.value = categories.value[0].id
   }
-  select.value = M.FormSelect.init(selectRef.value, {})
   M.updateTextFields()
-})
-
-onBeforeUnmount(() => {
-  if (select.value && select.value.destroy) {
-    select.value.destroy()
-  }
 })
 </script>

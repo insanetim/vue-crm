@@ -57,34 +57,36 @@
   </form>
 </template>
 
-<script setup>
-import useLoginForm from '@/hooks/login-form'
+<script setup lang="ts">
+import { inject, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
+
+import type { Credentials } from '@/types'
+import type { MessageType } from '@/plugins/message'
 import { useAuthStore } from '@/stores/auth'
+import { useLoginForm } from '@/use/useLoginForm'
 import localize from '@/utils/localize'
 import messages from '@/utils/messages'
-import { inject, onMounted } from 'vue'
-import { useMeta } from 'vue-meta'
-import { useRoute, useRouter } from 'vue-router'
 
 useMeta({ title: 'Login' })
-
-const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
-const $message = inject('$message')
+const authStore = useAuthStore()
+const $message = inject('$message') as MessageType
 
-const login = async values => {
+const login = async (values: Omit<Credentials, 'name'>) => {
   try {
     await authStore.login(values)
     router.push({ name: 'home' })
   } catch (e) {}
 }
-
 const { email, errors, onSubmit, password } = useLoginForm(login)
 
 onMounted(() => {
-  if (messages[route.query.message]) {
-    $message(localize(messages[route.query.message]))
+  const code = route.query.message as keyof typeof messages
+  if (messages[code]) {
+    $message(localize(messages[code]))
   }
 })
 </script>

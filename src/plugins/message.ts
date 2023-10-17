@@ -1,13 +1,18 @@
+import type { Plugin } from 'vue'
 import localize from '@/utils/localize'
 
-export default {
+declare let M: any
+
+export type MessageType = (html: string) => void
+
+export default <Plugin>{
   install(app) {
-    const message = html => {
+    const message: MessageType = html => {
       M.toast({ html })
     }
     app.provide('$message', message)
 
-    const error = html => {
+    const error: MessageType = html => {
       M.toast({ html: `[${localize('Error')}]: ${html}` })
     }
     app.provide('$error', error)

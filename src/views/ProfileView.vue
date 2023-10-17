@@ -46,23 +46,28 @@
   </div>
 </template>
 
-<script setup>
-import useProfileForm from '@/hooks/profile-form'
-import { useInfoStore } from '@/stores/info'
-import localize from '@/utils/localize'
-import { computed, onMounted } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 import { useMeta } from 'vue-meta'
 
+import type { UserInfo } from '@/types'
+import { useInfoStore } from '@/stores/info'
+import { useProfileForm } from '@/use/useProfileForm'
+import { useUpdateTextFields } from '@/use/useUpdateTextFields'
+import localize from '@/utils/localize'
+
+type ProfileValues = {
+  isRuLocale: boolean
+  name: string
+}
+
 useMeta({ title: 'ProfileTitle' })
-
 const infoStore = useInfoStore()
-const info = computed(() => infoStore.info)
-const { errors, isRuLocale, name, onSubmit } = useProfileForm(submitHandler, {
-  isRuLocale: info.value.locale === 'ru-RU',
-  name: info.value.name
-})
+useUpdateTextFields()
 
-async function submitHandler({ isRuLocale, name }) {
+const info = computed<UserInfo | null>(() => infoStore.info)
+
+const submitHandler = async ({ isRuLocale, name }: ProfileValues) => {
   try {
     await infoStore.updateInfo({
       locale: isRuLocale ? 'ru-RU' : 'en-US',
@@ -70,9 +75,9 @@ async function submitHandler({ isRuLocale, name }) {
     })
   } catch (e) {}
 }
-
-onMounted(() => {
-  M.updateTextFields()
+const { errors, isRuLocale, name, onSubmit } = useProfileForm(submitHandler, {
+  isRuLocale: info.value?.locale === 'ru-RU',
+  name: info.value?.name
 })
 </script>
 

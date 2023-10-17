@@ -18,21 +18,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+import type { Currencies, CurrenciesResponse } from '@/types'
 import { currencies } from '@/constants'
 import { useInfoStore } from '@/stores/info'
 import currencyFormat from '@/utils/currencyFormat'
 import localize from '@/utils/localize'
-import { computed } from 'vue'
+
+type PropTypes = {
+  rates: CurrenciesResponse['rates']
+}
+
+const { rates } = defineProps<PropTypes>()
 
 const infoStore = useInfoStore()
-const { rates } = defineProps({
-  rates: {
-    required: true,
-    type: Object
-  }
-})
-const base = computed(() => infoStore.bill / rates.UAH)
 
-const getCurrency = currency => Math.round(base.value * rates[currency])
+const base = computed(() => infoStore.bill! / rates.UAH)
+
+const getCurrency = (currency: Currencies) =>
+  Math.round(base.value * rates[currency])
 </script>

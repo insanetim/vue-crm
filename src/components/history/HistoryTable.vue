@@ -39,15 +39,15 @@
   </table>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { RecordExtended } from '@/views/HistoryView.vue'
 import currencyFormat from '@/utils/currencyFormat'
 import dateFormat from '@/utils/dateFormat'
 import localize from '@/utils/localize'
 
-defineProps({
-  records: {
-    required: true,
-    type: Array
-  }
-})
+type PropTypes = {
+  records: RecordExtended[]
+}
+
+defineProps<PropTypes>()
 </script>

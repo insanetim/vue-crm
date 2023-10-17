@@ -4,17 +4,8 @@
   </div>
 </template>
 
-<script setup>
-import { useAppStore } from '@/stores/app'
-import localize from '@/utils/localize'
-import messages from '@/utils/messages'
-import { computed, inject, watch } from 'vue'
+<script setup lang="ts">
+import { useWatchError } from '@/use/useWatchError'
 
-const appStore = useAppStore()
-const $error = inject('$error')
-const error = computed(() => appStore.error)
-
-watch(error, ({ code }) => {
-  $error(localize(messages[code] ?? 'SomethingWentWrong'))
-})
+useWatchError()
 </script>

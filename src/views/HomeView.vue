@@ -14,7 +14,7 @@
     <app-loader v-if="loading" />
 
     <div
-      v-else
+      v-else-if="currency"
       class="row"
     >
       <home-bill :rates="currency.rates" />
@@ -27,18 +27,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+
+import type { CurrenciesResponse } from '@/types'
 import HomeBill from '@/components/home/HomeBill.vue'
 import HomeCurrency from '@/components/home/HomeCurrency.vue'
 import { useAppStore } from '@/stores/app'
 import localize from '@/utils/localize'
-import { onMounted, ref } from 'vue'
-import { useMeta } from 'vue-meta'
 
 useMeta({ title: 'Menu_Bill' })
-
 const appStore = useAppStore()
-const currency = ref(null)
+
+const currency = ref<CurrenciesResponse | null>(null)
 const loading = ref(true)
 
 const refresh = async () => {

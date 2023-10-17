@@ -36,30 +36,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useToggle } from '@vueuse/core'
+
+import type { UserInfo } from '@/types'
 import AppNavbar from '@/components/app/AppNavbar.vue'
 import AppSidebar from '@/components/app/AppSidebar.vue'
-import { useAppStore } from '@/stores/app'
 import { useInfoStore } from '@/stores/info'
-import localize from '@/utils/localize'
-import messages from '@/utils/messages'
-import { useToggle } from '@vueuse/core'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { useWatchError } from '@/use/useWatchError'
 
-const appStore = useAppStore()
 const infoStore = useInfoStore()
 const loading = ref(true)
-const $error = inject('$error')
-const info = computed(() => infoStore.info)
-const error = computed(() => appStore.error)
+const info = computed<UserInfo | null>(() => infoStore.info)
 const [isOpen, toggle] = useToggle(true)
 
-watch(error, ({ code }) => {
-  $error(localize(messages[code] ?? 'SomethingWentWrong'))
-})
+useWatchError()
 
 onMounted(async () => {
-  if (!Object.keys(info.value).length) {
+  if (!info.value) {
     await infoStore.fetchInfo()
   }
   loading.value = false
