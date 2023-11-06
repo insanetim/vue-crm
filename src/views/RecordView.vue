@@ -112,7 +112,7 @@ import type { MessageType } from '@/plugins/message'
 import { useCategoryStore } from '@/stores/category'
 import { useInfoStore } from '@/stores/info'
 import { useRecordStore } from '@/stores/record'
-import { useRecordForm } from '@/use/useRecordForm'
+import { useRecordForm } from '@/composables/useRecordForm'
 import localize from '@/utils/localize'
 import type { CategoryPersistent, UserInfo } from '@/types'
 

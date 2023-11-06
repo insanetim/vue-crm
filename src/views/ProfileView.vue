@@ -52,8 +52,8 @@ import { useMeta } from 'vue-meta'
 
 import type { UserInfo } from '@/types'
 import { useInfoStore } from '@/stores/info'
-import { useProfileForm } from '@/use/useProfileForm'
-import { useUpdateTextFields } from '@/use/useUpdateTextFields'
+import { useProfileForm } from '@/composables/useProfileForm'
+import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
 import localize from '@/utils/localize'
 
 type ProfileValues = {

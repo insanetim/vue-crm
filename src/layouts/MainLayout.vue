@@ -44,7 +44,7 @@ import type { UserInfo } from '@/types'
 import AppNavbar from '@/components/app/AppNavbar.vue'
 import AppSidebar from '@/components/app/AppSidebar.vue'
 import { useInfoStore } from '@/stores/info'
-import { useWatchError } from '@/use/useWatchError'
+import { useWatchError } from '@/composables/useWatchError'
 
 const infoStore = useInfoStore()
 const loading = ref(true)

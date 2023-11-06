@@ -54,8 +54,8 @@ import { inject } from 'vue'
 import type { UserCategory } from '@/types'
 import type { MessageType } from '@/plugins/message'
 import { useCategoryStore } from '@/stores/category'
-import { useCategoryForm } from '@/use/useCategoryForm'
-import { useUpdateTextFields } from '@/use/useUpdateTextFields'
+import { useCategoryForm } from '@/composables/useCategoryForm'
+import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
 import localize from '@/utils/localize'
 
 const $message = inject('$message') as MessageType

@@ -88,7 +88,7 @@ import { useMeta } from 'vue-meta'
 
 import type { Credentials } from '@/types'
 import { useAuthStore } from '@/stores/auth'
-import { useRegisterForm } from '@/use/useRegisterForm'
+import { useRegisterForm } from '@/composables/useRegisterForm'
 import localize from '@/utils/localize'
 
 useMeta({ title: 'Register' })

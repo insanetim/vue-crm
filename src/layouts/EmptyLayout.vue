@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWatchError } from '@/use/useWatchError'
+import { useWatchError } from '@/composables/useWatchError'
 
 useWatchError()
 </script>

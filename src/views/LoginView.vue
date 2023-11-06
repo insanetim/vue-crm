@@ -65,7 +65,7 @@ import { useMeta } from 'vue-meta'
 import type { Credentials } from '@/types'
 import type { MessageType } from '@/plugins/message'
 import { useAuthStore } from '@/stores/auth'
-import { useLoginForm } from '@/use/useLoginForm'
+import { useLoginForm } from '@/composables/useLoginForm'
 import localize from '@/utils/localize'
 import messages from '@/utils/messages'
 

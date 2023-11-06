@@ -51,7 +51,7 @@ import { useMeta } from 'vue-meta'
 import HistoryTable from '@/components/history/HistoryTable.vue'
 import { useCategoryStore } from '@/stores/category'
 import { useRecordStore } from '@/stores/record'
-import { usePagination } from '@/use/usePagination'
+import { usePagination } from '@/composables/usePagination'
 import localize from '@/utils/localize'
 import type { CategoryPersistent, RecordPersistent } from '@/types'
 
