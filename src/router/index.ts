@@ -70,15 +70,13 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(to => {
   const auth = getAuth()
   const user = auth.currentUser
   const requireAuth = to.matched.some(record => record.meta.auth)
 
   if (requireAuth && !user) {
-    next({ name: 'login', query: { message: 'login' } })
-  } else {
-    next()
+    return { name: 'login', query: { message: 'login' } }
   }
 })
 

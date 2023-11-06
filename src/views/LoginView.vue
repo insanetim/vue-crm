@@ -78,7 +78,7 @@ const $message = inject('$message') as MessageType
 const login = async (values: Omit<Credentials, 'name'>) => {
   try {
     await authStore.login(values)
-    router.push({ name: 'home' })
+    router.replace({ name: route.query.from?.toString() || 'home' })
   } catch (e) {}
 }
 const { email, errors, onSubmit, password } = useLoginForm(login)

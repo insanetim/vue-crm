@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useNow } from '@vueuse/core'
 
 import { useAuthStore } from '@/stores/auth'
@@ -74,6 +74,7 @@ type EmitTypes = {
 
 const emit = defineEmits<EmitTypes>()
 
+const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const infoStore = useInfoStore()
@@ -83,6 +84,9 @@ const info = computed<UserInfo | null>(() => infoStore.info)
 
 const logout = async () => {
   await authStore.logout()
-  router.push({ name: 'login', query: { message: 'logout' } })
+  router.replace({
+    name: 'login',
+    query: { message: 'logout', from: route.name?.toString() }
+  })
 }
 </script>
