@@ -116,7 +116,6 @@ import { useRecordForm } from '@/composables/useRecordForm'
 import localize from '@/utils/localize'
 import type { CategoryPersistent, UserInfo } from '@/types'
 
-declare let M: any
 type RecordValues = {
   amount: number
   description: string
@@ -177,6 +176,6 @@ onUpdated(() => {
   if (categories.value.length && !category.value) {
     category.value = categories.value[0].id
   }
-  M.updateTextFields()
+  window.M.updateTextFields()
 })
 </script>
