@@ -10,6 +10,7 @@
           <input
             id="title"
             v-model="title"
+            v-bind="titleAttrs"
             :class="{ invalid: errors.title }"
             type="text"
           />
@@ -25,6 +26,7 @@
           <input
             id="limit"
             v-model.number="limit"
+            v-bind="limitAttrs"
             :class="{ invalid: errors.limit }"
             type="number"
           />
@@ -69,6 +71,6 @@ const submitHandler = async (values: UserCategory) => {
     $message(localize('Category_HasBeenCreated'))
   } catch (e) {}
 }
-const { errors, limit, onSubmit, resetForm, title } =
+const { limit, limitAttrs, title, titleAttrs, errors, onSubmit, resetForm } =
   useCategoryForm(submitHandler)
 </script>

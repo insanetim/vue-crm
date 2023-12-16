@@ -18,7 +18,7 @@
           v-else
           class="center"
         >
-          {{ localize('NoCategories') }}
+          {{ localize('NoCategories') }}.
         </p>
       </div>
     </section>

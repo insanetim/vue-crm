@@ -31,6 +31,7 @@
         <label>
           <input
             v-model="type"
+            v-bind="typeAttrs"
             class="with-gap"
             name="type"
             type="radio"
@@ -44,6 +45,7 @@
         <label>
           <input
             v-model="type"
+            v-bind="typeAttrs"
             class="with-gap"
             name="type"
             type="radio"
@@ -57,6 +59,7 @@
         <input
           id="amount"
           v-model.number="amount"
+          v-bind="amountAttrs"
           :class="{ invalid: errors.amount }"
           type="number"
         />
@@ -72,6 +75,7 @@
         <input
           id="description"
           v-model="description"
+          v-bind="descriptionAttrs"
           :class="{ invalid: errors.description }"
           type="text"
         />
@@ -98,7 +102,7 @@
     >
       {{ localize('NoCategories') }}.
       <router-link :to="{ name: 'categories' }">
-        {{ localize('AddFirst') }}
+        {{ localize('AddFirst') }}.
       </router-link>
     </p>
   </div>
@@ -148,7 +152,7 @@ const submitHandler = async (values: RecordValues) => {
       await recordStore.createRecord({
         ...values,
         categoryId: category.value,
-        date: new Date().toJSON()
+        date: new Date().toJSON(),
       })
       const bill =
         values.type === 'income'
@@ -164,8 +168,17 @@ const submitHandler = async (values: RecordValues) => {
     )
   }
 }
-const { amount, description, errors, onSubmit, resetForm, type } =
-  useRecordForm(submitHandler)
+const {
+  amount,
+  amountAttrs,
+  description,
+  descriptionAttrs,
+  type,
+  typeAttrs,
+  errors,
+  onSubmit,
+  resetForm,
+} = useRecordForm(submitHandler)
 
 onMounted(async () => {
   await categoryStore.fetchCategories()

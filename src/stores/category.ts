@@ -1,18 +1,14 @@
 import type { FirebaseError } from 'firebase/app'
-import {
-  child,
-  get,
-  getDatabase,
-  onValue,
-  push,
-  ref,
-  update
-} from 'firebase/database'
 import { defineStore } from 'pinia'
 
 import type { UserCategory, CategoryPersistent } from '@/types'
+import {
+  createUserCategory,
+  getUserCategories,
+  getUserCategoryById,
+  updateUserCategory
+} from '@/services/firebase'
 import { useAppStore } from './app'
-import { useAuthStore } from './auth'
 
 type StateShape = {
   categories: CategoryPersistent[]
@@ -23,51 +19,32 @@ export const useCategoryStore = defineStore('category', {
     categories: []
   }),
   actions: {
-    async createCategory({ limit, title }: UserCategory) {
+    async createCategory(categoryInfo: UserCategory) {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        await push(ref(db, `/users/${uid}/categories`), { limit, title })
+        const { key } = await createUserCategory(categoryInfo)
+        this.categories.push({ id: key as string, ...categoryInfo })
       } catch (e) {
         const appStore = useAppStore()
         appStore.setError(e as FirebaseError)
         throw e
       }
     },
-    fetchCategories() {
-      return new Promise<void>(resolve => {
-        ;(async () => {
-          try {
-            const db = getDatabase()
-            const authStore = useAuthStore()
-            const uid = authStore.getUid()
-            onValue(ref(db, `/users/${uid}/categories`), snapshot => {
-              const categories = snapshot.val() || {}
-              this.categories = Object.keys(categories).map(id => ({
-                id,
-                ...categories[id]
-              }))
-              resolve()
-            })
-          } catch (e) {
-            const appStore = useAppStore()
-            appStore.setError(e as FirebaseError)
-            throw e
-          }
-        })()
-      })
-    },
-    async fetchCategoryById(id: string) {
+    async fetchCategories() {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        const category = (
-          await get(child(ref(db, `/users/${uid}/categories`), id))
-        ).val()
-
-        return { id, ...category }
+        const categories = (await getUserCategories()) ?? {}
+        this.categories = Object.keys(categories).map(id => ({
+          id,
+          ...categories[id]
+        }))
+      } catch (e) {
+        const appStore = useAppStore()
+        appStore.setError(e as FirebaseError)
+        throw e
+      }
+    },
+    async fetchCategoryById(id: string): Promise<CategoryPersistent> {
+      try {
+        return await getUserCategoryById(id)
       } catch (e) {
         const appStore = useAppStore()
         appStore.setError(e as FirebaseError)
@@ -76,13 +53,9 @@ export const useCategoryStore = defineStore('category', {
     },
     async updateCategory({ id, limit, title }: CategoryPersistent) {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        await update(child(ref(db, `/users/${uid}/categories`), id), {
-          limit,
-          title
-        })
+        await updateUserCategory({ id, limit, title })
+        const index = this.categories.findIndex(category => category.id === id)
+        this.categories[index] = { id, limit, title }
       } catch (e) {
         const appStore = useAppStore()
         appStore.setError(e as FirebaseError)

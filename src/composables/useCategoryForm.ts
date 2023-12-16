@@ -15,29 +15,38 @@ export function useCategoryForm(
   fn: CallbackFunction,
   initialValues: InitialValues = {}
 ) {
-  const schema = toTypedSchema(
+  const validationSchema = toTypedSchema(
     object({
       limit: number().min(
         categoryLimit,
         `${localize('Message_MinLength')} ${categoryLimit}`
       ),
-      title: string().required(localize('Message_CategoryTitle'))
+      title: string().required(localize('Message_CategoryTitle')),
     })
   )
-  const { errors, handleSubmit, resetForm, setValues, useFieldModel } = useForm(
-    {
-      initialValues: {
-        limit: initialValues.limit ?? categoryLimit,
-        title: initialValues.title ?? ''
-      },
-      validationSchema: schema
-    }
-  )
-  const [limit, title] = useFieldModel(['limit', 'title'])
+
+  const { errors, handleSubmit, resetForm, setValues, defineField } = useForm({
+    initialValues: {
+      limit: initialValues.limit ?? categoryLimit,
+      title: initialValues.title ?? '',
+    },
+    validationSchema,
+  })
+  const [limit, limitAttrs] = defineField('limit')
+  const [title, titleAttrs] = defineField('title')
 
   const onSubmit = handleSubmit(values => {
     fn(values)
   })
 
-  return { errors, limit, onSubmit, resetForm, setValues, title }
+  return {
+    limit,
+    limitAttrs,
+    title,
+    titleAttrs,
+    errors,
+    onSubmit,
+    resetForm,
+    setValues,
+  }
 }

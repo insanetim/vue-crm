@@ -45,12 +45,12 @@ const loading = ref(true)
 
 const refresh = async () => {
   loading.value = true
-  currency.value = await appStore.fetchCurrency()
+  currency.value = await appStore.fetchCurrencies()
   loading.value = false
 }
 
 onMounted(async () => {
-  currency.value = await appStore.fetchCurrency()
+  currency.value = await appStore.fetchCurrencies()
   loading.value = false
 })
 </script>

@@ -9,6 +9,7 @@
         <input
           id="email"
           v-model.trim="email"
+          v-bind="emailAttrs"
           :class="{ invalid: errors.email }"
           type="text"
         />
@@ -24,6 +25,7 @@
         <input
           id="password"
           v-model.trim="password"
+          v-bind="passwordAttrs"
           :class="{ invalid: errors.password }"
           type="password"
         />
@@ -81,7 +83,8 @@ const login = async (values: Omit<Credentials, 'name'>) => {
     router.replace({ name: route.query.from?.toString() || 'home' })
   } catch (e) {}
 }
-const { email, errors, onSubmit, password } = useLoginForm(login)
+const { email, emailAttrs, password, passwordAttrs, errors, onSubmit } =
+  useLoginForm(login)
 
 onMounted(() => {
   const code = route.query.message as keyof typeof messages

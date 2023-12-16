@@ -12,6 +12,7 @@
         <input
           id="name"
           v-model.trim="name"
+          v-bind="nameAttrs"
           :class="{ invalid: errors.name }"
           type="text"
         />
@@ -28,6 +29,7 @@
           English
           <input
             v-model="isRuLocale"
+            v-bind="isRuLocaleAttrs"
             type="checkbox"
           />
           <span class="lever"></span>
@@ -71,14 +73,15 @@ const submitHandler = async ({ isRuLocale, name }: ProfileValues) => {
   try {
     await infoStore.updateInfo({
       locale: isRuLocale ? 'ru-RU' : 'en-US',
-      name
+      name,
     })
   } catch (e) {}
 }
-const { errors, isRuLocale, name, onSubmit } = useProfileForm(submitHandler, {
-  isRuLocale: info.value?.locale === 'ru-RU',
-  name: info.value?.name
-})
+const { isRuLocale, isRuLocaleAttrs, name, nameAttrs, errors, onSubmit } =
+  useProfileForm(submitHandler, {
+    isRuLocale: info.value?.locale === 'ru-RU',
+    name: info.value?.name,
+  })
 </script>
 
 <style scoped>

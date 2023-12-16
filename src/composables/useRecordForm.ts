@@ -1,5 +1,5 @@
 import { useForm } from 'vee-validate'
-import { number, object, string } from 'yup'
+import { mixed, number, object, string } from 'yup'
 import { toTypedSchema } from '@vee-validate/yup'
 
 import type { CallbackFunction } from '@/types'
@@ -10,26 +10,34 @@ export function useRecordForm(fn: CallbackFunction) {
     object({
       amount: number().min(1, `${localize('Message_MinLength')} 1`),
       description: string().required(localize('Message_EnterDescription')),
-      type: string().required()
+      type: mixed().oneOf(['outcome', 'income']),
     })
   )
-  const { errors, handleSubmit, resetForm, useFieldModel } = useForm({
+  const { errors, handleSubmit, resetForm, defineField } = useForm({
     initialValues: {
       amount: 1,
       description: '',
-      type: 'outcome'
+      type: 'outcome',
     },
-    validationSchema: schema
+    validationSchema: schema,
   })
-  const [amount, description, type] = useFieldModel([
-    'amount',
-    'description',
-    'type'
-  ])
+  const [amount, amountAttrs] = defineField('amount')
+  const [description, descriptionAttrs] = defineField('description')
+  const [type, typeAttrs] = defineField('type')
 
   const onSubmit = handleSubmit(values => {
     fn(values)
   })
 
-  return { amount, description, errors, onSubmit, resetForm, type }
+  return {
+    amount,
+    amountAttrs,
+    description,
+    descriptionAttrs,
+    type,
+    typeAttrs,
+    errors,
+    onSubmit,
+    resetForm,
+  }
 }

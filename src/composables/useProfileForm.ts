@@ -17,18 +17,19 @@ export function useProfileForm(
   const schema = toTypedSchema(
     object({
       isRuLocale: boolean(),
-      name: string().required(localize('Message_EnterName'))
+      name: string().required(localize('Message_EnterName')),
     })
   )
-  const { errors, handleSubmit, useFieldModel } = useForm({
+  const { errors, handleSubmit, defineField } = useForm({
     initialValues,
-    validationSchema: schema
+    validationSchema: schema,
   })
-  const [isRuLocale, name] = useFieldModel(['isRuLocale', 'name'])
+  const [isRuLocale, isRuLocaleAttrs] = defineField('isRuLocale')
+  const [name, nameAttrs] = defineField('name')
 
   const onSubmit = handleSubmit(values => {
     fn(values)
   })
 
-  return { errors, isRuLocale, name, onSubmit }
+  return { isRuLocale, isRuLocaleAttrs, name, nameAttrs, errors, onSubmit }
 }

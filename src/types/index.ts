@@ -1,4 +1,4 @@
-import { currencies } from './constants/index'
+import { currencies } from '@/constants/index'
 
 export type CallbackFunction = (...args: any[]) => void
 

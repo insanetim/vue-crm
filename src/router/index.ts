@@ -1,5 +1,6 @@
-import { getAuth } from 'firebase/auth'
 import { createRouter, createWebHistory } from 'vue-router'
+
+import { auth } from '@/services/firebase'
 
 const routes = [
   {
@@ -71,7 +72,6 @@ const router = createRouter({
 })
 
 router.beforeEach(to => {
-  const auth = getAuth()
   const user = auth.currentUser
   const requireAuth = to.matched.some(record => record.meta.auth)
 

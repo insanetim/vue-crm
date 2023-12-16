@@ -17,17 +17,18 @@ export function useLoginForm(fn: CallbackFunction) {
         .min(
           passwordMinLength,
           `${localize('Message_MinLength')} ${passwordMinLength}`
-        )
+        ),
     })
   )
-  const { errors, handleSubmit, useFieldModel } = useForm({
-    validationSchema: schema
+  const { errors, handleSubmit, defineField } = useForm({
+    validationSchema: schema,
   })
-  const [email, password] = useFieldModel(['email', 'password'])
+  const [email, emailAttrs] = defineField('email')
+  const [password, passwordAttrs] = defineField('password')
 
   const onSubmit = handleSubmit(values => {
     fn(values)
   })
 
-  return { email, errors, onSubmit, password }
+  return { email, emailAttrs, password, passwordAttrs, errors, onSubmit }
 }

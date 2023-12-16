@@ -4,7 +4,10 @@
       <h3>{{ localize('History_Title') }}</h3>
     </div>
 
-    <div class="history-chart">
+    <div
+      v-if="records.length"
+      class="history-chart"
+    >
       <pie
         :data="chartData"
         :options="chartOptions"
@@ -36,7 +39,7 @@
     >
       {{ localize('NoRecords') }}.
       <router-link :to="{ name: 'record' }">
-        {{ localize('AddFirst') }}
+        {{ localize('AddFirst') }}.
       </router-link>
     </p>
   </div>

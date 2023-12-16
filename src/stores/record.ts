@@ -1,10 +1,13 @@
 import type { FirebaseError } from 'firebase/app'
-import { child, get, getDatabase, onValue, push, ref } from 'firebase/database'
 import { defineStore } from 'pinia'
 
 import type { UserRecord, RecordPersistent } from '@/types'
 import { useAppStore } from './app'
-import { useAuthStore } from './auth'
+import {
+  createUserRecord,
+  getUserRecordById,
+  getUserRecords
+} from '@/services/firebase'
 
 type StateShape = {
   records: RecordPersistent[]
@@ -17,10 +20,21 @@ export const useRecordStore = defineStore('record', {
   actions: {
     async createRecord(record: UserRecord) {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        await push(ref(db, `/users/${uid}/records`), record)
+        const { key } = await createUserRecord(record)
+        this.records.push({ id: key as string, ...record })
+      } catch (e) {
+        const appStore = useAppStore()
+        appStore.setError(e as FirebaseError)
+        throw e
+      }
+    },
+    async fetchRecords() {
+      try {
+        const records = (await getUserRecords()) ?? {}
+        this.records = Object.keys(records).map(id => ({
+          id,
+          ...records[id]
+        }))
       } catch (e) {
         const appStore = useAppStore()
         appStore.setError(e as FirebaseError)
@@ -29,42 +43,12 @@ export const useRecordStore = defineStore('record', {
     },
     async fetchRecordById(id: string): Promise<RecordPersistent> {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        const record = (
-          await get(child(ref(db, `/users/${uid}/records`), id))
-        ).val()
-
-        return { id, ...record }
+        return await getUserRecordById(id)
       } catch (e) {
         const appStore = useAppStore()
         appStore.setError(e as FirebaseError)
         throw e
       }
-    },
-    fetchRecords() {
-      return new Promise<void>(resolve => {
-        ;(async () => {
-          try {
-            const db = getDatabase()
-            const authStore = useAuthStore()
-            const uid = authStore.getUid()
-            onValue(ref(db, `/users/${uid}/records`), snapshot => {
-              const records = snapshot.val() || {}
-              this.records = Object.keys(records).map(id => ({
-                id,
-                ...records[id]
-              }))
-              resolve()
-            })
-          } catch (e) {
-            const appStore = useAppStore()
-            appStore.setError(e as FirebaseError)
-            throw e
-          }
-        })()
-      })
     }
   }
 })

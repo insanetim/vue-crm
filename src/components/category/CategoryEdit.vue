@@ -26,6 +26,7 @@
           <input
             id="title"
             v-model="title"
+            v-bind="titleAttrs"
             :class="{ invalid: errors.title }"
             type="text"
           />
@@ -41,6 +42,7 @@
           <input
             id="limit"
             v-model.number="limit"
+            v-bind="limitAttrs"
             :class="{ invalid: errors.limit }"
             type="number"
           />
@@ -88,18 +90,16 @@ const submitHandler = async (values: UserCategory) => {
   try {
     await categoryStore.updateCategory({
       id: current.value,
-      ...values
+      ...values,
     })
     $message(localize('Category_HasBeenUpdated'))
   } catch (e) {}
 }
-const { errors, limit, onSubmit, setValues, title } = useCategoryForm(
-  submitHandler,
-  {
+const { limit, limitAttrs, title, titleAttrs, errors, onSubmit, setValues } =
+  useCategoryForm(submitHandler, {
     limit: initCategory.limit,
-    title: initCategory.title
-  }
-)
+    title: initCategory.title,
+  })
 
 watch(current, id => {
   const { limit, title } = categories.value.find(

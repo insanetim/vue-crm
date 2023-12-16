@@ -1,10 +1,9 @@
 import type { FirebaseError } from 'firebase/app'
-import { get, getDatabase, ref, update } from 'firebase/database'
 import { defineStore } from 'pinia'
 
 import type { UserInfo } from '@/types'
+import { getUserInfo, updateUserInfo } from '@/services/firebase'
 import { useAppStore } from './app'
-import { useAuthStore } from './auth'
 
 type StateShape = {
   info: UserInfo | null
@@ -24,11 +23,7 @@ export const useInfoStore = defineStore('info', {
     },
     async fetchInfo() {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        const data = await get(ref(db, `/users/${uid}/info`))
-        this.info = data.val()
+        this.info = await getUserInfo()
       } catch (e) {
         const appStore = useAppStore()
         appStore.setError(e as FirebaseError)
@@ -37,10 +32,7 @@ export const useInfoStore = defineStore('info', {
     },
     async updateInfo(toUpdate: Partial<UserInfo>) {
       try {
-        const db = getDatabase()
-        const authStore = useAuthStore()
-        const uid = authStore.getUid()
-        await update(ref(db, `/users/${uid}/info`), toUpdate)
+        await updateUserInfo(toUpdate)
         this.info = { ...this.info, ...toUpdate } as UserInfo
       } catch (e) {
         const appStore = useAppStore()
