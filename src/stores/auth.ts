@@ -30,6 +30,6 @@ export const useAuthStore = defineStore('auth', {
         appStore.setError(e as FirebaseError)
         throw e
       }
-    }
-  }
+    },
+  },
 })

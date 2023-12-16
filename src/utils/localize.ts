@@ -5,7 +5,7 @@ import { useInfoStore } from '@/stores/info'
 
 const locales: Record<Locale, Record<string, string>> = {
   'en-US': en,
-  'ru-RU': ru
+  'ru-RU': ru,
 }
 
 export default function localize(key: string): string {

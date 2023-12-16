@@ -24,7 +24,7 @@
           :key="infoStore.locale"
           v-tooltip="{
             html: 'CreateNewRecord',
-            position: 'left'
+            position: 'left',
           }"
           class="btn-floating btn-large blue"
           :to="{ name: 'record' }"

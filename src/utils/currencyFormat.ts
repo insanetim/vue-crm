@@ -5,7 +5,7 @@ export default function currencyFormat(value: number, currency = 'UAH') {
   const locale = infoStore.locale ?? 'ru-RU'
   const formatter = new Intl.NumberFormat(locale, {
     currency,
-    style: 'currency'
+    style: 'currency',
   })
 
   return formatter.format(value)

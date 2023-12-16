@@ -6,7 +6,7 @@ import {
   createUserCategory,
   getUserCategories,
   getUserCategoryById,
-  updateUserCategory
+  updateUserCategory,
 } from '@/services/firebase'
 import { useAppStore } from './app'
 
@@ -16,7 +16,7 @@ type StateShape = {
 
 export const useCategoryStore = defineStore('category', {
   state: (): StateShape => ({
-    categories: []
+    categories: [],
   }),
   actions: {
     async createCategory(categoryInfo: UserCategory) {
@@ -34,7 +34,7 @@ export const useCategoryStore = defineStore('category', {
         const categories = (await getUserCategories()) ?? {}
         this.categories = Object.keys(categories).map(id => ({
           id,
-          ...categories[id]
+          ...categories[id],
         }))
       } catch (e) {
         const appStore = useAppStore()
@@ -61,6 +61,6 @@ export const useCategoryStore = defineStore('category', {
         appStore.setError(e as FirebaseError)
         throw e
       }
-    }
-  }
+    },
+  },
 })

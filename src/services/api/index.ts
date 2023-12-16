@@ -7,7 +7,7 @@ export const getCurrencies = async (): Promise<CurrenciesResponse> => {
   const res = await fetch(
     `${apiUrl}/latest?${new URLSearchParams({
       base: 'USD',
-      symbols: currencies.join(',')
+      symbols: currencies.join(','),
     })}`,
     { headers: { apikey: apiKey } }
   )

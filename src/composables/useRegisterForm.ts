@@ -15,20 +15,20 @@ export function useRegisterForm(fn: CallbackFunction) {
       name: string().required(localize('Message_EnterName')),
       password: string()
         .required(localize('Message_EnterPassword'))
-        .min(6, localize('Message_MinLength'))
+        .min(6, localize('Message_MinLength')),
     })
   )
   const { errors, handleSubmit, useFieldModel } = useForm({
     initialValues: {
-      agree: false
+      agree: false,
     },
-    validationSchema: schema
+    validationSchema: schema,
   })
   const [agree, email, name, password] = useFieldModel([
     'agree',
     'email',
     'name',
-    'password'
+    'password',
   ])
 
   const onSubmit = handleSubmit(values => {

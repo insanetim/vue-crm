@@ -86,7 +86,7 @@ const logout = async () => {
   await authStore.logout()
   router.replace({
     name: 'login',
-    query: { message: 'logout', from: route.name?.toString() }
+    query: { message: 'logout', from: route.name?.toString() },
   })
 }
 </script>

@@ -3,7 +3,7 @@ import type { Directive } from 'vue'
 export default <Directive<HTMLElement>>{
   mounted(el) {
     window.M.Dropdown.init(el, {
-      constrainWidth: false
+      constrainWidth: false,
     })
   },
   beforeUnmount(el) {
@@ -12,5 +12,5 @@ export default <Directive<HTMLElement>>{
     if (instance && instance.destroy) {
       instance.destroy()
     }
-  }
+  },
 }

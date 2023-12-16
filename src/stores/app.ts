@@ -9,7 +9,7 @@ type StateShape = {
 
 export const useAppStore = defineStore('app', {
   state: (): StateShape => ({
-    error: null
+    error: null,
   }),
   actions: {
     async fetchCurrencies() {
@@ -17,6 +17,6 @@ export const useAppStore = defineStore('app', {
     },
     setError(error: FirebaseError) {
       this.error = error
-    }
-  }
+    },
+  },
 })

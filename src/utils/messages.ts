@@ -3,5 +3,5 @@ export default {
   'auth/user-not-found': 'NoUserWithEmail',
   'auth/wrong-password': 'WrongPassword',
   login: 'FirstLogin',
-  logout: 'Logout'
+  logout: 'Logout',
 }

@@ -90,7 +90,7 @@ const categories = computed<CategoryExtended[]>(() => {
       balance,
       progressColor,
       progressPercent,
-      tooltip
+      tooltip,
     }
   })
 })

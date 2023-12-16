@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
 } from 'firebase/auth'
 import {
   child,
@@ -12,7 +12,7 @@ import {
   push,
   ref,
   set,
-  update
+  update,
 } from 'firebase/database'
 
 import type {
@@ -20,7 +20,7 @@ import type {
   Credentials,
   UserCategory,
   UserInfo,
-  UserRecord
+  UserRecord,
 } from '@/types'
 
 initializeApp({
@@ -31,7 +31,7 @@ initializeApp({
     'https://vue-crm-93feb-default-rtdb.europe-west1.firebasedatabase.app/',
   messagingSenderId: '207435020724',
   projectId: 'vue-crm-93feb',
-  storageBucket: 'vue-crm-93feb.appspot.com'
+  storageBucket: 'vue-crm-93feb.appspot.com',
 })
 
 export const auth = getAuth()
@@ -43,7 +43,7 @@ const db = getDatabase()
 
 export const loginUser = async ({
   email,
-  password
+  password,
 }: Omit<Credentials, 'name'>) => {
   return await signInWithEmailAndPassword(auth, email, password)
 }
@@ -61,7 +61,7 @@ export const registerUser = async ({ email, name, password }: Credentials) => {
   return await set(userInfoRef, {
     bill: 100000,
     locale: 'ru-RU',
-    name
+    name,
   })
 }
 
@@ -105,7 +105,7 @@ export const getUserCategoryById = async (id: string) => {
 export const updateUserCategory = async ({
   id,
   limit,
-  title
+  title,
 }: CategoryPersistent) => {
   const uid = getUid()
   const categoriesRef = ref(db, `/users/${uid}/categories`)

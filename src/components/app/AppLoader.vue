@@ -25,7 +25,7 @@ import { computed } from 'vue'
 const colors = [
   'spinner-red-only',
   'spinner-blue-only',
-  'spinner-green-only'
+  'spinner-green-only',
 ] as const
 
 const color = computed(() => colors[Math.floor(Math.random() * colors.length)])

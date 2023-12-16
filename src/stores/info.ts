@@ -11,11 +11,11 @@ type StateShape = {
 
 export const useInfoStore = defineStore('info', {
   state: (): StateShape => ({
-    info: null
+    info: null,
   }),
   getters: {
     bill: state => state.info?.bill,
-    locale: state => state.info?.locale
+    locale: state => state.info?.locale,
   },
   actions: {
     clearInfo() {
@@ -39,6 +39,6 @@ export const useInfoStore = defineStore('info', {
         appStore.setError(e as FirebaseError)
         throw e
       }
-    }
-  }
+    },
+  },
 })

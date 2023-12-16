@@ -13,5 +13,5 @@ export default <Directive<HTMLElement>>{
     if (instance && instance.destroy) {
       instance.destroy()
     }
-  }
+  },
 }

@@ -35,6 +35,6 @@ const links = [
   { title: localize('Menu_History'), url: '/history' },
   { title: localize('Menu_Planning'), url: '/planning' },
   { title: localize('Menu_NewRecord'), url: '/record' },
-  { title: localize('Menu_Categories'), url: '/categories' }
+  { title: localize('Menu_Categories'), url: '/categories' },
 ] as const
 </script>

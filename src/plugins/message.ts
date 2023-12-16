@@ -14,5 +14,5 @@ export default <Plugin>{
       window.M.toast({ html: `[${localize('Error')}]: ${html}` })
     }
     app.provide('$error', error)
-  }
+  },
 }

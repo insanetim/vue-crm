@@ -7,68 +7,68 @@ const routes = [
     component: () => import('@/views/LoginView.vue'),
     meta: { layout: 'empty' },
     name: 'login',
-    path: '/login'
+    path: '/login',
   },
   {
     component: () => import('@/views/RegisterView.vue'),
     meta: { layout: 'empty' },
     name: 'register',
-    path: '/register'
+    path: '/register',
   },
   {
     component: () => import('@/views/HomeView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'home',
-    path: '/'
+    path: '/',
   },
   {
     component: () => import('@/views/CategoriesView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'categories',
-    path: '/categories'
+    path: '/categories',
   },
   {
     component: () => import('@/views/DetailView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'detail',
     path: '/detail/:id',
-    props: true
+    props: true,
   },
   {
     component: () => import('@/views/HistoryView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'history',
-    path: '/history'
+    path: '/history',
   },
   {
     component: () => import('@/views/PlanningView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'planning',
-    path: '/planning'
+    path: '/planning',
   },
   {
     component: () => import('@/views/ProfileView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'profile',
-    path: '/profile'
+    path: '/profile',
   },
   {
     component: () => import('@/views/RecordView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'record',
-    path: '/record'
+    path: '/record',
   },
   {
     component: () => import('@/views/NotFoundView.vue'),
     meta: { auth: true, layout: 'main' },
     name: 'not-found',
-    path: '/:pathMatch(.*)*'
-  }
+    path: '/:pathMatch(.*)*',
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
 
 router.beforeEach(to => {

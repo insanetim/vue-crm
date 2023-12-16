@@ -24,8 +24,8 @@
               'card',
               {
                 red: record.type === 'outcome',
-                green: record.type === 'income'
-              }
+                green: record.type === 'income',
+              },
             ]"
           >
             <div class="card-content white-text">
@@ -86,7 +86,7 @@ onMounted(async () => {
     )
     record.value = {
       ...currentRecord,
-      categoryName: category.title
+      categoryName: category.title,
     }
   }
 

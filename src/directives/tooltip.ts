@@ -11,7 +11,7 @@ export default <Directive<HTMLElement, ValueShape>>{
   mounted(el, { modifiers, value }) {
     window.M.Tooltip.init(el, {
       ...value,
-      html: modifiers.noloc ? value.html : localize(value.html)
+      html: modifiers.noloc ? value.html : localize(value.html),
     })
   },
   beforeUnmount(el) {
@@ -20,5 +20,5 @@ export default <Directive<HTMLElement, ValueShape>>{
     if (instance && instance.destroy) {
       instance.destroy()
     }
-  }
+  },
 }

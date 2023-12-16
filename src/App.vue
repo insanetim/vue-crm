@@ -22,6 +22,6 @@ export default {
     const layout = computed(() => `${route.meta.layout || 'empty'}-layout`)
 
     return { appTitle, layout }
-  }
+  },
 }
 </script>

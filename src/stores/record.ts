@@ -6,7 +6,7 @@ import { useAppStore } from './app'
 import {
   createUserRecord,
   getUserRecordById,
-  getUserRecords
+  getUserRecords,
 } from '@/services/firebase'
 
 type StateShape = {
@@ -15,7 +15,7 @@ type StateShape = {
 
 export const useRecordStore = defineStore('record', {
   state: (): StateShape => ({
-    records: []
+    records: [],
   }),
   actions: {
     async createRecord(record: UserRecord) {
@@ -33,7 +33,7 @@ export const useRecordStore = defineStore('record', {
         const records = (await getUserRecords()) ?? {}
         this.records = Object.keys(records).map(id => ({
           id,
-          ...records[id]
+          ...records[id],
         }))
       } catch (e) {
         const appStore = useAppStore()
@@ -49,6 +49,6 @@ export const useRecordStore = defineStore('record', {
         appStore.setError(e as FirebaseError)
         throw e
       }
-    }
-  }
+    },
+  },
 })
