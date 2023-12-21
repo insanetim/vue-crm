@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app'
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
@@ -16,6 +17,7 @@ import {
 } from 'firebase/database'
 
 import type {
+  CallbackFunction,
   CategoryPersistent,
   Credentials,
   UserCategory,
@@ -40,6 +42,12 @@ const getUid = () => {
   return user ? user.uid : null
 }
 const db = getDatabase()
+
+export const onAuthStateChangedListener = (callback: CallbackFunction) => {
+  if (!callback) return
+
+  return onAuthStateChanged(auth, callback)
+}
 
 export const loginUser = async ({
   email,

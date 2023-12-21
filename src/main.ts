@@ -1,6 +1,5 @@
 import { createApp, type App as AppType } from 'vue'
 import { createMetaManager } from 'vue-meta'
-import { onAuthStateChanged } from 'firebase/auth'
 import { createPinia } from 'pinia'
 import { PiniaLogger } from 'pinia-logger'
 // @ts-ignore:next-line
@@ -8,7 +7,7 @@ import Paginate from 'vuejs-paginate-next'
 
 import App from './App.vue'
 import router from './router'
-import { auth } from './services/firebase'
+import { onAuthStateChangedListener } from './services/firebase'
 import messagePlugin from './plugins/message'
 import dropdown from './directives/dropdown'
 import select from './directives/select'
@@ -28,7 +27,7 @@ pinia.use(
 )
 
 let app: AppType
-onAuthStateChanged(auth, async () => {
+onAuthStateChangedListener(() => {
   if (!app) {
     app = createApp(App)
     app.use(pinia)
@@ -40,7 +39,6 @@ onAuthStateChanged(auth, async () => {
     app.directive('tooltip', tooltip)
     app.component('AppLoader', AppLoader)
     app.component('AppPagination', Paginate)
-    await router.isReady()
     app.mount('#app')
   }
 })
