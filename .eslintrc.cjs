@@ -1,4 +1,3 @@
-/* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
 
 module.exports = {
@@ -7,15 +6,15 @@ module.exports = {
     'plugin:vue/vue3-essential',
     'eslint:recommended',
     '@vue/eslint-config-typescript',
-    'prettier'
+    'prettier',
   ],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: 'latest',
   },
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   rules: {
     'no-empty': 0,
@@ -25,10 +24,10 @@ module.exports = {
         html: {
           component: 'always',
           normal: 'never',
-          void: 'always'
+          void: 'always',
         },
-        svg: 'always'
-      }
-    ]
-  }
+        svg: 'always',
+      },
+    ],
+  },
 }
