@@ -4,11 +4,12 @@
 .firebase
 
 
-# local env files
+# env files
+.env
 .env.local
 .env.*.local
 
-# Log files
+# log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

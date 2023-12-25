@@ -5,6 +5,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  type NextOrObserver,
+  type User,
 } from 'firebase/auth'
 import {
   child,
@@ -17,7 +19,6 @@ import {
 } from 'firebase/database'
 
 import type {
-  CallbackFunction,
   CategoryPersistent,
   Credentials,
   UserCategory,
@@ -43,7 +44,7 @@ const getUid = () => {
 }
 const db = getDatabase()
 
-export const onAuthStateChangedListener = (callback: CallbackFunction) => {
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) => {
   if (!callback) return
 
   return onAuthStateChanged(auth, callback)
