@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { inject, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
+
+import type { Credentials } from '@/types'
+import type { MessageType } from '@/plugins/message'
+import { useAuthStore } from '@/stores/auth'
+import { useLoginForm } from '@/composables/useLoginForm'
+import localize from '@/utils/localize'
+import messages from '@/utils/messages'
+
+useMeta({ title: 'Login' })
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+const $message = inject('$message') as MessageType
+
+const { email, emailAttrs, password, passwordAttrs, errors, handleSubmit } =
+  useLoginForm()
+
+const onSubmit = handleSubmit(async (values: Omit<Credentials, 'name'>) => {
+  try {
+    await authStore.login(values)
+    router.replace({ name: route.query.from?.toString() || 'home' })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+onMounted(() => {
+  const code = route.query.message as keyof typeof messages
+  if (messages[code]) {
+    $message(localize(messages[code]))
+  }
+})
+</script>
+
 <template>
   <form
     class="card auth-card"
@@ -58,38 +96,3 @@
     </div>
   </form>
 </template>
-
-<script setup lang="ts">
-import { inject, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useMeta } from 'vue-meta'
-
-import type { Credentials } from '@/types'
-import type { MessageType } from '@/plugins/message'
-import { useAuthStore } from '@/stores/auth'
-import { useLoginForm } from '@/composables/useLoginForm'
-import localize from '@/utils/localize'
-import messages from '@/utils/messages'
-
-useMeta({ title: 'Login' })
-const route = useRoute()
-const router = useRouter()
-const authStore = useAuthStore()
-const $message = inject('$message') as MessageType
-
-const login = async (values: Omit<Credentials, 'name'>) => {
-  try {
-    await authStore.login(values)
-    router.replace({ name: route.query.from?.toString() || 'home' })
-  } catch (e) {}
-}
-const { email, emailAttrs, password, passwordAttrs, errors, onSubmit } =
-  useLoginForm(login)
-
-onMounted(() => {
-  const code = route.query.message as keyof typeof messages
-  if (messages[code]) {
-    $message(localize(messages[code]))
-  }
-})
-</script>

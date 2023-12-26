@@ -1,3 +1,56 @@
+<script setup lang="ts">
+import { computed, inject, ref, watch } from 'vue'
+
+import type { CategoryPersistent, UserCategory } from '@/types'
+import type { MessageType } from '@/plugins/message'
+import { useCategoryStore } from '@/stores/category'
+import { useCategoryForm } from '@/composables/useCategoryForm'
+import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
+import localize from '@/utils/localize'
+
+const $message = inject('$message') as MessageType
+const categoryStore = useCategoryStore()
+useUpdateTextFields()
+
+const categories = computed<CategoryPersistent[]>(
+  () => categoryStore.categories
+)
+const initCategory = categories.value[0]
+const current = ref(initCategory.id)
+
+const {
+  limit,
+  limitAttrs,
+  title,
+  titleAttrs,
+  errors,
+  setValues,
+  handleSubmit,
+} = useCategoryForm({
+  limit: initCategory.limit,
+  title: initCategory.title,
+})
+
+const onSubmit = handleSubmit(async (values: UserCategory) => {
+  try {
+    await categoryStore.updateCategory({
+      id: current.value,
+      ...values,
+    })
+    $message(localize('Category_HasBeenUpdated'))
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+watch(current, id => {
+  const { limit, title } = categories.value.find(
+    c => c.id === id
+  ) as CategoryPersistent
+  setValues({ limit, title })
+})
+</script>
+
 <template>
   <div class="col s12 m6">
     <div>
@@ -65,46 +118,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject, ref, watch } from 'vue'
-
-import type { CategoryPersistent, UserCategory } from '@/types'
-import type { MessageType } from '@/plugins/message'
-import { useCategoryStore } from '@/stores/category'
-import { useCategoryForm } from '@/composables/useCategoryForm'
-import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
-import localize from '@/utils/localize'
-
-const $message = inject('$message') as MessageType
-const categoryStore = useCategoryStore()
-useUpdateTextFields()
-
-const categories = computed<CategoryPersistent[]>(
-  () => categoryStore.categories
-)
-const initCategory = categories.value[0]
-const current = ref(initCategory.id)
-
-const submitHandler = async (values: UserCategory) => {
-  try {
-    await categoryStore.updateCategory({
-      id: current.value,
-      ...values,
-    })
-    $message(localize('Category_HasBeenUpdated'))
-  } catch (e) {}
-}
-const { limit, limitAttrs, title, titleAttrs, errors, onSubmit, setValues } =
-  useCategoryForm(submitHandler, {
-    limit: initCategory.limit,
-    title: initCategory.title,
-  })
-
-watch(current, id => {
-  const { limit, title } = categories.value.find(
-    c => c.id === id
-  ) as CategoryPersistent
-  setValues({ limit, title })
-})
-</script>

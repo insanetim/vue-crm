@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import type { CurrenciesResponse } from '@/types'
+import { currencies } from '@/constants'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
+
+type PropTypes = {
+  date: string
+  rates: CurrenciesResponse['rates']
+}
+
+defineProps<PropTypes>()
+</script>
+
 <template>
   <div class="col s12 m6 l8">
     <div class="card orange darken-3 bill-card">
@@ -29,17 +43,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { CurrenciesResponse } from '@/types'
-import { currencies } from '@/constants'
-import dateFormat from '@/utils/dateFormat'
-import localize from '@/utils/localize'
-
-type PropTypes = {
-  date: string
-  rates: CurrenciesResponse['rates']
-}
-
-defineProps<PropTypes>()
-</script>

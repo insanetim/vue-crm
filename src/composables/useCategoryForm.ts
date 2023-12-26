@@ -1,43 +1,44 @@
-import { useForm } from 'vee-validate'
+import type { Ref } from 'vue'
+import { useForm, type BaseFieldProps, type GenericObject } from 'vee-validate'
 import { number, object, string } from 'yup'
 import { toTypedSchema } from '@vee-validate/yup'
 
-import type { CallbackFunction } from '@/types'
+import type { UserCategory } from '@/types'
 import { categoryLimit } from '@/constants'
 import localize from '@/utils/localize'
 
-type InitialValues = {
-  limit?: number
-  title?: string
+type UseCategoryForm = Pick<
+  ReturnType<typeof useForm<UserCategory>>,
+  'errors' | 'setValues' | 'handleSubmit'
+> & {
+  limit: Ref<number>
+  limitAttrs: Ref<BaseFieldProps & GenericObject>
+  title: Ref<string>
+  titleAttrs: Ref<BaseFieldProps & GenericObject>
 }
 
-export function useCategoryForm(
-  fn: CallbackFunction,
-  initialValues: InitialValues = {}
-) {
+export const useCategoryForm = (
+  initialValues: Partial<UserCategory> = {}
+): UseCategoryForm => {
   const validationSchema = toTypedSchema(
     object({
-      limit: number().min(
-        categoryLimit,
-        `${localize('Message_MinLength')} ${categoryLimit}`
-      ),
+      limit: number()
+        .min(categoryLimit, `${localize('Message_MinLength')} ${categoryLimit}`)
+        .required(),
       title: string().required(localize('Message_CategoryTitle')),
     })
   )
 
-  const { errors, handleSubmit, resetForm, setValues, defineField } = useForm({
-    initialValues: {
-      limit: initialValues.limit ?? categoryLimit,
-      title: initialValues.title ?? '',
-    },
-    validationSchema,
-  })
+  const { errors, defineField, setValues, handleSubmit } =
+    useForm<UserCategory>({
+      initialValues: {
+        limit: initialValues.limit ?? categoryLimit,
+        title: initialValues.title ?? '',
+      },
+      validationSchema,
+    })
   const [limit, limitAttrs] = defineField('limit')
   const [title, titleAttrs] = defineField('title')
-
-  const onSubmit = handleSubmit(values => {
-    fn(values)
-  })
 
   return {
     limit,
@@ -45,8 +46,7 @@ export function useCategoryForm(
     title,
     titleAttrs,
     errors,
-    onSubmit,
-    resetForm,
     setValues,
+    handleSubmit,
   }
 }

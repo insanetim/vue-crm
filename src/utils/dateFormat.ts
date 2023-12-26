@@ -2,7 +2,7 @@ import { useInfoStore } from '@/stores/info'
 
 type Value = string | number | Date
 
-export default function dateFormat(value: Value, format = 'date') {
+const dateFormat = (value: Value, format = 'date') => {
   const infoStore = useInfoStore()
   const locale = infoStore.locale ?? 'ru-RU'
   const options: Record<string, string> = {}
@@ -21,3 +21,5 @@ export default function dateFormat(value: Value, format = 'date') {
 
   return Intl.DateTimeFormat(locale, options).format(new Date(value))
 }
+
+export default dateFormat

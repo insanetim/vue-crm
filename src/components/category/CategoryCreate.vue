@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { inject } from 'vue'
+
+import type { UserCategory } from '@/types'
+import type { MessageType } from '@/plugins/message'
+import { useCategoryStore } from '@/stores/category'
+import { useCategoryForm } from '@/composables/useCategoryForm'
+import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
+import localize from '@/utils/localize'
+
+const $message = inject('$message') as MessageType
+const categoryStore = useCategoryStore()
+useUpdateTextFields()
+
+const { limit, limitAttrs, title, titleAttrs, errors, handleSubmit } =
+  useCategoryForm()
+
+const onSubmit = handleSubmit(async (values: UserCategory, { resetForm }) => {
+  try {
+    await categoryStore.createCategory(values)
+    resetForm()
+    $message(localize('Category_HasBeenCreated'))
+  } catch (error) {
+    console.log(error)
+  }
+})
+</script>
+
 <template>
   <div class="col s12 m6">
     <div>
@@ -49,28 +77,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { inject } from 'vue'
-
-import type { UserCategory } from '@/types'
-import type { MessageType } from '@/plugins/message'
-import { useCategoryStore } from '@/stores/category'
-import { useCategoryForm } from '@/composables/useCategoryForm'
-import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
-import localize from '@/utils/localize'
-
-const $message = inject('$message') as MessageType
-const categoryStore = useCategoryStore()
-useUpdateTextFields()
-
-const submitHandler = async (values: UserCategory) => {
-  try {
-    await categoryStore.createCategory(values)
-    resetForm()
-    $message(localize('Category_HasBeenCreated'))
-  } catch (e) {}
-}
-const { limit, limitAttrs, title, titleAttrs, errors, onSubmit, resetForm } =
-  useCategoryForm(submitHandler)
-</script>

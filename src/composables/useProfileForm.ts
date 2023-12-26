@@ -2,34 +2,22 @@ import { useForm } from 'vee-validate'
 import { boolean, object, string } from 'yup'
 import { toTypedSchema } from '@vee-validate/yup'
 
-import type { CallbackFunction } from '@/types'
+import type { ProfileValues } from '@/types'
 import localize from '@/utils/localize'
 
-type InitialValues = {
-  isRuLocale?: boolean
-  name?: string
-}
-
-export function useProfileForm(
-  fn: CallbackFunction,
-  initialValues: InitialValues = {}
-) {
-  const schema = toTypedSchema(
+export const useProfileForm = (initialValues: Partial<ProfileValues> = {}) => {
+  const validationSchema = toTypedSchema(
     object({
-      isRuLocale: boolean(),
+      isRuLocale: boolean().required(),
       name: string().required(localize('Message_EnterName')),
     })
   )
-  const { errors, handleSubmit, defineField } = useForm({
+  const { errors, defineField, handleSubmit } = useForm<ProfileValues>({
     initialValues,
-    validationSchema: schema,
+    validationSchema,
   })
   const [isRuLocale, isRuLocaleAttrs] = defineField('isRuLocale')
   const [name, nameAttrs] = defineField('name')
 
-  const onSubmit = handleSubmit(values => {
-    fn(values)
-  })
-
-  return { isRuLocale, isRuLocaleAttrs, name, nameAttrs, errors, onSubmit }
+  return { isRuLocale, isRuLocaleAttrs, name, nameAttrs, errors, handleSubmit }
 }

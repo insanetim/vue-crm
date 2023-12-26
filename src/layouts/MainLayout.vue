@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useToggle } from '@vueuse/core'
+
+import type { UserInfo } from '@/types'
+import { useInfoStore } from '@/stores/info'
+import { useWatchError } from '@/composables/useWatchError'
+import AppNavbar from '@/components/app/AppNavbar.vue'
+import AppSidebar from '@/components/app/AppSidebar.vue'
+
+const infoStore = useInfoStore()
+const loading = ref(true)
+const info = computed<UserInfo | null>(() => infoStore.info)
+const [isOpen, toggle] = useToggle(true)
+
+useWatchError()
+
+onMounted(async () => {
+  if (!info.value) {
+    await infoStore.fetchInfo()
+  }
+  loading.value = false
+})
+</script>
+
 <template>
   <div>
     <app-loader v-if="loading" />
@@ -35,28 +60,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useToggle } from '@vueuse/core'
-
-import type { UserInfo } from '@/types'
-import AppNavbar from '@/components/app/AppNavbar.vue'
-import AppSidebar from '@/components/app/AppSidebar.vue'
-import { useInfoStore } from '@/stores/info'
-import { useWatchError } from '@/composables/useWatchError'
-
-const infoStore = useInfoStore()
-const loading = ref(true)
-const info = computed<UserInfo | null>(() => infoStore.info)
-const [isOpen, toggle] = useToggle(true)
-
-useWatchError()
-
-onMounted(async () => {
-  if (!info.value) {
-    await infoStore.fetchInfo()
-  }
-  loading.value = false
-})
-</script>

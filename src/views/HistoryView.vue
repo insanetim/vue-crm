@@ -1,50 +1,3 @@
-<template>
-  <div>
-    <div class="page-title">
-      <h3>{{ localize('History_Title') }}</h3>
-    </div>
-
-    <div
-      v-if="records.length"
-      class="history-chart"
-    >
-      <pie
-        :data="chartData"
-        :options="chartOptions"
-      />
-    </div>
-
-    <app-loader v-if="loading" />
-
-    <section v-else-if="records.length">
-      <history-table :records="items" />
-
-      <app-pagination
-        v-if="records.length > items.length"
-        v-model="page"
-        :click-handler="pageChangeHandler"
-        :container-class="'pagination'"
-        :next-link-class="'waves-effect'"
-        :next-text="localize('Forward')"
-        :page-count="pageCount"
-        :page-link-class="'waves-effect'"
-        :prev-link-class="'waves-effect'"
-        :prev-text="localize('Back')"
-      />
-    </section>
-
-    <p
-      v-else
-      class="center"
-    >
-      {{ localize('NoRecords') }}.
-      <router-link :to="{ name: 'record' }">
-        {{ localize('AddFirst') }}.
-      </router-link>
-    </p>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
@@ -135,3 +88,50 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
+
+<template>
+  <div>
+    <div class="page-title">
+      <h3>{{ localize('History_Title') }}</h3>
+    </div>
+
+    <div
+      v-if="records.length"
+      class="history-chart"
+    >
+      <pie
+        :data="chartData"
+        :options="chartOptions"
+      />
+    </div>
+
+    <app-loader v-if="loading" />
+
+    <section v-else-if="records.length">
+      <history-table :records="items" />
+
+      <app-pagination
+        v-if="records.length > items.length"
+        v-model="page"
+        :click-handler="pageChangeHandler"
+        :container-class="'pagination'"
+        :next-link-class="'waves-effect'"
+        :next-text="localize('Forward')"
+        :page-count="pageCount"
+        :page-link-class="'waves-effect'"
+        :prev-link-class="'waves-effect'"
+        :prev-text="localize('Back')"
+      />
+    </section>
+
+    <p
+      v-else
+      class="center"
+    >
+      {{ localize('NoRecords') }}.
+      <router-link :to="{ name: 'record' }">
+        {{ localize('AddFirst') }}.
+      </router-link>
+    </p>
+  </div>
+</template>

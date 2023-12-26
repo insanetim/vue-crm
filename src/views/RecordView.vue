@@ -1,3 +1,84 @@
+<script setup lang="ts">
+import { computed, inject, onMounted, onUpdated, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+
+import type { CategoryPersistent, UserInfo, RecordValues } from '@/types'
+import type { MessageType } from '@/plugins/message'
+import { useCategoryStore } from '@/stores/category'
+import { useInfoStore } from '@/stores/info'
+import { useRecordStore } from '@/stores/record'
+import { useRecordForm } from '@/composables/useRecordForm'
+import localize from '@/utils/localize'
+
+useMeta({ title: 'Menu_NewRecord' })
+const infoStore = useInfoStore()
+const recordStore = useRecordStore()
+const categoryStore = useCategoryStore()
+const $message = inject('$message') as MessageType
+
+const loading = ref(true)
+const category = ref<string>('')
+const info = computed<UserInfo | null>(() => infoStore.info)
+const categories = computed<CategoryPersistent[]>(
+  () => categoryStore.categories
+)
+const canCreateRecord = computed(() => {
+  if (type.value === 'income') {
+    return true
+  }
+
+  return info.value!.bill >= amount.value
+})
+
+const {
+  amount,
+  amountAttrs,
+  description,
+  descriptionAttrs,
+  type,
+  typeAttrs,
+  errors,
+  handleSubmit,
+} = useRecordForm()
+
+const onSubmit = handleSubmit(async (values: RecordValues, { resetForm }) => {
+  if (canCreateRecord.value) {
+    try {
+      await recordStore.createRecord({
+        ...values,
+        categoryId: category.value,
+        date: new Date().toJSON(),
+      })
+      const bill =
+        values.type === 'income'
+          ? info.value!.bill + values.amount
+          : info.value!.bill - values.amount
+      await infoStore.updateInfo({ bill })
+      $message(localize('RecordHasBeenCreated'))
+      resetForm()
+    } catch (error) {
+      console.log(error)
+    }
+  } else {
+    $message(
+      `${localize('NotEnoughMoney')} (${values.amount - info.value!.bill})`
+    )
+  }
+})
+
+onMounted(async () => {
+  await categoryStore.fetchCategories()
+  loading.value = false
+})
+
+onUpdated(() => {
+  if (categories.value.length && !category.value) {
+    category.value = categories.value[0].id
+  }
+  window.M.updateTextFields()
+})
+</script>
+
 <template>
   <div>
     <div class="page-title">
@@ -107,88 +188,3 @@
     </p>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject, onMounted, onUpdated, ref } from 'vue'
-import { useMeta } from 'vue-meta'
-
-import type { MessageType } from '@/plugins/message'
-import { useCategoryStore } from '@/stores/category'
-import { useInfoStore } from '@/stores/info'
-import { useRecordStore } from '@/stores/record'
-import { useRecordForm } from '@/composables/useRecordForm'
-import localize from '@/utils/localize'
-import type { CategoryPersistent, UserInfo } from '@/types'
-
-type RecordValues = {
-  amount: number
-  description: string
-  type: string
-}
-
-useMeta({ title: 'Menu_NewRecord' })
-const infoStore = useInfoStore()
-const recordStore = useRecordStore()
-const categoryStore = useCategoryStore()
-const $message = inject('$message') as MessageType
-
-const loading = ref(true)
-const category = ref<string>('')
-const info = computed<UserInfo | null>(() => infoStore.info)
-const categories = computed<CategoryPersistent[]>(
-  () => categoryStore.categories
-)
-const canCreateRecord = computed(() => {
-  if (type.value === 'income') {
-    return true
-  }
-
-  return info.value!.bill >= (amount.value as number)
-})
-
-const submitHandler = async (values: RecordValues) => {
-  if (canCreateRecord.value) {
-    try {
-      await recordStore.createRecord({
-        ...values,
-        categoryId: category.value,
-        date: new Date().toJSON(),
-      })
-      const bill =
-        values.type === 'income'
-          ? info.value!.bill + values.amount
-          : info.value!.bill - values.amount
-      await infoStore.updateInfo({ bill })
-      $message(localize('RecordHasBeenCreated'))
-      resetForm()
-    } catch (e) {}
-  } else {
-    $message(
-      `${localize('NotEnoughMoney')} (${values.amount - info.value!.bill})`
-    )
-  }
-}
-const {
-  amount,
-  amountAttrs,
-  description,
-  descriptionAttrs,
-  type,
-  typeAttrs,
-  errors,
-  onSubmit,
-  resetForm,
-} = useRecordForm(submitHandler)
-
-onMounted(async () => {
-  await categoryStore.fetchCategories()
-  loading.value = false
-})
-
-onUpdated(() => {
-  if (categories.value.length && !category.value) {
-    category.value = categories.value[0].id
-  }
-  window.M.updateTextFields()
-})
-</script>

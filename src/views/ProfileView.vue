@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useMeta } from 'vue-meta'
+
+import type { UserInfo, ProfileValues } from '@/types'
+import { useInfoStore } from '@/stores/info'
+import { useProfileForm } from '@/composables/useProfileForm'
+import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
+import localize from '@/utils/localize'
+
+useMeta({ title: 'ProfileTitle' })
+const infoStore = useInfoStore()
+useUpdateTextFields()
+
+const info = computed<UserInfo | null>(() => infoStore.info)
+
+const { isRuLocale, isRuLocaleAttrs, name, nameAttrs, errors, handleSubmit } =
+  useProfileForm({
+    isRuLocale: info.value?.locale === 'ru-RU',
+    name: info.value?.name,
+  })
+
+const onSubmit = handleSubmit(async ({ isRuLocale, name }: ProfileValues) => {
+  try {
+    await infoStore.updateInfo({
+      locale: isRuLocale ? 'ru-RU' : 'en-US',
+      name,
+    })
+  } catch (error) {
+    console.log(error)
+  }
+})
+</script>
+
 <template>
   <div>
     <div class="page-title">
@@ -47,42 +81,6 @@
     </form>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useMeta } from 'vue-meta'
-
-import type { UserInfo } from '@/types'
-import { useInfoStore } from '@/stores/info'
-import { useProfileForm } from '@/composables/useProfileForm'
-import { useUpdateTextFields } from '@/composables/useUpdateTextFields'
-import localize from '@/utils/localize'
-
-type ProfileValues = {
-  isRuLocale: boolean
-  name: string
-}
-
-useMeta({ title: 'ProfileTitle' })
-const infoStore = useInfoStore()
-useUpdateTextFields()
-
-const info = computed<UserInfo | null>(() => infoStore.info)
-
-const submitHandler = async ({ isRuLocale, name }: ProfileValues) => {
-  try {
-    await infoStore.updateInfo({
-      locale: isRuLocale ? 'ru-RU' : 'en-US',
-      name,
-    })
-  } catch (e) {}
-}
-const { isRuLocale, isRuLocaleAttrs, name, nameAttrs, errors, onSubmit } =
-  useProfileForm(submitHandler, {
-    isRuLocale: info.value?.locale === 'ru-RU',
-    name: info.value?.name,
-  })
-</script>
 
 <style scoped>
 .switch {

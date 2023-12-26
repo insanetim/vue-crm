@@ -1,6 +1,6 @@
 import { onMounted } from 'vue'
 
-export function useUpdateTextFields() {
+export const useUpdateTextFields = () => {
   onMounted(() => {
     window.M.updateTextFields()
   })

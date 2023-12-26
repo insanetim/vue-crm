@@ -33,9 +33,7 @@
   top: 64px;
   width: 250px;
   transition: transform 0.3s;
-  transition:
-    transform 0.3s,
-    -webkit-transform 0.3s;
+  transition: transform 0.3s, -webkit-transform 0.3s;
   bottom: 0 !important;
   height: auto !important;
 }

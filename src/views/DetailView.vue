@@ -1,3 +1,47 @@
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { useMeta } from 'vue-meta'
+
+import type { RecordPersistent } from '@/types'
+import { useCategoryStore } from '@/stores/category'
+import { useRecordStore } from '@/stores/record'
+import currencyFormat from '@/utils/currencyFormat'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
+
+type PropTypes = {
+  id: string
+}
+type RecordDetail = RecordPersistent & {
+  categoryName: string
+}
+
+const { id } = defineProps<PropTypes>()
+
+useMeta({ title: 'Detail_Title' })
+const categoryStore = useCategoryStore()
+const recordStore = useRecordStore()
+
+const record = ref<RecordDetail | null>(null)
+const loading = ref(true)
+
+onMounted(async () => {
+  const currentRecord = await recordStore.fetchRecordById(id)
+
+  if (currentRecord.categoryId) {
+    const category = await categoryStore.fetchCategoryById(
+      currentRecord.categoryId
+    )
+    record.value = {
+      ...currentRecord,
+      categoryName: category.title,
+    }
+  }
+
+  loading.value = false
+})
+</script>
+
 <template>
   <div>
     <app-loader v-if="loading" />
@@ -49,47 +93,3 @@
     </p>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useMeta } from 'vue-meta'
-
-import type { RecordPersistent } from '@/types'
-import { useCategoryStore } from '@/stores/category'
-import { useRecordStore } from '@/stores/record'
-import currencyFormat from '@/utils/currencyFormat'
-import dateFormat from '@/utils/dateFormat'
-import localize from '@/utils/localize'
-
-type PropTypes = {
-  id: string
-}
-type RecordDetail = RecordPersistent & {
-  categoryName: string
-}
-
-const { id } = defineProps<PropTypes>()
-
-useMeta({ title: 'Detail_Title' })
-const categoryStore = useCategoryStore()
-const recordStore = useRecordStore()
-
-const record = ref<RecordDetail | null>(null)
-const loading = ref(true)
-
-onMounted(async () => {
-  const currentRecord = await recordStore.fetchRecordById(id)
-
-  if (currentRecord.categoryId) {
-    const category = await categoryStore.fetchCategoryById(
-      currentRecord.categoryId
-    )
-    record.value = {
-      ...currentRecord,
-      categoryName: category.title,
-    }
-  }
-
-  loading.value = false
-})
-</script>

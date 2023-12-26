@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const colors = [
+  'spinner-red-only',
+  'spinner-blue-only',
+  'spinner-green-only',
+] as const
+
+const color = computed(() => colors[Math.floor(Math.random() * colors.length)])
+</script>
+
 <template>
   <div class="app-loader">
     <div class="preloader-wrapper active">
@@ -18,15 +30,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-
-const colors = [
-  'spinner-red-only',
-  'spinner-blue-only',
-  'spinner-green-only',
-] as const
-
-const color = computed(() => colors[Math.floor(Math.random() * colors.length)])
-</script>

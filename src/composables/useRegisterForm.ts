@@ -2,38 +2,43 @@ import { useForm } from 'vee-validate'
 import { boolean, object, string } from 'yup'
 import { toTypedSchema } from '@vee-validate/yup'
 
-import type { CallbackFunction } from '@/types'
+import type { RegisterValues } from '@/types'
 import localize from '@/utils/localize'
 
-export function useRegisterForm(fn: CallbackFunction) {
-  const schema = toTypedSchema(
+export const useRegisterForm = () => {
+  const validationSchema = toTypedSchema(
     object({
-      agree: boolean().oneOf([true]),
+      agree: boolean().oneOf([true]).required(),
       email: string()
-        .required(localize('Message_EmailRequired'))
-        .email(localize('Message_EmailValid')),
+        .email(localize('Message_EmailValid'))
+        .required(localize('Message_EmailRequired')),
       name: string().required(localize('Message_EnterName')),
       password: string()
-        .required(localize('Message_EnterPassword'))
-        .min(6, localize('Message_MinLength')),
+        .min(6, localize('Message_MinLength'))
+        .required(localize('Message_EnterPassword')),
     })
   )
-  const { errors, handleSubmit, useFieldModel } = useForm({
+  const { errors, defineField, handleSubmit } = useForm<RegisterValues>({
     initialValues: {
       agree: false,
     },
-    validationSchema: schema,
+    validationSchema,
   })
-  const [agree, email, name, password] = useFieldModel([
-    'agree',
-    'email',
-    'name',
-    'password',
-  ])
+  const [agree, agreeAttrs] = defineField('agree')
+  const [email, emailAttrs] = defineField('email')
+  const [name, nameAttrs] = defineField('name')
+  const [password, passwordAttrs] = defineField('password')
 
-  const onSubmit = handleSubmit(values => {
-    fn(values)
-  })
-
-  return { agree, email, errors, name, onSubmit, password }
+  return {
+    agree,
+    agreeAttrs,
+    email,
+    emailAttrs,
+    name,
+    nameAttrs,
+    password,
+    passwordAttrs,
+    errors,
+    handleSubmit,
+  }
 }

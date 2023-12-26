@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useNow } from '@vueuse/core'
+
+import { useAuthStore } from '@/stores/auth'
+import { useInfoStore } from '@/stores/info'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
+import type { UserInfo } from '@/types'
+
+type EmitTypes = {
+  (e: 'toggle'): void
+}
+
+const emit = defineEmits<EmitTypes>()
+
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+const infoStore = useInfoStore()
+const now = useNow()
+
+const info = computed<UserInfo | null>(() => infoStore.info)
+
+const logout = async () => {
+  await authStore.logout()
+  router.replace({
+    name: 'login',
+    query: { message: 'logout', from: route.name?.toString() },
+  })
+}
+</script>
+
 <template>
   <nav class="navbar orange lighten-1">
     <div class="nav-wrapper">
@@ -56,37 +90,3 @@
     </div>
   </nav>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useNow } from '@vueuse/core'
-
-import { useAuthStore } from '@/stores/auth'
-import { useInfoStore } from '@/stores/info'
-import dateFormat from '@/utils/dateFormat'
-import localize from '@/utils/localize'
-import type { UserInfo } from '@/types'
-
-type EmitTypes = {
-  (e: 'toggle'): void
-}
-
-const emit = defineEmits<EmitTypes>()
-
-const route = useRoute()
-const router = useRouter()
-const authStore = useAuthStore()
-const infoStore = useInfoStore()
-const now = useNow()
-
-const info = computed<UserInfo | null>(() => infoStore.info)
-
-const logout = async () => {
-  await authStore.logout()
-  router.replace({
-    name: 'login',
-    query: { message: 'logout', from: route.name?.toString() },
-  })
-}
-</script>

@@ -1,12 +1,3 @@
-<template>
-  <metainfo>
-    <template #title="{ content }">{{ appTitle(content) }}</template>
-  </metainfo>
-  <component :is="layout">
-    <router-view />
-  </component>
-</template>
-
 <script lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
@@ -25,3 +16,12 @@ export default {
   },
 }
 </script>
+
+<template>
+  <metainfo>
+    <template #title="{ content }">{{ appTitle(content) }}</template>
+  </metainfo>
+  <component :is="layout">
+    <router-view />
+  </component>
+</template>

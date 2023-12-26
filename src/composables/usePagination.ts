@@ -1,9 +1,10 @@
-import { pageSize } from '@/constants'
-import _ from 'lodash'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import _ from 'lodash'
 
-export function usePagination<T>() {
+import { pageSize } from '@/constants'
+
+export const usePagination = <T>() => {
   const route = useRoute()
   const router = useRouter()
   const allItems = ref<T[][]>([])

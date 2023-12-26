@@ -6,7 +6,7 @@ import { useAppStore } from '@/stores/app'
 import localize from '@/utils/localize'
 import messages from '@/utils/messages'
 
-export function useWatchError() {
+export const useWatchError = () => {
   const appStore = useAppStore()
   const $error = inject('$error') as MessageType
   const error = computed<FirebaseError | null>(() => appStore.error)

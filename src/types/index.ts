@@ -1,7 +1,5 @@
 import { currencies } from '@/constants/index'
 
-export type CallbackFunction = (...args: any[]) => void
-
 export type Currencies = (typeof currencies)[number]
 
 export type CurrenciesResponse = {
@@ -15,6 +13,15 @@ export type CurrenciesResponse = {
 export type Credentials = {
   email: string
   password: string
+  name: string
+}
+
+export type RegisterValues = Credentials & {
+  agree: boolean
+}
+
+export type ProfileValues = {
+  isRuLocale: boolean
   name: string
 }
 
@@ -35,14 +42,22 @@ export type CategoryPersistent = UserCategory & {
   id: string
 }
 
+export type RecordType = 'outcome' | 'income'
+
 export type UserRecord = {
   amount: number
   categoryId: string
   date: string
   description: string
-  type: string
+  type: RecordType
 }
 
 export type RecordPersistent = UserRecord & {
   id: string
+}
+
+export type RecordValues = {
+  amount: number
+  description: string
+  type: RecordType
 }

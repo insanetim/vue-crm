@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import type { RecordExtended } from '@/views/HistoryView.vue'
+import currencyFormat from '@/utils/currencyFormat'
+import dateFormat from '@/utils/dateFormat'
+import localize from '@/utils/localize'
+
+type PropTypes = {
+  records: RecordExtended[]
+}
+
+defineProps<PropTypes>()
+</script>
+
 <template>
   <table>
     <thead>
@@ -38,16 +51,3 @@
     </tbody>
   </table>
 </template>
-
-<script setup lang="ts">
-import type { RecordExtended } from '@/views/HistoryView.vue'
-import currencyFormat from '@/utils/currencyFormat'
-import dateFormat from '@/utils/dateFormat'
-import localize from '@/utils/localize'
-
-type PropTypes = {
-  records: RecordExtended[]
-}
-
-defineProps<PropTypes>()
-</script>

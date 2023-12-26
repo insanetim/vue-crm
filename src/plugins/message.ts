@@ -1,4 +1,5 @@
 import type { Plugin } from 'vue'
+
 import localize from '@/utils/localize'
 
 export type MessageType = (html: string) => void

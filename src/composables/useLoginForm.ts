@@ -2,33 +2,31 @@ import { useForm } from 'vee-validate'
 import { object, string } from 'yup'
 import { toTypedSchema } from '@vee-validate/yup'
 
-import type { CallbackFunction } from '@/types'
+import type { Credentials } from '@/types'
 import { passwordMinLength } from '@/constants/index'
 import localize from '@/utils/localize'
 
-export function useLoginForm(fn: CallbackFunction) {
-  const schema = toTypedSchema(
+export const useLoginForm = () => {
+  const validationSchema = toTypedSchema(
     object({
       email: string()
-        .required(localize('Message_EmailRequired'))
-        .email(localize('Message_EmailValid')),
+        .email(localize('Message_EmailValid'))
+        .required(localize('Message_EmailRequired')),
       password: string()
-        .required(localize('Message_EnterPassword'))
         .min(
           passwordMinLength,
           `${localize('Message_MinLength')} ${passwordMinLength}`
-        ),
+        )
+        .required(localize('Message_EnterPassword')),
     })
   )
-  const { errors, handleSubmit, defineField } = useForm({
-    validationSchema: schema,
+  const { errors, defineField, handleSubmit } = useForm<
+    Omit<Credentials, 'name'>
+  >({
+    validationSchema,
   })
   const [email, emailAttrs] = defineField('email')
   const [password, passwordAttrs] = defineField('password')
 
-  const onSubmit = handleSubmit(values => {
-    fn(values)
-  })
-
-  return { email, emailAttrs, password, passwordAttrs, errors, onSubmit }
+  return { email, emailAttrs, password, passwordAttrs, errors, handleSubmit }
 }
