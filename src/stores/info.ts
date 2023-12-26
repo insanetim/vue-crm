@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 import type { UserInfo } from '@/types'
 import { getUserInfo, updateUserInfo } from '@/services/firebase'
-import { useAppStore } from './app'
+import useErrorHandler from '@/composables/useErrorHandler'
 
 type StateShape = {
   info: UserInfo | null
@@ -24,20 +24,16 @@ export const useInfoStore = defineStore('info', {
     async fetchInfo() {
       try {
         this.info = await getUserInfo()
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
     async updateInfo(toUpdate: Partial<UserInfo>) {
       try {
         await updateUserInfo(toUpdate)
         this.info = { ...this.info, ...toUpdate } as UserInfo
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
   },

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 import type { Credentials } from '@/types'
 import { registerUser, loginUser, logoutUser } from '@/services/firebase'
-import { useAppStore } from './app'
+import useErrorHandler from '@/composables/useErrorHandler'
 import { useInfoStore } from './info'
 
 export const useAuthStore = defineStore('auth', {
@@ -11,10 +11,8 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials: Omit<Credentials, 'name'>) {
       try {
         await loginUser(credentials)
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
     async logout() {
@@ -25,10 +23,8 @@ export const useAuthStore = defineStore('auth', {
     async register(credentials: Credentials) {
       try {
         await registerUser(credentials)
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
   },

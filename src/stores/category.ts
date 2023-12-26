@@ -8,7 +8,7 @@ import {
   getUserCategoryById,
   updateUserCategory,
 } from '@/services/firebase'
-import { useAppStore } from './app'
+import useErrorHandler from '@/composables/useErrorHandler'
 
 type StateShape = {
   categories: CategoryPersistent[]
@@ -23,10 +23,8 @@ export const useCategoryStore = defineStore('category', {
       try {
         const { key } = await createUserCategory(categoryInfo)
         this.categories.push({ id: key as string, ...categoryInfo })
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
     async fetchCategories() {
@@ -36,19 +34,15 @@ export const useCategoryStore = defineStore('category', {
           id,
           ...categories[id],
         }))
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
-    async fetchCategoryById(id: string): Promise<CategoryPersistent> {
+    async fetchCategoryById(id: string): Promise<CategoryPersistent | void> {
       try {
         return await getUserCategoryById(id)
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
     async updateCategory({ id, limit, title }: CategoryPersistent) {
@@ -56,10 +50,8 @@ export const useCategoryStore = defineStore('category', {
         await updateUserCategory({ id, limit, title })
         const index = this.categories.findIndex(category => category.id === id)
         this.categories[index] = { id, limit, title }
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
   },

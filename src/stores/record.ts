@@ -2,12 +2,12 @@ import type { FirebaseError } from 'firebase/app'
 import { defineStore } from 'pinia'
 
 import type { UserRecord, RecordPersistent } from '@/types'
-import { useAppStore } from './app'
 import {
   createUserRecord,
   getUserRecordById,
   getUserRecords,
 } from '@/services/firebase'
+import useErrorHandler from '@/composables/useErrorHandler'
 
 type StateShape = {
   records: RecordPersistent[]
@@ -22,10 +22,8 @@ export const useRecordStore = defineStore('record', {
       try {
         const { key } = await createUserRecord(record)
         this.records.push({ id: key as string, ...record })
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
     async fetchRecords() {
@@ -35,19 +33,15 @@ export const useRecordStore = defineStore('record', {
           id,
           ...records[id],
         }))
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
-    async fetchRecordById(id: string): Promise<RecordPersistent> {
+    async fetchRecordById(id: string): Promise<RecordPersistent | void> {
       try {
         return await getUserRecordById(id)
-      } catch (e) {
-        const appStore = useAppStore()
-        appStore.setError(e as FirebaseError)
-        throw e
+      } catch (error) {
+        useErrorHandler(error as FirebaseError)
       }
     },
   },
